@@ -38,26 +38,46 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 			if err != nil {
 				return result.ExitCode, err
 			}
-			var labelToAdd string
+			var (
+				labelToAdd string
+				labelColor string
+			)
 
 			if result.HasAddOrUpdateOnly {
 				labelToAdd = cfg.ResultLabels.AddOrUpdateLabel
+				labelColor = cfg.ResultLabels.AddOrUpdateLabelColor
 			} else if result.HasDestroy {
 				labelToAdd = cfg.ResultLabels.DestroyLabel
+				labelColor = cfg.ResultLabels.DestroyLabelColor
 			} else if result.HasNoChanges {
 				labelToAdd = cfg.ResultLabels.NoChangesLabel
+				labelColor = cfg.ResultLabels.NoChangesLabelColor
 			} else if result.HasPlanError {
 				labelToAdd = cfg.ResultLabels.PlanErrorLabel
+				labelColor = cfg.ResultLabels.PlanErrorLabelColor
 			}
 
 			if labelToAdd != "" {
-				_, _, err = g.client.API.IssuesAddLabels(
+				labels, _, err := g.client.API.IssuesAddLabels(
 					context.Background(),
 					cfg.PR.Number,
 					[]string{labelToAdd},
 				)
 				if err != nil {
 					return result.ExitCode, err
+				}
+				if labelColor != "" {
+					// set the color of label
+					for _, label := range labels {
+						if labelToAdd == label.GetName() {
+							if label.GetColor() != labelColor {
+								_, _, err := g.client.API.IssuesUpdateLabel(context.Background(), labelToAdd, labelColor)
+								if err != nil {
+									return result.ExitCode, err
+								}
+							}
+						}
+					}
 				}
 			}
 		}
