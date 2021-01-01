@@ -16,7 +16,6 @@ linters:
     - staticcheck
     - errorlint
     - unparam
-    - unconvert
     - godox
     - nestif
     - gocritic
