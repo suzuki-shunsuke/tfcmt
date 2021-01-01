@@ -1,5 +1,10 @@
 # tfnotify
 
+[![Build Status](https://github.com/suzuki-shunsuke/tfnotify/workflows/test/badge.svg)](https://github.com/suzuki-shunsuke/tfnotify/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/suzuki-shunsuke/tfnotify)](https://goreportcard.com/report/github.com/suzuki-shunsuke/tfnotify)
+[![GitHub last commit](https://img.shields.io/github/last-commit/suzuki-shunsuke/tfnotify.svg)](https://github.com/suzuki-shunsuke/tfnotify)
+[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/tfnotify/master/LICENSE)
+
 Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify)
 
 tfnotify parses Terraform commands' execution result and applies it to an arbitrary template and then notifies it to GitHub comments etc.
