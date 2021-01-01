@@ -259,7 +259,10 @@ func main() {
 		},
 	}
 
-	err := app.Run(os.Args)
+	ctx, cancel := context.WithCancel(context.Background())
+	go handleSignal(cancel)
+
+	err := app.RunContext(ctx, os.Args)
 	os.Exit(HandleExit(err))
 }
 
@@ -288,7 +291,7 @@ func cmdFmt(ctx *cli.Context) error {
 		parser:   terraform.NewFmtParser(),
 		template: terraform.NewFmtTemplate(cfg.Terraform.Fmt.Template),
 	}
-	return t.Run(context.Background())
+	return t.Run(ctx.Context)
 }
 
 func cmdPlan(ctx *cli.Context) error {
@@ -308,7 +311,7 @@ func cmdPlan(ctx *cli.Context) error {
 		destroyWarningTemplate: terraform.NewDestroyWarningTemplate(cfg.Terraform.Plan.WhenDestroy.Template),
 		warnDestroy:            warnDestroy,
 	}
-	return t.Run(context.Background())
+	return t.Run(ctx.Context)
 }
 
 func cmdApply(ctx *cli.Context) error {
@@ -322,5 +325,5 @@ func cmdApply(ctx *cli.Context) error {
 		parser:   terraform.NewApplyParser(),
 		template: terraform.NewApplyTemplate(cfg.Terraform.Apply.Template),
 	}
-	return t.Run(context.Background())
+	return t.Run(ctx.Context)
 }

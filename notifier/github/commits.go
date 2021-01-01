@@ -14,12 +14,12 @@ import (
 type CommitsService service
 
 // List lists commits on a repository
-func (g *CommitsService) List(revision string) ([]string, error) {
+func (g *CommitsService) List(ctx context.Context, revision string) ([]string, error) {
 	if revision == "" {
 		return []string{}, errors.New("no revision specified")
 	}
 	commits, _, err := g.client.API.RepositoriesListCommits(
-		context.Background(),
+		ctx,
 		&github.CommitsListOptions{SHA: revision},
 	)
 	if err != nil {
@@ -48,8 +48,8 @@ func (g *CommitsService) lastOne(commits []string, revision string) (string, err
 	return commits[1], nil
 }
 
-func (g *CommitsService) MergedPRNumber(revision string) (int, error) {
-	commit, _, err := g.client.API.RepositoriesGetCommit(context.Background(), revision)
+func (g *CommitsService) MergedPRNumber(ctx context.Context, revision string) (int, error) {
+	commit, _, err := g.client.API.RepositoriesGetCommit(ctx, revision)
 	if err != nil {
 		return 0, err
 	}
