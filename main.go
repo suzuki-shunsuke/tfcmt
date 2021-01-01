@@ -13,7 +13,6 @@ import (
 	"github.com/mercari/tfnotify/notifier/slack"
 	"github.com/mercari/tfnotify/notifier/typetalk"
 	"github.com/mercari/tfnotify/terraform"
-
 	"github.com/urfave/cli"
 )
 

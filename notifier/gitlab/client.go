@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/mercari/tfnotify/terraform"
-
 	gitlab "github.com/xanzy/go-gitlab"
 )
 

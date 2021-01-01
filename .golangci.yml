@@ -25,7 +25,6 @@ linters:
     - gocritic
     - funlen
     - errcheck
-    - gci
     - gosec
     - gocognit
     - gocyclo
