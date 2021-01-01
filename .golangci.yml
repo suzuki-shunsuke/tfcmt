@@ -14,7 +14,6 @@ linters:
     - testpackage
     - stylecheck
     - staticcheck
-    - gosimple
     - errorlint
     - unparam
     - unconvert

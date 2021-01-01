@@ -165,8 +165,7 @@ func TestCommentGetDuplicates(t *testing.T) {
 	t.Parallel()
 	api := newFakeAPI()
 	api.FakeIssuesListComments = func(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error) {
-		var comments []*github.IssueComment
-		comments = []*github.IssueComment{
+		comments := []*github.IssueComment{
 			{
 				ID:   github.Int64(371748792),
 				Body: github.String("## Plan result\nfoo message\n"),
