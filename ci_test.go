@@ -729,7 +729,6 @@ func TestGitHubActions(t *testing.T) { //nolint:paralleltest
 	testCases := []struct {
 		fn func()
 		ci CI
-		ok bool
 	}{
 		{
 			fn: func() {
@@ -744,18 +743,14 @@ func TestGitHubActions(t *testing.T) { //nolint:paralleltest
 				},
 				URL: "https://github.com/mercari/tfnotify/actions/runs/12345",
 			},
-			ok: true,
 		},
 	}
 
 	for _, testCase := range testCases {
 		testCase.fn()
-		ci, err := githubActions()
+		ci := githubActions()
 		if !reflect.DeepEqual(ci, testCase.ci) {
 			t.Errorf("got %q but want %q", ci, testCase.ci)
-		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
 		}
 	}
 }

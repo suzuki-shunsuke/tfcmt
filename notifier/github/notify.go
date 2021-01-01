@@ -43,16 +43,17 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 				labelColor string
 			)
 
-			if result.HasAddOrUpdateOnly {
+			switch {
+			case result.HasAddOrUpdateOnly:
 				labelToAdd = cfg.ResultLabels.AddOrUpdateLabel
 				labelColor = cfg.ResultLabels.AddOrUpdateLabelColor
-			} else if result.HasDestroy {
+			case result.HasDestroy:
 				labelToAdd = cfg.ResultLabels.DestroyLabel
 				labelColor = cfg.ResultLabels.DestroyLabelColor
-			} else if result.HasNoChanges {
+			case result.HasNoChanges:
 				labelToAdd = cfg.ResultLabels.NoChangesLabel
 				labelColor = cfg.ResultLabels.NoChangesLabelColor
-			} else if result.HasPlanError {
+			case result.HasPlanError:
 				labelToAdd = cfg.ResultLabels.PlanErrorLabel
 				labelColor = cfg.ResultLabels.PlanErrorLabelColor
 			}

@@ -57,7 +57,7 @@ func HandleExit(err error) int {
 		return ExitCodeOK
 	}
 
-	if exitErr, ok := err.(ExitCoder); ok {
+	if exitErr, ok := err.(ExitCoder); ok { //nolint:errorlint
 		if err.Error() != "" {
 			if _, ok := exitErr.(ErrorFormatter); ok {
 				fmt.Fprintf(os.Stderr, "%+v\n", err)
@@ -68,7 +68,7 @@ func HandleExit(err error) int {
 		return exitErr.ExitCode()
 	}
 
-	if _, ok := err.(error); ok {
+	if _, ok := err.(error); ok { //nolint:errorlint
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return ExitCodeError
 	}

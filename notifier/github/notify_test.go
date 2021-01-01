@@ -211,7 +211,7 @@ func TestNotifyNotify(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		client, err := NewClient(testCase.config)
+		client, err := NewClient(context.Background(), testCase.config)
 		if err != nil {
 			t.Fatal(err)
 		}

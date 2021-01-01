@@ -41,7 +41,7 @@ func TestHandleError(t *testing.T) {
 		// TODO: test stderr
 		exitCode := HandleExit(testCase.err)
 		if exitCode != testCase.exitCode {
-			t.Errorf("got %q but want %q", exitCode, testCase.exitCode)
+			t.Errorf("got %d but want %d", exitCode, testCase.exitCode)
 		}
 	}
 }

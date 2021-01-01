@@ -137,14 +137,14 @@ func gitlabci() (ci CI, err error) {
 	return ci, err
 }
 
-func githubActions() (ci CI, err error) {
+func githubActions() (ci CI) {
 	ci.URL = fmt.Sprintf(
 		"https://github.com/%s/actions/runs/%s",
 		os.Getenv("GITHUB_REPOSITORY"),
 		os.Getenv("GITHUB_RUN_ID"),
 	)
 	ci.PR.Revision = os.Getenv("GITHUB_SHA")
-	return ci, err
+	return ci
 }
 
 func cloudbuild() (ci CI, err error) {

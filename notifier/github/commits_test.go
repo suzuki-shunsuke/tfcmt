@@ -1,6 +1,7 @@
 package github
 
 import (
+	"context"
 	"testing"
 )
 
@@ -22,7 +23,7 @@ func TestCommitsList(t *testing.T) {
 
 	for _, testCase := range testCases {
 		cfg := newFakeConfig()
-		client, err := NewClient(cfg)
+		client, err := NewClient(context.Background(), cfg)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -76,7 +77,7 @@ func TestCommitsLastOne(t *testing.T) {
 
 	for _, testCase := range testCases {
 		cfg := newFakeConfig()
-		client, err := NewClient(cfg)
+		client, err := NewClient(context.Background(), cfg)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -123,7 +124,7 @@ func TestMergedPRNumber(t *testing.T) {
 
 	for _, testCase := range testCases {
 		cfg := newFakeConfig()
-		client, err := NewClient(cfg)
+		client, err := NewClient(context.Background(), cfg)
 		if err != nil {
 			t.Fatal(err)
 		}

@@ -1,6 +1,7 @@
 package github
 
 import (
+	"context"
 	"errors"
 	"os"
 	"strings"
@@ -11,7 +12,7 @@ import (
 )
 
 // EnvToken is GitHub API Token
-const EnvToken = "GITHUB_TOKEN"
+const EnvToken = "GITHUB_TOKEN" //nolint:gosec
 
 // EnvBaseURL is GitHub base URL. This can be set to a domain endpoint to use with GitHub Enterprise.
 const EnvBaseURL = "GITHUB_BASE_URL"
@@ -67,7 +68,7 @@ type service struct {
 }
 
 // NewClient returns Client initialized with Config
-func NewClient(cfg Config) (*Client, error) {
+func NewClient(ctx context.Context, cfg Config) (*Client, error) {
 	token := cfg.Token
 	token = strings.TrimPrefix(token, "$")
 	if token == EnvToken {
@@ -79,7 +80,7 @@ func NewClient(cfg Config) (*Client, error) {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	)
-	tc := oauth2.NewClient(oauth2.NoContext, ts)
+	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
 
 	baseURL := cfg.BaseURL

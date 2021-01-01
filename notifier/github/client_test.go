@@ -1,6 +1,7 @@
 package github
 
 import (
+	"context"
 	"os"
 	"testing"
 )
@@ -62,7 +63,7 @@ func TestNewClient(t *testing.T) { //nolint:paralleltest
 	}
 	for _, testCase := range testCases {
 		os.Setenv(EnvToken, testCase.envToken)
-		_, err := NewClient(testCase.config)
+		_, err := NewClient(context.Background(), testCase.config)
 		if err == nil {
 			continue
 		}
@@ -144,7 +145,7 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 	}
 	for _, testCase := range testCases {
 		os.Setenv(EnvBaseURL, testCase.envBaseURL)
-		c, err := NewClient(testCase.config)
+		c, err := NewClient(context.Background(), testCase.config)
 		if err != nil {
 			continue
 		}
