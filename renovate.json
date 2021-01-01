@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "github>suzuki-shunsuke/renovate-config:golang"
+  ]
+}
