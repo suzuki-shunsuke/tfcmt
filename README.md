@@ -1,18 +1,12 @@
-tfnotify
-========
+# tfnotify
 
-[![][release-svg]][release] [![][test-svg]][test] [![][codecov-svg]][codecov] [![][goreportcard-svg]][goreportcard]
-
-[release]: https://github.com/mercari/tfnotify/actions?query=workflow%3Arelease
-[release-svg]: https://github.com/mercari/tfnotify/workflows/release/badge.svg
-[test]: https://github.com/mercari/tfnotify/actions?query=workflow%3Atest
-[test-svg]: https://github.com/mercari/tfnotify/workflows/test/badge.svg
-[codecov]: https://codecov.io/gh/mercari/tfnotify
-[codecov-svg]: https://codecov.io/gh/mercari/tfnotify/branch/master/graph/badge.svg
-[goreportcard]: https://goreportcard.com/report/github.com/mercari/tfnotify
-[goreportcard-svg]: https://goreportcard.com/badge/github.com/mercari/tfnotify
+Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify)
 
 tfnotify parses Terraform commands' execution result and applies it to an arbitrary template and then notifies it to GitHub comments etc.
+
+## Why do we fork mercari/tfnotify?
+
+We have sent [some pull requests](https://github.com/mercari/tfnotify/pulls/suzuki-shunsuke) to mercari/tfnotify but they aren't merged yet.
 
 ## Motivation
 
@@ -30,13 +24,6 @@ You can do this by using this command.
 ## Installation
 
 Grab the binary from GitHub Releases (Recommended)
-
-or
-
-```console
-$ go get -u github.com/mercari/tfnotify
-```
-
 
 ### What tfnotify does
 
@@ -90,7 +77,7 @@ notifier:
   github:
     token: $GITHUB_TOKEN
     repository:
-      owner: "mercari"
+      owner: "suzuki-shunsuke"
       name: "tfnotify"
 terraform:
   fmt:
@@ -227,7 +214,7 @@ notifier:
     token: $GITHUB_TOKEN
     base_url: $GITHUB_BASE_URL # Example: https://github.example.com/api/v3
     repository:
-      owner: "mercari"
+      owner: "suzuki-shunsuke"
       name: "tfnotify"
 terraform:
   fmt:
@@ -278,7 +265,7 @@ notifier:
     token: $GITLAB_TOKEN
     base_url: $GITLAB_BASE_URL
     repository:
-      owner: "mercari"
+      owner: "suzuki-shunsuke"
       name: "tfnotify"
 terraform:
   fmt:
@@ -383,9 +370,11 @@ Currently, supported CI are here:
 - Google Cloud Build
 
 ### Private Repository Considerations
+
 GitHub private repositories require the `repo` and `write:discussion` permissions.
 
 ### Jenkins Considerations
+
 - Plugin
   - [Git Plugin](https://wiki.jenkins.io/display/JENKINS/Git+Plugin)
 - Environment Variable
@@ -402,18 +391,16 @@ GitHub private repositories require the `repo` and `write:discussion` permission
   - `terraform plan`: Pull request
   - `terraform apply`: Push to branch
 
-## Committers
-
- * Masaki ISHIYAMA ([@b4b4r07](https://github.com/b4b4r07))
-
-## Contribution
-
-Please read the CLA below carefully before submitting your contribution.
-
-https://www.mercari.com/cla/
-
 ## License
+
+### License of original code
+
+This is a fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), so about the origincal license, please see https://github.com/mercari/tfnotify#license .
 
 Copyright 2018 Mercari, Inc.
 
 Licensed under the MIT License.
+
+### License of code which we wrote
+
+MIT
