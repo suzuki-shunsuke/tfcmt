@@ -100,7 +100,7 @@ func (t *tfnotify) Run(ctx context.Context) error {
 	var notifier notifier.Notifier
 	switch selectedNotifier {
 	case "github":
-		client, err := github.NewClient(github.Config{
+		client, err := github.NewClient(ctx, github.Config{
 			Token:   t.config.Notifier.Github.Token,
 			BaseURL: t.config.Notifier.Github.BaseURL,
 			Owner:   t.config.Notifier.Github.Repository.Owner,

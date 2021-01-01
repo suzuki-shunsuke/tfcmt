@@ -55,7 +55,7 @@ func TestCommentPost(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		client, err := NewClient(testCase.config)
+		client, err := NewClient(context.Background(), testCase.config)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -107,7 +107,7 @@ func TestCommentList(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		client, err := NewClient(testCase.config)
+		client, err := NewClient(context.Background(), testCase.config)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -148,7 +148,7 @@ func TestCommentDelete(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		client, err := NewClient(testCase.config)
+		client, err := NewClient(context.Background(), testCase.config)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -225,7 +225,7 @@ func TestCommentGetDuplicates(t *testing.T) {
 	for _, testCase := range testCases {
 		cfg := newFakeConfig()
 		cfg.PR.Message = testCase.message
-		client, err := NewClient(cfg)
+		client, err := NewClient(context.Background(), cfg)
 		if err != nil {
 			t.Fatal(err)
 		}
