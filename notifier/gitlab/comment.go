@@ -1,7 +1,7 @@
 package gitlab
 
 import (
-	"fmt"
+	"errors"
 	"regexp"
 
 	gitlab "github.com/xanzy/go-gitlab"
@@ -33,7 +33,7 @@ func (g *CommentService) Post(body string, opt PostOptions) error {
 		)
 		return err
 	}
-	return fmt.Errorf("gitlab.comment.post: Number or Revision is required")
+	return errors.New("gitlab.comment.post: Number or Revision is required")
 }
 
 // List lists comments on GitLab merge requests

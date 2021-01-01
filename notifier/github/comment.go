@@ -2,7 +2,7 @@ package github
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"regexp"
 
 	"github.com/google/go-github/github"
@@ -36,7 +36,7 @@ func (g *CommentService) Post(ctx context.Context, body string, opt PostOptions)
 		)
 		return err
 	}
-	return fmt.Errorf("github.comment.post: Number or Revision is required")
+	return errors.New("github.comment.post: Number or Revision is required")
 }
 
 // List lists comments on GitHub issues/pull requests
