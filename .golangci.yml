@@ -15,6 +15,5 @@ linters:
     - godox
     - nestif
     - funlen
-    - gosec
     - gocognit
     - gocyclo

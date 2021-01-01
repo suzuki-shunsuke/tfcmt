@@ -12,7 +12,7 @@ import (
 )
 
 // EnvToken is GitHub API Token
-const EnvToken = "GITHUB_TOKEN"
+const EnvToken = "GITHUB_TOKEN" //nolint:gosec
 
 // EnvBaseURL is GitHub base URL. This can be set to a domain endpoint to use with GitHub Enterprise.
 const EnvBaseURL = "GITHUB_BASE_URL"
