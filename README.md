@@ -8,6 +8,8 @@ tfnotify parses Terraform commands' execution result and applies it to an arbitr
 
 We have sent [some pull requests](https://github.com/mercari/tfnotify/pulls/suzuki-shunsuke) to mercari/tfnotify but they aren't merged yet.
 
+We forked mercari/tfnotify v0.7.0 [fb178d8](https://github.com/mercari/tfnotify/tree/fb178d8a5a51f88a51b7fda93ed5443ff56dfc8f).
+
 ## Motivation
 
 There are commands such as `plan` and `apply` on Terraform command, but many developers think they would like to check if the execution of those commands succeeded.
@@ -163,10 +165,13 @@ terraform:
       </pre></code></details>
     when_add_or_update_only:
       label: "add-or-update"
+      label_color: "1d76db"  # blue
     when_destroy:
       label: "destroy"
+      label_color: "d93f0b"  # red
     when_no_changes:
       label: "no-changes"
+      label_color: "0e8a16"  # green
     when_plan_error:
       label: "error"
   # ...
