@@ -24,7 +24,6 @@ linters:
     - nestif
     - gocritic
     - funlen
-    - errcheck
     - gosec
     - gocognit
     - gocyclo

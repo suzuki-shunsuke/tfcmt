@@ -73,7 +73,9 @@ func NewClient(cfg Config) (*Client, error) {
 		baseURL = os.Getenv(EnvBaseURL)
 	}
 	if baseURL != "" {
-		client.SetBaseURL(baseURL)
+		if err := client.SetBaseURL(baseURL); err != nil {
+			return nil, err
+		}
 	}
 
 	c := &Client{

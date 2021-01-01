@@ -63,7 +63,7 @@ func (g *CommentService) DeleteDuplicates(title string) {
 	}
 	for _, id := range ids {
 		// don't handle error
-		g.client.Comment.Delete(id)
+		_ = g.client.Comment.Delete(id)
 	}
 }
 
