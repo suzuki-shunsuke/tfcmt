@@ -178,7 +178,7 @@ func (cfg *Config) Validation() error {
 	}
 	if cfg.isDefinedTypetalk() {
 		if cfg.Notifier.Typetalk.TopicID == "" {
-			return errors.New("Typetalk topic id is missing")
+			return errors.New("Typetalk topic id is missing") //nolint:stylecheck
 		}
 	}
 	notifier := cfg.GetNotifierType()

@@ -12,7 +12,6 @@ linters:
     - dupl
     - wrapcheck
     - testpackage
-    - stylecheck
     - staticcheck
     - errorlint
     - unparam
