@@ -167,10 +167,8 @@ func TestLoadFile(t *testing.T) {
 		if err == nil {
 			if !testCase.ok {
 				t.Error("got no error but want error")
-			} else {
-				if !reflect.DeepEqual(cfg, testCase.cfg) {
-					t.Errorf("got %#v but want: %#v", cfg, testCase.cfg)
-				}
+			} else if !reflect.DeepEqual(cfg, testCase.cfg) {
+				t.Errorf("got %#v but want: %#v", cfg, testCase.cfg)
 			}
 		} else {
 			if testCase.ok {

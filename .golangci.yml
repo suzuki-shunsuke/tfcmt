@@ -14,7 +14,6 @@ linters:
     - testpackage
     - godox
     - nestif
-    - gocritic
     - funlen
     - gosec
     - gocognit
