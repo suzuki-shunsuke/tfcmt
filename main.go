@@ -77,10 +77,7 @@ func (t *tfnotify) Run(ctx context.Context) error {
 			return err
 		}
 	case "github-actions":
-		ci, err = githubActions()
-		if err != nil {
-			return err
-		}
+		ci = githubActions()
 	case "cloud-build", "cloudbuild":
 		ci, err = cloudbuild()
 		if err != nil {
