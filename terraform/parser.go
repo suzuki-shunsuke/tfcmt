@@ -1,7 +1,7 @@
 package terraform
 
 import (
-	"fmt"
+	"errors"
 	"regexp"
 	"strings"
 )
@@ -108,7 +108,7 @@ func (p *PlanParser) Parse(body string) ParseResult {
 		return ParseResult{
 			Result:   "",
 			ExitCode: ExitFail,
-			Error:    fmt.Errorf("cannot parse plan result"),
+			Error:    errors.New("cannot parse plan result"),
 		}
 	}
 	lines := strings.Split(body, "\n")
@@ -155,7 +155,7 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 		return ParseResult{
 			Result:   "",
 			ExitCode: ExitFail,
-			Error:    fmt.Errorf("cannot parse apply result"),
+			Error:    errors.New("cannot parse apply result"),
 		}
 	}
 	lines := strings.Split(body, "\n")

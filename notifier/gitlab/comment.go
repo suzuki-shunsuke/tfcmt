@@ -1,7 +1,7 @@
 package gitlab
 
 import (
-	"fmt"
+	"errors"
 	"regexp"
 
 	gitlab "github.com/xanzy/go-gitlab"
@@ -33,7 +33,7 @@ func (g *CommentService) Post(body string, opt PostOptions) error {
 		)
 		return err
 	}
-	return fmt.Errorf("gitlab.comment.post: Number or Revision is required")
+	return errors.New("gitlab.comment.post: Number or Revision is required")
 }
 
 // List lists comments on GitLab merge requests
@@ -56,14 +56,8 @@ func (g *CommentService) Delete(note int) error {
 
 // DeleteDuplicates deletes duplicate comments containing arbitrary character strings
 func (g *CommentService) DeleteDuplicates(title string) {
-	var ids []int
-	comments := g.getDuplicates(title)
-	for _, comment := range comments {
-		ids = append(ids, comment.ID)
-	}
-	for _, id := range ids {
-		// don't handle error
-		g.client.Comment.Delete(id)
+	for _, comment := range g.getDuplicates(title) {
+		_ = g.client.Comment.Delete(comment.ID)
 	}
 }
 

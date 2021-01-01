@@ -68,8 +68,7 @@ func newFakeAPI() fakeAPI {
 			return nil, nil
 		},
 		FakeIssuesListComments: func(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error) {
-			var comments []*github.IssueComment
-			comments = []*github.IssueComment{
+			comments := []*github.IssueComment{
 				{
 					ID:   github.Int64(371748792),
 					Body: github.String("comment 1"),
@@ -108,8 +107,7 @@ func newFakeAPI() fakeAPI {
 			}, nil, nil
 		},
 		FakeRepositoriesListCommits: func(ctx context.Context, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error) {
-			var commits []*github.RepositoryCommit
-			commits = []*github.RepositoryCommit{
+			commits := []*github.RepositoryCommit{
 				{
 					SHA: github.String("04e0917e448b662c2b16330fad50e97af16ff27a"),
 				},

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewClient(t *testing.T) {
+func TestNewClient(t *testing.T) { //nolint:paralleltest
 	githubToken := os.Getenv(EnvToken)
 	defer func() {
 		os.Setenv(EnvToken, githubToken)
@@ -72,7 +72,7 @@ func TestNewClient(t *testing.T) {
 	}
 }
 
-func TestNewClientWithBaseURL(t *testing.T) {
+func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 	githubBaseURL := os.Getenv(EnvBaseURL)
 	defer func() {
 		os.Setenv(EnvBaseURL, githubBaseURL)
@@ -156,6 +156,7 @@ func TestNewClientWithBaseURL(t *testing.T) {
 }
 
 func TestIsNumber(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		pr   PullRequest
 		isPR bool
@@ -181,6 +182,7 @@ func TestIsNumber(t *testing.T) {
 }
 
 func TestHasAnyLabelDefined(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		rl   ResultLabels
 		want bool
@@ -225,6 +227,7 @@ func TestHasAnyLabelDefined(t *testing.T) {
 }
 
 func TestIsResultLabels(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		rl    ResultLabels
 		label string

@@ -332,6 +332,7 @@ Error: Batch "project/tfnotify-jp-tfnotify-prod/services:batchEnable" for reques
 `
 
 func TestDefaultParserParse(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		body   string
 		result ParseResult
@@ -354,6 +355,7 @@ func TestDefaultParserParse(t *testing.T) {
 }
 
 func TestFmtParserParse(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		name   string
 		body   string
@@ -396,6 +398,7 @@ func TestFmtParserParse(t *testing.T) {
 }
 
 func TestPlanParserParse(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		name   string
 		body   string
@@ -507,6 +510,7 @@ func TestPlanParserParse(t *testing.T) {
 }
 
 func TestApplyParserParse(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		name   string
 		body   string
@@ -554,6 +558,7 @@ func TestApplyParserParse(t *testing.T) {
 }
 
 func TestTrimLastNewline(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		data     []string
 		expected []string

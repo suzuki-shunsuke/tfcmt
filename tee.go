@@ -20,7 +20,7 @@ func tee(stdin io.Reader, stdout io.Writer) string {
 	}
 
 	uncolorize := colorable.NewNonColorable(&b2)
-	uncolorize.Write(b1.Bytes())
+	_, _ = uncolorize.Write(b1.Bytes())
 
 	return b2.String()
 }

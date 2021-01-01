@@ -9,6 +9,7 @@ import (
 )
 
 func TestNotify(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		config   Config
 		body     string

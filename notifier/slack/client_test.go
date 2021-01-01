@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewClient(t *testing.T) {
+func TestNewClient(t *testing.T) { //nolint:paralleltest
 	slackToken := os.Getenv(EnvToken)
 	defer func() {
 		os.Setenv(EnvToken, slackToken)

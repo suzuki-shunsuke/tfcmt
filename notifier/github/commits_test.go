@@ -5,6 +5,7 @@ import (
 )
 
 func TestCommitsList(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		revision string
 		ok       bool
@@ -35,6 +36,7 @@ func TestCommitsList(t *testing.T) {
 }
 
 func TestCommitsLastOne(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		commits  []string
 		revision string
@@ -91,6 +93,7 @@ func TestCommitsLastOne(t *testing.T) {
 }
 
 func TestMergedPRNumber(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		prNumber int
 		ok       bool

@@ -157,33 +157,33 @@ func (cfg *Config) Validation() error {
 	}
 	if cfg.isDefinedGithub() {
 		if cfg.Notifier.Github.Repository.Owner == "" {
-			return fmt.Errorf("repository owner is missing")
+			return errors.New("repository owner is missing")
 		}
 		if cfg.Notifier.Github.Repository.Name == "" {
-			return fmt.Errorf("repository name is missing")
+			return errors.New("repository name is missing")
 		}
 	}
 	if cfg.isDefinedGitlab() {
 		if cfg.Notifier.Gitlab.Repository.Owner == "" {
-			return fmt.Errorf("repository owner is missing")
+			return errors.New("repository owner is missing")
 		}
 		if cfg.Notifier.Gitlab.Repository.Name == "" {
-			return fmt.Errorf("repository name is missing")
+			return errors.New("repository name is missing")
 		}
 	}
 	if cfg.isDefinedSlack() {
 		if cfg.Notifier.Slack.Channel == "" {
-			return fmt.Errorf("slack channel id is missing")
+			return errors.New("slack channel id is missing")
 		}
 	}
 	if cfg.isDefinedTypetalk() {
 		if cfg.Notifier.Typetalk.TopicID == "" {
-			return fmt.Errorf("Typetalk topic id is missing")
+			return errors.New("Typetalk topic id is missing") //nolint:stylecheck
 		}
 	}
 	notifier := cfg.GetNotifierType()
 	if notifier == "" {
-		return fmt.Errorf("notifier is missing")
+		return errors.New("notifier is missing")
 	}
 	return nil
 }

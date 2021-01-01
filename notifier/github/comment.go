@@ -2,7 +2,7 @@ package github
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"regexp"
 
 	"github.com/google/go-github/github"
@@ -36,7 +36,7 @@ func (g *CommentService) Post(ctx context.Context, body string, opt PostOptions)
 		)
 		return err
 	}
-	return fmt.Errorf("github.comment.post: Number or Revision is required")
+	return errors.New("github.comment.post: Number or Revision is required")
 }
 
 // List lists comments on GitHub issues/pull requests
@@ -60,14 +60,8 @@ func (g *CommentService) Delete(ctx context.Context, id int) error {
 
 // DeleteDuplicates deletes duplicate comments containing arbitrary character strings
 func (g *CommentService) DeleteDuplicates(ctx context.Context, title string) {
-	var ids []int64
-	comments := g.getDuplicates(ctx, title)
-	for _, comment := range comments {
-		ids = append(ids, *comment.ID)
-	}
-	for _, id := range ids {
-		// don't handle error
-		g.client.Comment.Delete(ctx, int(id))
+	for _, comment := range g.getDuplicates(ctx, title) {
+		_ = g.client.Comment.Delete(ctx, int(*comment.ID))
 	}
 }
 

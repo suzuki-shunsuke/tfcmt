@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -13,7 +14,6 @@ import (
 	"github.com/mercari/tfnotify/notifier/slack"
 	"github.com/mercari/tfnotify/notifier/typetalk"
 	"github.com/mercari/tfnotify/terraform"
-
 	"github.com/urfave/cli"
 )
 
@@ -87,7 +87,7 @@ func (t *tfnotify) Run(ctx context.Context) error {
 			return err
 		}
 	case "":
-		return fmt.Errorf("CI service: required (e.g. circleci)")
+		return errors.New("CI service: required (e.g. circleci)")
 	default:
 		return fmt.Errorf("CI service %v: not supported yet", ci)
 	}
@@ -184,13 +184,13 @@ func (t *tfnotify) Run(ctx context.Context) error {
 		}
 		notifier = client.Notify
 	case "":
-		return fmt.Errorf("notifier is missing")
+		return errors.New("notifier is missing")
 	default:
 		return fmt.Errorf("%s: not supported notifier yet", t.context.GlobalString("notifier"))
 	}
 
 	if notifier == nil {
-		return fmt.Errorf("no notifier specified at all")
+		return errors.New("no notifier specified at all")
 	}
 
 	return NewExitError(notifier.Notify(ctx, tee(os.Stdin, os.Stdout)))

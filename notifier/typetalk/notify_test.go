@@ -9,7 +9,7 @@ import (
 	typetalk "github.com/nulab/go-typetalk/typetalk/v1"
 )
 
-func TestNotify(t *testing.T) {
+func TestNotify(t *testing.T) { //nolint:paralleltest
 	testCases := []struct {
 		config   Config
 		body     string
