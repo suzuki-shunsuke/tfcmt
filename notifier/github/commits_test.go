@@ -29,7 +29,7 @@ func TestCommitsList(t *testing.T) {
 		}
 		api := newFakeAPI()
 		client.API = &api
-		_, err = client.Commits.List(testCase.revision)
+		_, err = client.Commits.List(context.Background(), testCase.revision)
 		if (err == nil) != testCase.ok {
 			t.Errorf("got error %q", err)
 		}
@@ -130,7 +130,7 @@ func TestMergedPRNumber(t *testing.T) {
 		}
 		api := newFakeAPI()
 		client.API = &api
-		prNumber, err := client.Commits.MergedPRNumber(testCase.revision)
+		prNumber, err := client.Commits.MergedPRNumber(context.Background(), testCase.revision)
 		if (err == nil) != testCase.ok {
 			t.Errorf("got error %q", err)
 		}

@@ -34,7 +34,7 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 			}
 		}
 		if cfg.PR.IsNumber() && cfg.ResultLabels.HasAnyLabelDefined() {
-			err = g.removeResultLabels()
+			err = g.removeResultLabels(ctx)
 			if err != nil {
 				return result.ExitCode, err
 			}
@@ -60,7 +60,7 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 
 			if labelToAdd != "" {
 				labels, _, err := g.client.API.IssuesAddLabels(
-					context.Background(),
+					ctx,
 					cfg.PR.Number,
 					[]string{labelToAdd},
 				)
@@ -72,7 +72,7 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 					for _, label := range labels {
 						if labelToAdd == label.GetName() {
 							if label.GetColor() != labelColor {
-								_, _, err := g.client.API.IssuesUpdateLabel(context.Background(), labelToAdd, labelColor)
+								_, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor)
 								if err != nil {
 									return result.ExitCode, err
 								}
@@ -105,11 +105,11 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 
 	_, isApply := parser.(*terraform.ApplyParser)
 	if isApply {
-		prNumber, err := g.client.Commits.MergedPRNumber(cfg.PR.Revision)
+		prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision)
 		if err == nil {
 			cfg.PR.Number = prNumber
 		} else if !cfg.PR.IsNumber() {
-			commits, err := g.client.Commits.List(cfg.PR.Revision)
+			commits, err := g.client.Commits.List(ctx, cfg.PR.Revision)
 			if err != nil {
 				return result.ExitCode, err
 			}
@@ -146,9 +146,9 @@ func (g *NotifyService) notifyDestoryWarning(ctx context.Context, body string, r
 	})
 }
 
-func (g *NotifyService) removeResultLabels() error {
+func (g *NotifyService) removeResultLabels(ctx context.Context) error {
 	cfg := g.client.Config
-	labels, _, err := g.client.API.IssuesListLabels(context.Background(), cfg.PR.Number, nil)
+	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, nil)
 	if err != nil {
 		return err
 	}
@@ -156,7 +156,7 @@ func (g *NotifyService) removeResultLabels() error {
 	for _, l := range labels {
 		labelText := l.GetName()
 		if cfg.ResultLabels.IsResultLabel(labelText) {
-			resp, err := g.client.API.IssuesRemoveLabel(context.Background(), cfg.PR.Number, labelText)
+			resp, err := g.client.API.IssuesRemoveLabel(ctx, cfg.PR.Number, labelText)
 			// Ignore 404 errors, which are from the PR not having the label
 			if err != nil && resp.StatusCode != http.StatusNotFound {
 				return err
