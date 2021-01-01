@@ -19,7 +19,6 @@ linters:
     - errorlint
     - unparam
     - unconvert
-    - prealloc
     - godox
     - nestif
     - gocritic

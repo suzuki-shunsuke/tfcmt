@@ -15,15 +15,15 @@ func (g *CommitsService) List(revision string) ([]string, error) {
 	if revision == "" {
 		return []string{}, errors.New("no revision specified")
 	}
-	var s []string
 	commits, _, err := g.client.API.ListCommits(
 		&gitlab.ListCommitsOptions{},
 	)
 	if err != nil {
-		return s, err
+		return nil, err
 	}
-	for _, commit := range commits {
-		s = append(s, commit.ID)
+	s := make([]string, len(commits))
+	for i, commit := range commits {
+		s[i] = commit.ID
 	}
 	return s, nil
 }

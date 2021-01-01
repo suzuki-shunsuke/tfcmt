@@ -18,18 +18,18 @@ func (g *CommitsService) List(revision string) ([]string, error) {
 	if revision == "" {
 		return []string{}, errors.New("no revision specified")
 	}
-	var s []string
 	commits, _, err := g.client.API.RepositoriesListCommits(
 		context.Background(),
 		&github.CommitsListOptions{SHA: revision},
 	)
 	if err != nil {
-		return s, err
+		return nil, err
 	}
-	for _, commit := range commits {
-		s = append(s, *commit.SHA)
+	shas := make([]string, len(commits))
+	for i, commit := range commits {
+		shas[i] = *commit.SHA
 	}
-	return s, nil
+	return shas, nil
 }
 
 // Last returns the hash of the previous commit of the given commit

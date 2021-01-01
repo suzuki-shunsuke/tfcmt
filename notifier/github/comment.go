@@ -60,14 +60,8 @@ func (g *CommentService) Delete(ctx context.Context, id int) error {
 
 // DeleteDuplicates deletes duplicate comments containing arbitrary character strings
 func (g *CommentService) DeleteDuplicates(ctx context.Context, title string) {
-	var ids []int64
-	comments := g.getDuplicates(ctx, title)
-	for _, comment := range comments {
-		ids = append(ids, *comment.ID)
-	}
-	for _, id := range ids {
-		// don't handle error
-		_ = g.client.Comment.Delete(ctx, int(id))
+	for _, comment := range g.getDuplicates(ctx, title) {
+		_ = g.client.Comment.Delete(ctx, int(*comment.ID))
 	}
 }
 
