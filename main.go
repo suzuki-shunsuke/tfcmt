@@ -14,7 +14,7 @@ import (
 	"github.com/mercari/tfnotify/notifier/slack"
 	"github.com/mercari/tfnotify/notifier/typetalk"
 	"github.com/mercari/tfnotify/terraform"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 const (
@@ -34,8 +34,8 @@ type tfnotify struct {
 // Run sends the notification with notifier
 func (t *tfnotify) Run(ctx context.Context) error {
 	ciname := t.config.CI
-	if t.context.GlobalString("ci") != "" {
-		ciname = t.context.GlobalString("ci")
+	if t.context.String("ci") != "" {
+		ciname = t.context.String("ci")
 	}
 	ciname = strings.ToLower(ciname)
 	var ci CI
@@ -90,8 +90,8 @@ func (t *tfnotify) Run(ctx context.Context) error {
 	}
 
 	selectedNotifier := t.config.GetNotifierType()
-	if t.context.GlobalString("notifier") != "" {
-		selectedNotifier = t.context.GlobalString("notifier")
+	if t.context.String("notifier") != "" {
+		selectedNotifier = t.context.String("notifier")
 	}
 
 	var notifier notifier.Notifier
@@ -183,7 +183,7 @@ func (t *tfnotify) Run(ctx context.Context) error {
 	case "":
 		return errors.New("notifier is missing")
 	default:
-		return fmt.Errorf("%s: not supported notifier yet", t.context.GlobalString("notifier"))
+		return fmt.Errorf("%s: not supported notifier yet", t.context.String("notifier"))
 	}
 
 	if notifier == nil {
@@ -199,21 +199,21 @@ func main() {
 	app.Usage = description
 	app.Version = version
 	app.Flags = []cli.Flag{
-		cli.StringFlag{Name: "ci", Usage: "name of CI to run tfnotify"},
-		cli.StringFlag{Name: "config", Usage: "config path"},
-		cli.StringFlag{Name: "notifier", Usage: "notification destination"},
+		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfnotify"},
+		&cli.StringFlag{Name: "config", Usage: "config path"},
+		&cli.StringFlag{Name: "notifier", Usage: "notification destination"},
 	}
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:   "fmt",
 			Usage:  "Parse stdin as a fmt result",
 			Action: cmdFmt,
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "title, t",
 					Usage: "Specify the title to use for notification",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "message, m",
 					Usage: "Specify the message to use for notification",
 				},
@@ -224,19 +224,19 @@ func main() {
 			Usage:  "Parse stdin as a plan result",
 			Action: cmdPlan,
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "title, t",
 					Usage: "Specify the title to use for notification",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "message, m",
 					Usage: "Specify the message to use for notification",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "destroy-warning-title",
 					Usage: "Specify the title to use for destroy warning notification",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "destroy-warning-message",
 					Usage: "Specify the message to use for destroy warning notification",
 				},
@@ -247,11 +247,11 @@ func main() {
 			Usage:  "Parse stdin as a apply result",
 			Action: cmdApply,
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "title, t",
 					Usage: "Specify the title to use for notification",
 				},
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "message, m",
 					Usage: "Specify the message to use for notification",
 				},
@@ -264,7 +264,7 @@ func main() {
 }
 
 func newConfig(ctx *cli.Context) (cfg config.Config, err error) {
-	confPath, err := cfg.Find(ctx.GlobalString("config"))
+	confPath, err := cfg.Find(ctx.String("config"))
 	if err != nil {
 		return cfg, err
 	}
