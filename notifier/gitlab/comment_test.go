@@ -8,6 +8,7 @@ import (
 )
 
 func TestCommentPost(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		config Config
 		body   string
@@ -67,6 +68,7 @@ func TestCommentPost(t *testing.T) {
 }
 
 func TestCommentList(t *testing.T) {
+	t.Parallel()
 	comments := []*gitlab.Note{
 		{
 			ID:   371748792,
@@ -121,6 +123,7 @@ func TestCommentList(t *testing.T) {
 }
 
 func TestCommentDelete(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		config Config
 		id     int

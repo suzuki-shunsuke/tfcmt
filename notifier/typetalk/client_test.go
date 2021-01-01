@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewClient(t *testing.T) {
+func TestNewClient(t *testing.T) { //nolint:paralleltest
 	typetalkToken := os.Getenv(EnvToken)
 	defer func() {
 		os.Setenv(EnvToken, typetalkToken)

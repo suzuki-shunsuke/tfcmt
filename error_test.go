@@ -6,6 +6,7 @@ import (
 )
 
 func TestHandleError(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		err      error
 		exitCode int

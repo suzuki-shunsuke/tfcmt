@@ -9,6 +9,7 @@ import (
 )
 
 func TestCommentPost(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		config Config
 		body   string
@@ -68,6 +69,7 @@ func TestCommentPost(t *testing.T) {
 }
 
 func TestCommentList(t *testing.T) {
+	t.Parallel()
 	comments := []*github.IssueComment{
 		{
 			ID:   github.Int64(371748792),
@@ -122,6 +124,7 @@ func TestCommentList(t *testing.T) {
 }
 
 func TestCommentDelete(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		config Config
 		id     int
@@ -159,6 +162,7 @@ func TestCommentDelete(t *testing.T) {
 }
 
 func TestCommentGetDuplicates(t *testing.T) {
+	t.Parallel()
 	api := newFakeAPI()
 	api.FakeIssuesListComments = func(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error) {
 		var comments []*github.IssueComment

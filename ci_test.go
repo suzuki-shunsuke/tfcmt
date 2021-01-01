@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestCircleci(t *testing.T) {
+func TestCircleci(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"CIRCLE_SHA1",
 		"CIRCLE_BUILD_URL",
@@ -146,7 +146,7 @@ func TestCircleci(t *testing.T) {
 	}
 }
 
-func TestTravisCI(t *testing.T) {
+func TestTravisCI(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"TRAVIS_PULL_REQUEST_SHA",
 		"TRAVIS_PULL_REQUEST",
@@ -213,7 +213,7 @@ func TestTravisCI(t *testing.T) {
 	}
 }
 
-func TestTeamCityCI(t *testing.T) {
+func TestTeamCityCI(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"BUILD_VCS_NUMBER",
 		"BUILD_NUMBER",
@@ -277,7 +277,7 @@ func TestTeamCityCI(t *testing.T) {
 	}
 }
 
-func TestCodeBuild(t *testing.T) {
+func TestCodeBuild(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"CODEBUILD_RESOLVED_SOURCE_VERSION",
 		"CODEBUILD_SOURCE_VERSION",
@@ -389,7 +389,7 @@ func TestCodeBuild(t *testing.T) {
 	}
 }
 
-func TestDrone(t *testing.T) {
+func TestDrone(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"DRONE_COMMIT_SHA",
 		"DRONE_PULL_REQUEST",
@@ -470,7 +470,7 @@ func TestDrone(t *testing.T) {
 	}
 }
 
-func TestJenkins(t *testing.T) {
+func TestJenkins(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"GIT_COMMIT",
 		"BUILD_URL",
@@ -555,7 +555,7 @@ func TestJenkins(t *testing.T) {
 	}
 }
 
-func TestJenkinsGitLab(t *testing.T) {
+func TestJenkinsGitLab(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"BUILD_URL",
 		"gitlabBefore",
@@ -622,7 +622,7 @@ func TestJenkinsGitLab(t *testing.T) {
 	}
 }
 
-func TestGitLabCI(t *testing.T) {
+func TestGitLabCI(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"CI_COMMIT_SHA",
 		"CI_JOB_URL",
@@ -708,7 +708,7 @@ func TestGitLabCI(t *testing.T) {
 	}
 }
 
-func TestGitHubActions(t *testing.T) {
+func TestGitHubActions(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"GITHUB_SHA",
 		"GITHUB_REPOSITORY",
@@ -760,7 +760,7 @@ func TestGitHubActions(t *testing.T) {
 	}
 }
 
-func TestCloudBuild(t *testing.T) {
+func TestCloudBuild(t *testing.T) { //nolint:paralleltest
 	envs := []string{
 		"COMMIT_SHA",
 		"BUILD_ID",

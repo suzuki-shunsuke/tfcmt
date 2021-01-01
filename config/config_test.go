@@ -15,6 +15,7 @@ func helperLoadConfig(contents []byte) (*Config, error) {
 }
 
 func TestLoadFile(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		file string
 		cfg  Config
@@ -180,6 +181,7 @@ func TestLoadFile(t *testing.T) {
 }
 
 func TestValidation(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		contents []byte
 		expected string
@@ -374,6 +376,7 @@ notifier:
 }
 
 func TestGetNotifierType(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		contents []byte
 		expected string
@@ -438,7 +441,7 @@ func removeDummy(file string) {
 	os.Remove(file)
 }
 
-func TestFind(t *testing.T) {
+func TestFind(t *testing.T) { //nolint:paralleltest
 	testCases := []struct {
 		file   string
 		expect string

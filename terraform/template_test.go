@@ -6,6 +6,7 @@ import (
 )
 
 func TestDefaultTemplateExecute(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		template string
 		value    CommonTemplate
@@ -178,6 +179,7 @@ b
 }
 
 func TestFmtTemplateExecute(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		template string
 		value    CommonTemplate
@@ -310,6 +312,7 @@ This is a "result".
 }
 
 func TestPlanTemplateExecute(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		template string
 		value    CommonTemplate
@@ -465,6 +468,7 @@ message
 }
 
 func TestDestroyWarningTemplateExecute(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		template string
 		value    CommonTemplate
@@ -569,6 +573,7 @@ This plan contains resource delete operation. Please check the plan result very 
 }
 
 func TestApplyTemplateExecute(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		template string
 		value    CommonTemplate
@@ -724,6 +729,7 @@ message
 }
 
 func TestGetValue(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		template Template
 		expected CommonTemplate
