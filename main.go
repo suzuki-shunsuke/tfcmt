@@ -165,7 +165,7 @@ func (t *tfnotify) Run(ctx context.Context) error {
 	case "":
 		return errors.New("notifier is missing")
 	default:
-		return fmt.Errorf("%s: not supported notifier yet", t.context.String("notifier"))
+		return fmt.Errorf("%s: not supported notifier yet", selectedNotifier)
 	}
 
 	if notifier == nil {
