@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/suzuki-shunsuke/go-findconfig/findconfig"
 	"gopkg.in/yaml.v2"
 )
 
@@ -227,22 +228,18 @@ func (cfg *Config) GetNotifierType() string {
 
 // Find returns config path
 func (cfg *Config) Find(file string) (string, error) {
-	var files []string
-	if file == "" {
-		files = []string{
-			"tfnotify.yaml",
-			"tfnotify.yml",
-			".tfnotify.yaml",
-			".tfnotify.yml",
-		}
-	} else {
-		files = []string{file}
-	}
-	for _, file := range files {
-		_, err := os.Stat(file)
-		if err == nil {
+	if file != "" {
+		if _, err := os.Stat(file); err == nil {
 			return file, nil
 		}
+		return "", errors.New("config for tfnotify is not found at all")
+	}
+	wd, err := os.Getwd()
+	if err != nil {
+		return "", fmt.Errorf("get a current directory path: %w", err)
+	}
+	if p := findconfig.Find(wd, findconfig.Exist, "tfnotify.yaml", "tfnotify.yml", ".tfnotify.yaml", ".tfnotify.yml"); p != "" {
+		return p, nil
 	}
 	return "", errors.New("config for tfnotify is not found at all")
 }

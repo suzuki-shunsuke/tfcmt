@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -440,6 +441,10 @@ func removeDummy(file string) {
 }
 
 func TestFind(t *testing.T) { //nolint:paralleltest
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
 	testCases := []struct {
 		file   string
 		expect string
@@ -478,7 +483,7 @@ func TestFind(t *testing.T) { //nolint:paralleltest
 		{
 			// in case of no args passed
 			file:   "",
-			expect: "tfnotify.yaml",
+			expect: filepath.Join(wd, "tfnotify.yaml"),
 			ok:     true,
 		},
 	}
