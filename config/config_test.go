@@ -483,15 +483,18 @@ func TestFind(t *testing.T) { //nolint:paralleltest
 		},
 	}
 	var cfg Config
-	for _, testCase := range testCases {
-		createDummy(testCase.file)
+	for _, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		t.Run(testCase.file, func(t *testing.T) {
+			createDummy(testCase.file)
+			actual, err := cfg.Find(testCase.file)
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+			if actual != testCase.expect {
+				t.Errorf("got %q but want %q", actual, testCase.expect)
+			}
+		})
 		defer removeDummy(testCase.file)
-		actual, err := cfg.Find(testCase.file)
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
-		if actual != testCase.expect {
-			t.Errorf("got %q but want %q", actual, testCase.expect)
-		}
 	}
 }
