@@ -59,24 +59,7 @@ func getCI(ciname string) (CI, error) {
 	}
 }
 
-// Run sends the notification with notifier
-func (t *tfnotify) Run(ctx context.Context) error {
-	ciname := t.config.CI
-	if t.context.String("ci") != "" {
-		ciname = t.context.String("ci")
-	}
-	ciname = strings.ToLower(ciname)
-	ci, err := getCI(ciname)
-	if err != nil {
-		return err
-	}
-
-	selectedNotifier := t.config.GetNotifierType()
-	if t.context.String("notifier") != "" {
-		selectedNotifier = t.context.String("notifier")
-	}
-
-	var notifier notifier.Notifier
+func (t *tfnotify) getNotifier(ctx context.Context, ci CI, selectedNotifier string) (notifier.Notifier, error) {
 	switch selectedNotifier {
 	case "github":
 		client, err := github.NewClient(ctx, github.Config{
@@ -110,9 +93,9 @@ func (t *tfnotify) Run(ctx context.Context) error {
 			},
 		})
 		if err != nil {
-			return err
+			return nil, err
 		}
-		notifier = client.Notify
+		return client.Notify, nil
 	case "gitlab":
 		client, err := gitlab.NewClient(gitlab.Config{
 			Token:     t.config.Notifier.Gitlab.Token,
@@ -130,9 +113,9 @@ func (t *tfnotify) Run(ctx context.Context) error {
 			Template: t.template,
 		})
 		if err != nil {
-			return err
+			return nil, err
 		}
-		notifier = client.Notify
+		return client.Notify, nil
 	case "slack":
 		client, err := slack.NewClient(slack.Config{
 			Token:    t.config.Notifier.Slack.Token,
@@ -145,9 +128,9 @@ func (t *tfnotify) Run(ctx context.Context) error {
 			Template: t.template,
 		})
 		if err != nil {
-			return err
+			return nil, err
 		}
-		notifier = client.Notify
+		return client.Notify, nil
 	case "typetalk":
 		client, err := typetalk.NewClient(typetalk.Config{
 			Token:    t.config.Notifier.Typetalk.Token,
@@ -159,13 +142,36 @@ func (t *tfnotify) Run(ctx context.Context) error {
 			Template: t.template,
 		})
 		if err != nil {
-			return err
+			return nil, err
 		}
-		notifier = client.Notify
+		return client.Notify, nil
 	case "":
-		return errors.New("notifier is missing")
+		return nil, errors.New("notifier is missing")
 	default:
-		return fmt.Errorf("%s: not supported notifier yet", selectedNotifier)
+		return nil, fmt.Errorf("%s: not supported notifier yet", selectedNotifier)
+	}
+}
+
+// Run sends the notification with notifier
+func (t *tfnotify) Run(ctx context.Context) error {
+	ciname := t.config.CI
+	if t.context.String("ci") != "" {
+		ciname = t.context.String("ci")
+	}
+	ciname = strings.ToLower(ciname)
+	ci, err := getCI(ciname)
+	if err != nil {
+		return err
+	}
+
+	selectedNotifier := t.config.GetNotifierType()
+	if t.context.String("notifier") != "" {
+		selectedNotifier = t.context.String("notifier")
+	}
+
+	notifier, err := t.getNotifier(ctx, ci, selectedNotifier)
+	if err != nil {
+		return err
 	}
 
 	if notifier == nil {
