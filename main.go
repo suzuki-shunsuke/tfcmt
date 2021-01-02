@@ -302,11 +302,22 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	go handleSignal(cancel)
 
-	err := app.RunContext(ctx, os.Args)
-	os.Exit(HandleExit(err))
+	os.Exit(HandleExit(app.RunContext(ctx, os.Args)))
 }
 
-func newConfig(ctx *cli.Context) (cfg config.Config, err error) {
+func parseVarOpts(vars []string, varsM map[string]string) error {
+	for _, v := range vars {
+		a := strings.Index(v, ":")
+		if a == -1 {
+			return errors.New("the value of var option is invalid. the format should be '<name>:<value>': " + v)
+		}
+		varsM[v[:a]] = v[a+1:]
+	}
+	return nil
+}
+
+func newConfig(ctx *cli.Context) (config.Config, error) {
+	cfg := config.Config{}
 	confPath, err := cfg.Find(ctx.String("config"))
 	if err != nil {
 		return cfg, err
@@ -316,12 +327,8 @@ func newConfig(ctx *cli.Context) (cfg config.Config, err error) {
 	}
 	vars := ctx.StringSlice("var")
 	vm := make(map[string]string, len(vars))
-	for _, v := range vars {
-		a := strings.Index(v, ":")
-		if a == -1 {
-			return cfg, errors.New("the value of var option is invalid. the format should be '<name>:<value>': " + v)
-		}
-		vm[v[:a]] = v[a+1:]
+	if err := parseVarOpts(vars, vm); err != nil {
+		return cfg, err
 	}
 	cfg.Vars = vm
 	if err := cfg.Validation(); err != nil {
