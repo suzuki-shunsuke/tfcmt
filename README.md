@@ -69,6 +69,7 @@ Placeholder | Usage
 `{{ .Result }}` | Matched result by parsing like `Plan: 1 to add` or `No changes`
 `{{ .Body }}` | The entire of Terraform execution result
 `{{ .Link }}` | The link of the build page on CI
+`{{ .Vars }}` | The variables which are passed by `-var` option
 
 On GitHub, tfnotify can also put a warning message if the plan result contains resource deletion (optional).
 
@@ -364,6 +365,29 @@ terraform:
 ```
 
 </details>
+
+## -var option
+
+tfnotify supports to pass variables by `-var` option.
+The format of the value should be `<name>:<value>`.
+
+ex.
+
+```
+$ terraform plan | tfnotify -var label_prefix:foo -var header:hello plan
+```
+
+The variables can be referred in `template` and `label`.
+
+```yaml
+terraform:
+  plan:
+    template: |
+      {{.Vars.header}}
+      ...
+    when_add_or_update_only:
+      label: "{{.Vars.label_prefix}}/add-or-update"
+```
 
 ### Supported CI
 
