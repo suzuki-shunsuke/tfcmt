@@ -77,7 +77,12 @@ func (t *tfnotify) renderTemplate(tpl string) (string, error) {
 }
 
 func (t *tfnotify) renderGitHubLabels() (github.ResultLabels, error) {
-	labels := github.ResultLabels{}
+	labels := github.ResultLabels{
+		AddOrUpdateLabelColor: t.config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
+		DestroyLabelColor:     t.config.Terraform.Plan.WhenDestroy.Color,
+		NoChangesLabelColor:   t.config.Terraform.Plan.WhenNoChanges.Color,
+		PlanErrorLabelColor:   t.config.Terraform.Plan.WhenPlanError.Color,
+	}
 
 	addOrUpdateLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenAddOrUpdateOnly.Label)
 	if err != nil {
