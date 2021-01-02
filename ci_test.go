@@ -26,11 +26,13 @@ func TestCircleci(t *testing.T) { //nolint:paralleltest
 	}()
 
 	testCases := []struct {
-		fn func()
-		ci CI
-		ok bool
+		name string
+		fn   func()
+		ci   CI
+		ok   bool
 	}{
 		{
+			name: "case 0",
 			fn: func() {
 				os.Setenv("CIRCLE_SHA1", "abcdefg")
 				os.Setenv("CIRCLE_BUILD_URL", "https://circleci.com/gh/owner/repo/1234")
@@ -48,6 +50,7 @@ func TestCircleci(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 1",
 			fn: func() {
 				os.Setenv("CIRCLE_SHA1", "abcdefg")
 				os.Setenv("CIRCLE_BUILD_URL", "https://circleci.com/gh/owner/repo/1234")
@@ -65,6 +68,7 @@ func TestCircleci(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 2",
 			fn: func() {
 				os.Setenv("CIRCLE_SHA1", "abcdefg")
 				os.Setenv("CIRCLE_BUILD_URL", "https://circleci.com/gh/owner/repo/1234")
@@ -82,6 +86,7 @@ func TestCircleci(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 3",
 			fn: func() {
 				os.Setenv("CIRCLE_SHA1", "abcdefg")
 				os.Setenv("CIRCLE_BUILD_URL", "https://circleci.com/gh/owner/repo/1234")
@@ -99,6 +104,7 @@ func TestCircleci(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 4",
 			fn: func() {
 				os.Setenv("CIRCLE_SHA1", "")
 				os.Setenv("CIRCLE_BUILD_URL", "https://circleci.com/gh/owner/repo/1234")
@@ -116,6 +122,7 @@ func TestCircleci(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 5",
 			fn: func() {
 				os.Setenv("CIRCLE_SHA1", "")
 				os.Setenv("CIRCLE_BUILD_URL", "https://circleci.com/gh/owner/repo/1234")
@@ -134,15 +141,21 @@ func TestCircleci(t *testing.T) { //nolint:paralleltest
 		},
 	}
 
-	for _, testCase := range testCases {
-		testCase.fn()
-		ci, err := circleci()
-		if !reflect.DeepEqual(ci, testCase.ci) {
-			t.Errorf("got %q but want %q", ci, testCase.ci)
+	for i, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf(`index %d: testCase.name == ""`, i)
 		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			testCase.fn()
+			ci, err := circleci()
+			if !reflect.DeepEqual(ci, testCase.ci) {
+				t.Errorf("got %q but want %q", ci, testCase.ci)
+			}
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+		})
 	}
 }
 
@@ -165,11 +178,13 @@ func TestTravisCI(t *testing.T) { //nolint:paralleltest
 
 	// https://docs.travis-ci.com/user/environment-variables/
 	testCases := []struct {
-		fn func()
-		ci CI
-		ok bool
+		name string
+		fn   func()
+		ci   CI
+		ok   bool
 	}{
 		{
+			name: "case 0",
 			fn: func() {
 				os.Setenv("TRAVIS_PULL_REQUEST_SHA", "abcdefg")
 				os.Setenv("TRAVIS_PULL_REQUEST", "1")
@@ -185,6 +200,7 @@ func TestTravisCI(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 1",
 			fn: func() {
 				os.Setenv("TRAVIS_PULL_REQUEST_SHA", "abcdefg")
 				os.Setenv("TRAVIS_PULL_REQUEST", "false")
@@ -201,15 +217,21 @@ func TestTravisCI(t *testing.T) { //nolint:paralleltest
 		},
 	}
 
-	for _, testCase := range testCases {
-		testCase.fn()
-		ci, err := travisci()
-		if !reflect.DeepEqual(ci, testCase.ci) {
-			t.Errorf("got %q but want %q", ci, testCase.ci)
+	for i, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf(`index %d: testCase.name == ""`, i)
 		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			testCase.fn()
+			ci, err := travisci()
+			if !reflect.DeepEqual(ci, testCase.ci) {
+				t.Errorf("got %q but want %q", ci, testCase.ci)
+			}
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+		})
 	}
 }
 
@@ -231,11 +253,13 @@ func TestTeamCityCI(t *testing.T) { //nolint:paralleltest
 
 	// https://confluence.jetbrains.com/display/TCD18/Predefined+Build+Parameters
 	testCases := []struct {
-		fn func()
-		ci CI
-		ok bool
+		name string
+		fn   func()
+		ci   CI
+		ok   bool
 	}{
 		{
+			name: "case 0",
 			fn: func() {
 				os.Setenv("BUILD_VCS_NUMBER", "fafef5adb5b9c39244027c8f16f7c3aa7e352b2e")
 				os.Setenv("BUILD_NUMBER", "123")
@@ -250,6 +274,7 @@ func TestTeamCityCI(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 1",
 			fn: func() {
 				os.Setenv("BUILD_VCS_NUMBER", "abcdefg")
 				os.Setenv("BUILD_NUMBER", "false")
@@ -265,15 +290,21 @@ func TestTeamCityCI(t *testing.T) { //nolint:paralleltest
 		},
 	}
 
-	for _, testCase := range testCases {
-		testCase.fn()
-		ci, err := teamcity()
-		if !reflect.DeepEqual(ci, testCase.ci) {
-			t.Errorf("got %q but want %q", ci, testCase.ci)
+	for i, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf(`index %d: testCase.name == ""`, i)
 		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			testCase.fn()
+			ci, err := teamcity()
+			if !reflect.DeepEqual(ci, testCase.ci) {
+				t.Errorf("got %q but want %q", ci, testCase.ci)
+			}
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+		})
 	}
 }
 
@@ -296,11 +327,13 @@ func TestCodeBuild(t *testing.T) { //nolint:paralleltest
 
 	// https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref.html
 	testCases := []struct {
-		fn func()
-		ci CI
-		ok bool
+		name string
+		fn   func()
+		ci   CI
+		ok   bool
 	}{
 		{
+			name: "case 0",
 			fn: func() {
 				os.Setenv("CODEBUILD_RESOLVED_SOURCE_VERSION", "abcdefg")
 				os.Setenv("CODEBUILD_SOURCE_VERSION", "pr/123")
@@ -316,6 +349,7 @@ func TestCodeBuild(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 1",
 			fn: func() {
 				os.Setenv("CODEBUILD_RESOLVED_SOURCE_VERSION", "abcdefg")
 				os.Setenv("CODEBUILD_SOURCE_VERSION", "pr/1")
@@ -331,6 +365,7 @@ func TestCodeBuild(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 2",
 			fn: func() {
 				os.Setenv("CODEBUILD_RESOLVED_SOURCE_VERSION", "")
 				os.Setenv("CODEBUILD_SOURCE_VERSION", "")
@@ -346,6 +381,7 @@ func TestCodeBuild(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 3",
 			fn: func() {
 				os.Setenv("CODEBUILD_RESOLVED_SOURCE_VERSION", "")
 				os.Setenv("CODEBUILD_SOURCE_VERSION", "pr/abc")
@@ -361,6 +397,7 @@ func TestCodeBuild(t *testing.T) { //nolint:paralleltest
 			ok: false,
 		},
 		{
+			name: "case 4",
 			fn: func() {
 				os.Setenv("CODEBUILD_RESOLVED_SOURCE_VERSION", "")
 				os.Setenv("CODEBUILD_SOURCE_VERSION", "f3008ac30d28ac38ae2533c2b153f00041661f22")
@@ -377,15 +414,21 @@ func TestCodeBuild(t *testing.T) { //nolint:paralleltest
 		},
 	}
 
-	for _, testCase := range testCases {
-		testCase.fn()
-		ci, err := codebuild()
-		if !reflect.DeepEqual(ci, testCase.ci) {
-			t.Errorf("got %q but want %q", ci, testCase.ci)
+	for i, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf(`index %d: testCase.name == ""`, i)
 		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			testCase.fn()
+			ci, err := codebuild()
+			if !reflect.DeepEqual(ci, testCase.ci) {
+				t.Errorf("got %q but want %q", ci, testCase.ci)
+			}
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+		})
 	}
 }
 
@@ -407,11 +450,13 @@ func TestDrone(t *testing.T) { //nolint:paralleltest
 
 	// https://docs.drone.io/reference/environ/
 	testCases := []struct {
-		fn func()
-		ci CI
-		ok bool
+		name string
+		fn   func()
+		ci   CI
+		ok   bool
 	}{
 		{
+			name: "case 0",
 			fn: func() {
 				os.Setenv("DRONE_COMMIT_SHA", "abcdefg")
 				os.Setenv("DRONE_PULL_REQUEST", "1")
@@ -427,6 +472,7 @@ func TestDrone(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 1",
 			fn: func() {
 				os.Setenv("DRONE_COMMIT_SHA", "abcdefg")
 				os.Setenv("DRONE_PULL_REQUEST", "")
@@ -442,6 +488,7 @@ func TestDrone(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 2",
 			fn: func() {
 				os.Setenv("DRONE_COMMIT_SHA", "abcdefg")
 				os.Setenv("DRONE_PULL_REQUEST", "abc")
@@ -458,15 +505,21 @@ func TestDrone(t *testing.T) { //nolint:paralleltest
 		},
 	}
 
-	for _, testCase := range testCases {
-		testCase.fn()
-		ci, err := drone()
-		if !reflect.DeepEqual(ci, testCase.ci) {
-			t.Errorf("got %q but want %q", ci, testCase.ci)
+	for i, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf(`index %d: testCase.name == ""`, i)
 		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			testCase.fn()
+			ci, err := drone()
+			if !reflect.DeepEqual(ci, testCase.ci) {
+				t.Errorf("got %q but want %q", ci, testCase.ci)
+			}
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+		})
 	}
 }
 
@@ -490,11 +543,13 @@ func TestJenkins(t *testing.T) { //nolint:paralleltest
 
 	// https://wiki.jenkins.io/display/JENKINS/Building+a+software+project#Buildingasoftwareproject-belowJenkinsSetEnvironmentVariables
 	testCases := []struct {
-		fn func()
-		ci CI
-		ok bool
+		name string
+		fn   func()
+		ci   CI
+		ok   bool
 	}{
 		{
+			name: "case 0",
 			fn: func() {
 				os.Setenv("GIT_COMMIT", "abcdefg")
 				os.Setenv("PULL_REQUEST_NUMBER", "123")
@@ -510,6 +565,7 @@ func TestJenkins(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 1",
 			fn: func() {
 				os.Setenv("GIT_COMMIT", "abcdefg")
 				os.Setenv("PULL_REQUEST_NUMBER", "")
@@ -526,6 +582,7 @@ func TestJenkins(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 2",
 			fn: func() {
 				os.Setenv("PULL_REQUEST_NUMBER", "")
 				os.Setenv("PULL_REQUEST_URL", "")
@@ -543,15 +600,21 @@ func TestJenkins(t *testing.T) { //nolint:paralleltest
 		},
 	}
 
-	for _, testCase := range testCases {
-		testCase.fn()
-		ci, err := jenkins()
-		if !reflect.DeepEqual(ci, testCase.ci) {
-			t.Errorf("got %q but want %q", ci, testCase.ci)
+	for i, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf(`index %d: testCase.name == ""`, i)
 		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			testCase.fn()
+			ci, err := jenkins()
+			if !reflect.DeepEqual(ci, testCase.ci) {
+				t.Errorf("got %q but want %q", ci, testCase.ci)
+			}
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+		})
 	}
 }
 
@@ -574,11 +637,13 @@ func TestJenkinsGitLab(t *testing.T) { //nolint:paralleltest
 
 	// https://wiki.jenkins.io/display/JENKINS/Building+a+software+project#Buildingasoftwareproject-belowJenkinsSetEnvironmentVariables
 	testCases := []struct {
-		fn func()
-		ci CI
-		ok bool
+		name string
+		fn   func()
+		ci   CI
+		ok   bool
 	}{
 		{
+			name: "case 0",
 			fn: func() {
 				os.Setenv("gitlabBefore", "abcdefg")
 				os.Setenv("gitlabMergeRequestIid", "123")
@@ -594,6 +659,7 @@ func TestJenkinsGitLab(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 1",
 			fn: func() {
 				os.Setenv("gitlabMergeRequestIid", "")
 				os.Setenv("gitlabBefore", "abcdefg")
@@ -610,15 +676,21 @@ func TestJenkinsGitLab(t *testing.T) { //nolint:paralleltest
 		},
 	}
 
-	for _, testCase := range testCases {
-		testCase.fn()
-		ci, err := jenkins()
-		if !reflect.DeepEqual(ci, testCase.ci) {
-			t.Errorf("got %q but want %q", ci, testCase.ci)
+	for i, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf(`index %d: testCase.name == ""`, i)
 		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			testCase.fn()
+			ci, err := jenkins()
+			if !reflect.DeepEqual(ci, testCase.ci) {
+				t.Errorf("got %q but want %q", ci, testCase.ci)
+			}
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+		})
 	}
 }
 
@@ -642,11 +714,13 @@ func TestGitLabCI(t *testing.T) { //nolint:paralleltest
 
 	// https://docs.gitlab.com/ee/ci/variables/README.html
 	testCases := []struct {
-		fn func()
-		ci CI
-		ok bool
+		name string
+		fn   func()
+		ci   CI
+		ok   bool
 	}{
 		{
+			name: "case 0",
 			fn: func() {
 				os.Setenv("CI_COMMIT_SHA", "abcdefg")
 				os.Setenv("CI_JOB_URL", "https://gitlab.com/owner/repo/-/jobs/111111111")
@@ -663,6 +737,7 @@ func TestGitLabCI(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 1",
 			fn: func() {
 				os.Setenv("CI_COMMIT_SHA", "hijklmn")
 				os.Setenv("CI_JOB_URL", "https://gitlab.com/owner/repo/-/jobs/222222222")
@@ -679,6 +754,7 @@ func TestGitLabCI(t *testing.T) { //nolint:paralleltest
 			ok: true,
 		},
 		{
+			name: "case 2",
 			fn: func() {
 				os.Setenv("CI_COMMIT_SHA", "hijklmn")
 				os.Setenv("CI_JOB_URL", "https://gitlab.com/owner/repo/-/jobs/333333333")
@@ -696,15 +772,21 @@ func TestGitLabCI(t *testing.T) { //nolint:paralleltest
 		},
 	}
 
-	for _, testCase := range testCases {
-		testCase.fn()
-		ci, err := gitlabci()
-		if !reflect.DeepEqual(ci, testCase.ci) {
-			t.Errorf("got %q but want %q", ci, testCase.ci)
+	for i, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf(`index %d: testCase.name == ""`, i)
 		}
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			testCase.fn()
+			ci, err := gitlabci()
+			if !reflect.DeepEqual(ci, testCase.ci) {
+				t.Errorf("got %q but want %q", ci, testCase.ci)
+			}
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+		})
 	}
 }
 
