@@ -86,7 +86,7 @@ func (t *tfnotify) Run(ctx context.Context) error {
 	case "":
 		return errors.New("CI service: required (e.g. circleci)")
 	default:
-		return fmt.Errorf("CI service %v: not supported yet", ci)
+		return fmt.Errorf("CI service %s: not supported yet", ciname)
 	}
 
 	selectedNotifier := t.config.GetNotifierType()
