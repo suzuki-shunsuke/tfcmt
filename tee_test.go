@@ -9,21 +9,21 @@ import (
 func TestTee(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
-		title  string
+		name   string
 		stdin  io.Reader
 		stdout string
 		body   string
 	}{
 		{
 			// Regular
-			title:  "Regular",
+			name:   "Regular",
 			stdin:  bytes.NewBufferString("Plan: 1 to add\n"),
 			stdout: "Plan: 1 to add\n",
 			body:   "Plan: 1 to add\n",
 		},
 		{
 			// ANSI color codes are included
-			title:  "ANSI color codes are included",
+			name:   "ANSI color codes are included",
 			stdin:  bytes.NewBufferString("\033[mPlan: 1 to add\033[m\n"),
 			stdout: "\033[mPlan: 1 to add\033[m\n",
 			body:   "Plan: 1 to add\n",
@@ -32,7 +32,7 @@ func TestTee(t *testing.T) {
 
 	for _, testCase := range testCases {
 		testCase := testCase
-		t.Run(testCase.title, func(t *testing.T) {
+		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
 			stdout := new(bytes.Buffer)
 			body := tee(testCase.stdin, stdout)
