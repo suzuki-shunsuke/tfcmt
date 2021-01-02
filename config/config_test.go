@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -440,6 +441,10 @@ func removeDummy(file string) {
 }
 
 func TestFind(t *testing.T) { //nolint:paralleltest
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
 	testCases := []struct {
 		file   string
 		expect string
@@ -478,20 +483,23 @@ func TestFind(t *testing.T) { //nolint:paralleltest
 		{
 			// in case of no args passed
 			file:   "",
-			expect: "tfnotify.yaml",
+			expect: filepath.Join(wd, "tfnotify.yaml"),
 			ok:     true,
 		},
 	}
 	var cfg Config
-	for _, testCase := range testCases {
-		createDummy(testCase.file)
+	for _, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		t.Run(testCase.file, func(t *testing.T) {
+			createDummy(testCase.file)
+			actual, err := cfg.Find(testCase.file)
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %q", err)
+			}
+			if actual != testCase.expect {
+				t.Errorf("got %q but want %q", actual, testCase.expect)
+			}
+		})
 		defer removeDummy(testCase.file)
-		actual, err := cfg.Find(testCase.file)
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
-		if actual != testCase.expect {
-			t.Errorf("got %q but want %q", actual, testCase.expect)
-		}
 	}
 }
