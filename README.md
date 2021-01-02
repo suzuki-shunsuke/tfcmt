@@ -73,6 +73,8 @@ Placeholder | Usage
 
 On GitHub, tfnotify can also put a warning message if the plan result contains resource deletion (optional).
 
+In the template, the [sprig template functions](http://masterminds.github.io/sprig/) can be used.
+
 #### Template Examples
 
 <details>
