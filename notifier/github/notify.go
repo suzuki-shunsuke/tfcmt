@@ -34,10 +34,6 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 			}
 		}
 		if cfg.PR.IsNumber() && cfg.ResultLabels.HasAnyLabelDefined() {
-			err = g.removeResultLabels(ctx)
-			if err != nil {
-				return result.ExitCode, err
-			}
 			var (
 				labelToAdd string
 				labelColor string
@@ -58,26 +54,35 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 				labelColor = cfg.ResultLabels.PlanErrorLabelColor
 			}
 
+			currentLabelColor, err := g.removeResultLabels(ctx, labelToAdd)
+			if err != nil {
+				return result.ExitCode, err
+			}
+
 			if labelToAdd != "" {
-				labels, _, err := g.client.API.IssuesAddLabels(
-					ctx,
-					cfg.PR.Number,
-					[]string{labelToAdd},
-				)
-				if err != nil {
-					return result.ExitCode, err
-				}
-				if labelColor != "" {
-					// set the color of label
-					for _, label := range labels {
-						if labelToAdd == label.GetName() {
-							if label.GetColor() != labelColor {
-								_, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor)
-								if err != nil {
-									return result.ExitCode, err
+				if currentLabelColor == "" {
+					labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
+					if err != nil {
+						return result.ExitCode, err
+					}
+					if labelColor != "" {
+						// set the color of label
+						for _, label := range labels {
+							if labelToAdd == label.GetName() {
+								if label.GetColor() != labelColor {
+									_, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor)
+									if err != nil {
+										return result.ExitCode, err
+									}
 								}
 							}
 						}
+					}
+				} else if labelColor != "" && labelColor != currentLabelColor {
+					// set the color of label
+					_, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor)
+					if err != nil {
+						return result.ExitCode, err
 					}
 				}
 			}
@@ -148,23 +153,28 @@ func (g *NotifyService) notifyDestoryWarning(ctx context.Context, body string, r
 	})
 }
 
-func (g *NotifyService) removeResultLabels(ctx context.Context) error {
+func (g *NotifyService) removeResultLabels(ctx context.Context, label string) (string, error) {
 	cfg := g.client.Config
 	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, nil)
 	if err != nil {
-		return err
+		return "", err
 	}
 
+	labelColor := ""
 	for _, l := range labels {
 		labelText := l.GetName()
+		if labelText == label {
+			labelColor = l.GetColor()
+			continue
+		}
 		if cfg.ResultLabels.IsResultLabel(labelText) {
 			resp, err := g.client.API.IssuesRemoveLabel(ctx, cfg.PR.Number, labelText)
 			// Ignore 404 errors, which are from the PR not having the label
 			if err != nil && resp.StatusCode != http.StatusNotFound {
-				return err
+				return labelColor, err
 			}
 		}
 	}
 
-	return nil
+	return labelColor, nil
 }
