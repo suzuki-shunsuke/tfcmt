@@ -33,6 +33,7 @@ type Config struct {
 	CI       string
 	Parser   terraform.Parser
 	Template terraform.Template
+	Vars     map[string]string
 }
 
 type service struct {

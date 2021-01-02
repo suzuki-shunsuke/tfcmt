@@ -91,6 +91,7 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 		Body:         body,
 		Link:         cfg.CI,
 		UseRawOutput: cfg.UseRawOutput,
+		Vars:         cfg.Vars,
 	})
 	body, err = template.Execute()
 	if err != nil {
@@ -134,6 +135,7 @@ func (g *NotifyService) notifyDestoryWarning(ctx context.Context, body string, r
 		Body:         body,
 		Link:         cfg.CI,
 		UseRawOutput: cfg.UseRawOutput,
+		Vars:         cfg.Vars,
 	})
 	body, err := destroyWarningTemplate.Execute()
 	if err != nil {

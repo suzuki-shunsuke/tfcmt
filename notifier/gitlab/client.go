@@ -41,6 +41,7 @@ type Config struct {
 	CI        string
 	Parser    terraform.Parser
 	Template  terraform.Template
+	Vars      map[string]string
 }
 
 // MergeRequest represents GitLab Merge Request metadata

@@ -30,6 +30,7 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 		Result:  result.Result,
 		Body:    body,
 		Link:    cfg.CI,
+		Vars:    cfg.Vars,
 	})
 	body, err = template.Execute()
 	if err != nil {
