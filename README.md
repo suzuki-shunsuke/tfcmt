@@ -56,7 +56,7 @@ For `plan` command, you also need to specify `plan` as the argument of tfnotify.
 
 ### Configurations
 
-When running tfnotify, you can specify the configuration path via `--config` option (if it's omitted, it defaults to `{.,}tfnotify.y{,a}ml`).
+When running tfnotify, you can specify the configuration path via `--config` option (if it's omitted, the configuration file `{.,}tfnotify.y{,a}ml` is searched from the current directory to the root directory).
 
 The example settings of GitHub and GitHub Enterprise, Slack, [Typetalk](https://www.typetalk.com/) are as follows. Incidentally, there is no need to replace TOKEN string such as `$GITHUB_TOKEN` with the actual token. Instead, it must be defined as environment variables in CI settings.
 
