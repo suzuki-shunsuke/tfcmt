@@ -31,6 +31,34 @@ type tfnotify struct {
 	warnDestroy            bool
 }
 
+func getCI(ciname string) (CI, error) {
+	var ci CI
+	switch ciname {
+	case "circleci", "circle-ci":
+		return circleci()
+	case "travis", "travisci", "travis-ci":
+		return travisci()
+	case "codebuild":
+		return codebuild()
+	case "teamcity":
+		return teamcity()
+	case "drone":
+		return drone()
+	case "jenkins":
+		return jenkins()
+	case "gitlabci", "gitlab-ci":
+		return gitlabci()
+	case "github-actions":
+		return githubActions(), nil
+	case "cloud-build", "cloudbuild":
+		return cloudbuild()
+	case "":
+		return ci, errors.New("CI service: required (e.g. circleci)")
+	default:
+		return ci, fmt.Errorf("CI service %s: not supported yet", ciname)
+	}
+}
+
 // Run sends the notification with notifier
 func (t *tfnotify) Run(ctx context.Context) error {
 	ciname := t.config.CI
@@ -38,55 +66,9 @@ func (t *tfnotify) Run(ctx context.Context) error {
 		ciname = t.context.String("ci")
 	}
 	ciname = strings.ToLower(ciname)
-	var ci CI
-	var err error
-	switch ciname {
-	case "circleci", "circle-ci":
-		ci, err = circleci()
-		if err != nil {
-			return err
-		}
-	case "travis", "travisci", "travis-ci":
-		ci, err = travisci()
-		if err != nil {
-			return err
-		}
-	case "codebuild":
-		ci, err = codebuild()
-		if err != nil {
-			return err
-		}
-	case "teamcity":
-		ci, err = teamcity()
-		if err != nil {
-			return err
-		}
-	case "drone":
-		ci, err = drone()
-		if err != nil {
-			return err
-		}
-	case "jenkins":
-		ci, err = jenkins()
-		if err != nil {
-			return err
-		}
-	case "gitlabci", "gitlab-ci":
-		ci, err = gitlabci()
-		if err != nil {
-			return err
-		}
-	case "github-actions":
-		ci = githubActions()
-	case "cloud-build", "cloudbuild":
-		ci, err = cloudbuild()
-		if err != nil {
-			return err
-		}
-	case "":
-		return errors.New("CI service: required (e.g. circleci)")
-	default:
-		return fmt.Errorf("CI service %s: not supported yet", ciname)
+	ci, err := getCI(ciname)
+	if err != nil {
+		return err
 	}
 
 	selectedNotifier := t.config.GetNotifierType()
