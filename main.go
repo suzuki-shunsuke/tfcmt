@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
 	"os"
 	"strings"
+	"text/template"
 
+	"github.com/Masterminds/sprig"
 	"github.com/mercari/tfnotify/config"
 	"github.com/mercari/tfnotify/notifier"
 	"github.com/mercari/tfnotify/notifier/github"
@@ -59,9 +62,57 @@ func getCI(ciname string) (CI, error) {
 	}
 }
 
+func (t *tfnotify) renderTemplate(tpl string) (string, error) {
+	tmpl, err := template.New("_").Funcs(sprig.TxtFuncMap()).Parse(tpl)
+	if err != nil {
+		return "", err
+	}
+	buf := &bytes.Buffer{}
+	if err := tmpl.Execute(buf, map[string]interface{}{
+		"Vars": t.config.Vars,
+	}); err != nil {
+		return "", fmt.Errorf("render a label template: %w", err)
+	}
+	return buf.String(), nil
+}
+
+func (t *tfnotify) renderGitHubLabels() (github.ResultLabels, error) {
+	labels := github.ResultLabels{}
+
+	addOrUpdateLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenAddOrUpdateOnly.Label)
+	if err != nil {
+		return labels, err
+	}
+	labels.AddOrUpdateLabel = addOrUpdateLabel
+
+	destroyLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenDestroy.Label)
+	if err != nil {
+		return labels, err
+	}
+	labels.DestroyLabel = destroyLabel
+
+	nochangesLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenNoChanges.Label)
+	if err != nil {
+		return labels, err
+	}
+	labels.NoChangesLabel = nochangesLabel
+
+	planErrorLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenPlanError.Label)
+	if err != nil {
+		return labels, err
+	}
+	labels.PlanErrorLabel = planErrorLabel
+
+	return labels, nil
+}
+
 func (t *tfnotify) getNotifier(ctx context.Context, ci CI, selectedNotifier string) (notifier.Notifier, error) {
 	switch selectedNotifier {
 	case "github":
+		labels, err := t.renderGitHubLabels()
+		if err != nil {
+			return nil, err
+		}
 		client, err := github.NewClient(ctx, github.Config{
 			Token:   t.config.Notifier.Github.Token,
 			BaseURL: t.config.Notifier.Github.BaseURL,
@@ -81,16 +132,8 @@ func (t *tfnotify) getNotifier(ctx context.Context, ci CI, selectedNotifier stri
 			Template:               t.template,
 			DestroyWarningTemplate: t.destroyWarningTemplate,
 			WarnDestroy:            t.warnDestroy,
-			ResultLabels: github.ResultLabels{
-				AddOrUpdateLabel:      t.config.Terraform.Plan.WhenAddOrUpdateOnly.Label,
-				DestroyLabel:          t.config.Terraform.Plan.WhenDestroy.Label,
-				NoChangesLabel:        t.config.Terraform.Plan.WhenNoChanges.Label,
-				PlanErrorLabel:        t.config.Terraform.Plan.WhenPlanError.Label,
-				AddOrUpdateLabelColor: t.config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
-				DestroyLabelColor:     t.config.Terraform.Plan.WhenDestroy.Color,
-				NoChangesLabelColor:   t.config.Terraform.Plan.WhenNoChanges.Color,
-				PlanErrorLabelColor:   t.config.Terraform.Plan.WhenPlanError.Color,
-			},
+			ResultLabels:           labels,
+			Vars:                   t.config.Vars,
 		})
 		if err != nil {
 			return nil, err
@@ -111,6 +154,7 @@ func (t *tfnotify) getNotifier(ctx context.Context, ci CI, selectedNotifier stri
 			CI:       ci.URL,
 			Parser:   t.parser,
 			Template: t.template,
+			Vars:     t.config.Vars,
 		})
 		if err != nil {
 			return nil, err
@@ -126,6 +170,7 @@ func (t *tfnotify) getNotifier(ctx context.Context, ci CI, selectedNotifier stri
 			CI:       ci.URL,
 			Parser:   t.parser,
 			Template: t.template,
+			Vars:     t.config.Vars,
 		})
 		if err != nil {
 			return nil, err
@@ -140,6 +185,7 @@ func (t *tfnotify) getNotifier(ctx context.Context, ci CI, selectedNotifier stri
 			CI:       ci.URL,
 			Parser:   t.parser,
 			Template: t.template,
+			Vars:     t.config.Vars,
 		})
 		if err != nil {
 			return nil, err
@@ -190,6 +236,7 @@ func main() {
 		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfnotify"},
 		&cli.StringFlag{Name: "config", Usage: "config path"},
 		&cli.StringFlag{Name: "notifier", Usage: "notification destination"},
+		&cli.StringSliceFlag{Name: "var", Usage: "template variables. The format of value is '<name>:<value>'"},
 	}
 	app.Commands = []*cli.Command{
 		{
@@ -262,6 +309,16 @@ func newConfig(ctx *cli.Context) (cfg config.Config, err error) {
 	if err := cfg.LoadFile(confPath); err != nil {
 		return cfg, err
 	}
+	vars := ctx.StringSlice("var")
+	vm := make(map[string]string, len(vars))
+	for _, v := range vars {
+		a := strings.Index(v, ":")
+		if a == -1 {
+			return cfg, errors.New("the value of var option is invalid. the format should be '<name>:<value>': " + v)
+		}
+		vm[v[:a]] = v[a+1:]
+	}
+	cfg.Vars = vm
 	if err := cfg.Validation(); err != nil {
 		return cfg, err
 	}

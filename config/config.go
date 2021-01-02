@@ -13,9 +13,10 @@ import (
 
 // Config is for tfnotify config structure
 type Config struct {
-	CI        string    `yaml:"ci"`
-	Notifier  Notifier  `yaml:"notifier"`
-	Terraform Terraform `yaml:"terraform"`
+	CI        string            `yaml:"ci"`
+	Notifier  Notifier          `yaml:"notifier"`
+	Terraform Terraform         `yaml:"terraform"`
+	Vars      map[string]string `yaml:"-"`
 
 	path string
 }

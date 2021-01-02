@@ -110,6 +110,7 @@ type CommonTemplate struct {
 	Body         string
 	Link         string
 	UseRawOutput bool
+	Vars         map[string]string
 }
 
 // DefaultTemplate is a default template for terraform commands
@@ -229,6 +230,7 @@ func (t *DefaultTemplate) Execute() (string, error) {
 		"Result":  "",
 		"Body":    t.Result,
 		"Link":    t.Link,
+		"Vars":    t.Vars,
 	}
 
 	resp, err := generateOutput("default", t.Template, data, t.UseRawOutput)
@@ -247,6 +249,7 @@ func (t *FmtTemplate) Execute() (string, error) {
 		"Result":  "",
 		"Body":    t.Result,
 		"Link":    t.Link,
+		"Vars":    t.Vars,
 	}
 
 	resp, err := generateOutput("fmt", t.Template, data, t.UseRawOutput)
@@ -265,6 +268,7 @@ func (t *PlanTemplate) Execute() (string, error) {
 		"Result":  t.Result,
 		"Body":    t.Body,
 		"Link":    t.Link,
+		"Vars":    t.Vars,
 	}
 
 	resp, err := generateOutput("plan", t.Template, data, t.UseRawOutput)
@@ -283,6 +287,7 @@ func (t *DestroyWarningTemplate) Execute() (string, error) {
 		"Result":  t.Result,
 		"Body":    t.Body,
 		"Link":    t.Link,
+		"Vars":    t.Vars,
 	}
 
 	resp, err := generateOutput("destroy_warning", t.Template, data, t.UseRawOutput)
@@ -301,6 +306,7 @@ func (t *ApplyTemplate) Execute() (string, error) {
 		"Result":  t.Result,
 		"Body":    t.Body,
 		"Link":    t.Link,
+		"Vars":    t.Vars,
 	}
 
 	resp, err := generateOutput("apply", t.Template, data, t.UseRawOutput)
