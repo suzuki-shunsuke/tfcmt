@@ -39,9 +39,6 @@ func TestLoadFile(t *testing.T) {
 					Default: Default{
 						Template: "",
 					},
-					Fmt: Fmt{
-						Template: "",
-					},
 					Plan: Plan{
 						Template:    "{{ .Title }}\n{{ .Message }}\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .Body }}\n</pre></code></details>\n",
 						WhenDestroy: WhenDestroy{},
@@ -70,9 +67,6 @@ func TestLoadFile(t *testing.T) {
 				},
 				Terraform: Terraform{
 					Default: Default{
-						Template: "",
-					},
-					Fmt: Fmt{
 						Template: "",
 					},
 					Plan: Plan{
@@ -115,9 +109,6 @@ func TestLoadFile(t *testing.T) {
 				},
 				Terraform: Terraform{
 					Default: Default{
-						Template: "",
-					},
-					Fmt: Fmt{
 						Template: "",
 					},
 					Plan: Plan{

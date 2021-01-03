@@ -42,7 +42,6 @@ type Repository struct {
 // Terraform represents terraform configurations
 type Terraform struct {
 	Default      Default `yaml:"default"`
-	Fmt          Fmt     `yaml:"fmt"`
 	Plan         Plan    `yaml:"plan"`
 	Apply        Apply   `yaml:"apply"`
 	UseRawOutput bool    `yaml:"use_raw_output,omitempty"`
@@ -50,11 +49,6 @@ type Terraform struct {
 
 // Default is a default setting for terraform commands
 type Default struct {
-	Template string `yaml:"template"`
-}
-
-// Fmt is a terraform fmt config
-type Fmt struct {
 	Template string `yaml:"template"`
 }
 

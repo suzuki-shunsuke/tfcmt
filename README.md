@@ -88,15 +88,6 @@ notifier:
       owner: "suzuki-shunsuke"
       name: "tfcmt"
 terraform:
-  fmt:
-    template: |
-      {{ .Title }}
-
-      {{ .Message }}
-
-      {{ .Result }}
-
-      {{ .Body }}
   plan:
     template: |
       {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
@@ -228,15 +219,6 @@ notifier:
       owner: "suzuki-shunsuke"
       name: "tfcmt"
 terraform:
-  fmt:
-    template: |
-      {{ .Title }}
-
-      {{ .Message }}
-
-      {{ .Result }}
-
-      {{ .Body }}
   plan:
     template: |
       {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
