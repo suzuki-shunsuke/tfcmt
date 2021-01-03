@@ -1,19 +1,17 @@
-# tfnotify
+# tfcmt
 
-[![Build Status](https://github.com/suzuki-shunsuke/tfnotify/workflows/test/badge.svg)](https://github.com/suzuki-shunsuke/tfnotify/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/suzuki-shunsuke/tfnotify)](https://goreportcard.com/report/github.com/suzuki-shunsuke/tfnotify)
-[![GitHub last commit](https://img.shields.io/github/last-commit/suzuki-shunsuke/tfnotify.svg)](https://github.com/suzuki-shunsuke/tfnotify)
-[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/tfnotify/master/LICENSE)
+[![Build Status](https://github.com/suzuki-shunsuke/tfcmt/workflows/test/badge.svg)](https://github.com/suzuki-shunsuke/tfcmt/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/suzuki-shunsuke/tfcmt)](https://goreportcard.com/report/github.com/suzuki-shunsuke/tfcmt)
+[![GitHub last commit](https://img.shields.io/github/last-commit/suzuki-shunsuke/tfcmt.svg)](https://github.com/suzuki-shunsuke/tfcmt)
+[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/tfcmt/master/LICENSE)
 
 Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify)
 
-tfnotify parses Terraform commands' execution result and applies it to an arbitrary template and then notifies it to GitHub comments etc.
+tfcmt parses Terraform commands' execution result and applies it to an arbitrary template and then notifies it to GitHub comments etc.
 
-## Why do we fork mercari/tfnotify?
+## Forked version
 
-We have sent [some pull requests](https://github.com/mercari/tfnotify/pulls/suzuki-shunsuke) to mercari/tfnotify but they aren't merged yet.
-
-We forked mercari/tfnotify v0.7.0 [fb178d8](https://github.com/mercari/tfnotify/tree/fb178d8a5a51f88a51b7fda93ed5443ff56dfc8f).
+We forked [suzuki-shunsuke/tfnotify v1.3.3](https://github.com/suzuki-shunsuke/tfnotify/releases/tag/v1.3.3).
 
 ## Motivation
 
@@ -32,7 +30,7 @@ You can do this by using this command.
 
 Grab the binary from GitHub Releases (Recommended)
 
-### What tfnotify does
+### What tfcmt does
 
 1. Parse the execution result of Terraform
 2. Bind parsed results to Go templates
@@ -44,23 +42,23 @@ Detailed specifications such as templates and notification destinations can be c
 
 ### Basic
 
-tfnotify is just CLI command. So you can run it from your local after grabbing the binary.
+tfcmt is just CLI command. So you can run it from your local after grabbing the binary.
 
-Basically tfnotify waits for the input from Stdin. So tfnotify needs to pipe the output of Terraform command like the following:
+Basically tfcmt waits for the input from Stdin. So tfcmt needs to pipe the output of Terraform command like the following:
 
 ```console
-$ terraform plan | tfnotify plan
+$ terraform plan | tfcmt plan
 ```
 
-For `plan` command, you also need to specify `plan` as the argument of tfnotify. In the case of `apply`, you need to do `apply`. Currently supported commands can be checked with `tfnotify --help`.
+For `plan` command, you also need to specify `plan` as the argument of tfcmt. In the case of `apply`, you need to do `apply`. Currently supported commands can be checked with `tfcmt --help`.
 
 ### Configurations
 
-When running tfnotify, you can specify the configuration path via `--config` option (if it's omitted, the configuration file `{.,}tfnotify.y{,a}ml` is searched from the current directory to the root directory).
+When running tfcmt, you can specify the configuration path via `--config` option (if it's omitted, the configuration file `{.,}tfcmt.y{,a}ml` is searched from the current directory to the root directory).
 
 The example settings of GitHub and GitHub Enterprise, Slack, [Typetalk](https://www.typetalk.com/) are as follows. Incidentally, there is no need to replace TOKEN string such as `$GITHUB_TOKEN` with the actual token. Instead, it must be defined as environment variables in CI settings.
 
-[template](https://golang.org/pkg/text/template/) of Go can be used for `template`. The templates can be used in `tfnotify.yaml` are as follows:
+[template](https://golang.org/pkg/text/template/) of Go can be used for `template`. The templates can be used in `tfcmt.yaml` are as follows:
 
 Placeholder | Usage
 ---|---
@@ -71,7 +69,7 @@ Placeholder | Usage
 `{{ .Link }}` | The link of the build page on CI
 `{{ .Vars }}` | The variables which are passed by `-var` option
 
-On GitHub, tfnotify can also put a warning message if the plan result contains resource deletion (optional).
+On GitHub, tfcmt can also put a warning message if the plan result contains resource deletion (optional).
 
 In the template, the [sprig template functions](http://masterminds.github.io/sprig/) can be used.
 
@@ -88,7 +86,7 @@ notifier:
     token: $GITHUB_TOKEN
     repository:
       owner: "suzuki-shunsuke"
-      name: "tfnotify"
+      name: "tfcmt"
 terraform:
   fmt:
     template: |
@@ -125,7 +123,7 @@ terraform:
       </pre></code></details>
 ```
 
-If you would like to let tfnotify warn the resource deletion, add `when_destroy` configuration as below.
+If you would like to let tfcmt warn the resource deletion, add `when_destroy` configuration as below.
 
 ```yaml
 ---
@@ -152,7 +150,7 @@ terraform:
   # ...
 ```
 
-You can also let tfnotify add a label to PRs depending on the `terraform plan` output result. Currently, this feature is for Github labels only.
+You can also let tfcmt add a label to PRs depending on the `terraform plan` output result. Currently, this feature is for Github labels only.
 
 ```yaml
 ---
@@ -228,7 +226,7 @@ notifier:
     base_url: $GITHUB_BASE_URL # Example: https://github.example.com/api/v3
     repository:
       owner: "suzuki-shunsuke"
-      name: "tfnotify"
+      name: "tfcmt"
 terraform:
   fmt:
     template: |
@@ -279,7 +277,7 @@ notifier:
     base_url: $GITLAB_BASE_URL
     repository:
       owner: "suzuki-shunsuke"
-      name: "tfnotify"
+      name: "tfcmt"
 terraform:
   fmt:
     template: |
@@ -370,13 +368,13 @@ terraform:
 
 ## -var option
 
-tfnotify supports to pass variables by `-var` option.
+tfcmt supports to pass variables by `-var` option.
 The format of the value should be `<name>:<value>`.
 
 ex.
 
 ```
-$ terraform plan | tfnotify -var label_prefix:foo -var header:hello plan
+$ terraform plan | tfcmt -var label_prefix:foo -var header:hello plan
 ```
 
 The variables can be referred in `template` and `label`.
