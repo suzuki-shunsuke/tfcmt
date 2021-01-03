@@ -3,8 +3,8 @@ notifier:
   github:
     token: $GITHUB_TOKEN
     repository:
-      owner: "mercari"
-      name: "tfnotify"
+      owner: "suzuki-shunsuke"
+      name: "tfcmt"
 terraform:
   plan:
     template: |

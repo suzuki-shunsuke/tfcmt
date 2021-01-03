@@ -158,7 +158,7 @@ func (cfg *Config) Find(file string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("get a current directory path: %w", err)
 	}
-	if p := findconfig.Find(wd, findconfig.Exist, "tfnotify.yaml", "tfnotify.yml", ".tfnotify.yaml", ".tfnotify.yml"); p != "" {
+	if p := findconfig.Find(wd, findconfig.Exist, "tfcmt.yaml", "tfcmt.yml", ".tfcmt.yaml", ".tfcmt.yml"); p != "" {
 		return p, nil
 	}
 	return "", errors.New("config for tfnotify is not found at all")
