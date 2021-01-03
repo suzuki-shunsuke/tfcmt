@@ -4,18 +4,21 @@ import (
 	"context"
 	"testing"
 
+	"github.com/mercari/tfnotify/notifier"
 	"github.com/mercari/tfnotify/terraform"
 )
 
 func TestNotifyNotify(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
+		name     string
 		config   Config
 		body     string
 		ok       bool
 		exitCode int
 	}{
 		{
+			name: "case 0",
 			// invalid body (cannot parse)
 			config: Config{
 				Token: "token",
@@ -31,9 +34,10 @@ func TestNotifyNotify(t *testing.T) {
 			},
 			body:     "body",
 			ok:       false,
-			exitCode: 1,
+			exitCode: 0,
 		},
 		{
+			name: "case 1",
 			// invalid pr
 			config: Config{
 				Token: "token",
@@ -52,6 +56,7 @@ func TestNotifyNotify(t *testing.T) {
 			exitCode: 0,
 		},
 		{
+			name: "case 2",
 			// valid, error
 			config: Config{
 				Token: "token",
@@ -67,9 +72,10 @@ func TestNotifyNotify(t *testing.T) {
 			},
 			body:     "Error: hoge",
 			ok:       true,
-			exitCode: 1,
+			exitCode: 0,
 		},
 		{
+			name: "case 3",
 			// valid, and isPR
 			config: Config{
 				Token: "token",
@@ -88,6 +94,7 @@ func TestNotifyNotify(t *testing.T) {
 			exitCode: 0,
 		},
 		{
+			name: "case 4",
 			// valid, and isRevision
 			config: Config{
 				Token: "token",
@@ -106,6 +113,7 @@ func TestNotifyNotify(t *testing.T) {
 			exitCode: 0,
 		},
 		{
+			name: "case 5",
 			// valid, and contains destroy
 			// TODO(dtan4): check two comments were made actually
 			config: Config{
@@ -127,6 +135,7 @@ func TestNotifyNotify(t *testing.T) {
 			exitCode: 0,
 		},
 		{
+			name: "case 6",
 			// valid with no changes
 			// TODO(drlau): check that the label was actually added
 			config: Config{
@@ -152,6 +161,7 @@ func TestNotifyNotify(t *testing.T) {
 			exitCode: 0,
 		},
 		{
+			name: "case 7",
 			// valid, contains destroy, but not to notify
 			config: Config{
 				Token: "token",
@@ -172,6 +182,7 @@ func TestNotifyNotify(t *testing.T) {
 			exitCode: 0,
 		},
 		{
+			name: "case 8",
 			// apply case without merge commit
 			config: Config{
 				Token: "token",
@@ -190,6 +201,7 @@ func TestNotifyNotify(t *testing.T) {
 			exitCode: 0,
 		},
 		{
+			name: "case 9",
 			// apply case as merge commit
 			// TODO(drlau): validate cfg.PR.Number = 123
 			config: Config{
@@ -210,19 +222,28 @@ func TestNotifyNotify(t *testing.T) {
 		},
 	}
 
-	for _, testCase := range testCases {
-		client, err := NewClient(context.Background(), testCase.config)
-		if err != nil {
-			t.Fatal(err)
+	for i, testCase := range testCases {
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf("testCase.name is required: index: %d", i)
 		}
-		api := newFakeAPI()
-		client.API = &api
-		exitCode, err := client.Notify.Notify(context.Background(), testCase.body)
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
-		if exitCode != testCase.exitCode {
-			t.Errorf("got %q but want %q", exitCode, testCase.exitCode)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			client, err := NewClient(context.Background(), testCase.config)
+			if err != nil {
+				t.Fatal(err)
+			}
+			api := newFakeAPI()
+			client.API = &api
+			exitCode, err := client.Notify.Notify(context.Background(), notifier.ParamExec{
+				Stdout: testCase.body,
+			})
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %v", err)
+			}
+			if exitCode != testCase.exitCode {
+				t.Errorf("got %d but want %d", exitCode, testCase.exitCode)
+			}
+		})
 	}
 }

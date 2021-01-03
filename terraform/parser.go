@@ -18,6 +18,7 @@ type ParseResult struct {
 	HasDestroy         bool
 	HasNoChanges       bool
 	HasPlanError       bool
+	HasParseError      bool
 	ExitCode           int
 	Error              error
 }
@@ -83,9 +84,10 @@ func (p *PlanParser) Parse(body string) ParseResult {
 		exitCode = ExitFail
 	default:
 		return ParseResult{
-			Result:   "",
-			ExitCode: ExitFail,
-			Error:    errors.New("cannot parse plan result"),
+			Result:        "",
+			HasParseError: true,
+			ExitCode:      ExitFail,
+			Error:         errors.New("cannot parse plan result"),
 		}
 	}
 	lines := strings.Split(body, "\n")
@@ -130,9 +132,10 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 		exitCode = ExitFail
 	default:
 		return ParseResult{
-			Result:   "",
-			ExitCode: ExitFail,
-			Error:    errors.New("cannot parse apply result"),
+			Result:        "",
+			ExitCode:      ExitFail,
+			HasParseError: true,
+			Error:         errors.New("cannot parse apply result"),
 		}
 	}
 	lines := strings.Split(body, "\n")

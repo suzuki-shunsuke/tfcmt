@@ -2,8 +2,10 @@ package github
 
 import (
 	"context"
+	"log"
 	"net/http"
 
+	"github.com/mercari/tfnotify/notifier"
 	"github.com/mercari/tfnotify/terraform"
 )
 
@@ -12,12 +14,17 @@ import (
 type NotifyService service
 
 // Notify posts comment optimized for notifications
-func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err error) {
+func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (int, error) {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
 
+	body := param.Stdout
 	result := parser.Parse(body)
+	result.ExitCode = param.ExitCode
+	if result.HasParseError {
+		log.Println("[ERROR][tfcmt]", result.Error)
+	}
 	if result.Error != nil {
 		return result.ExitCode, result.Error
 	}
@@ -29,7 +36,7 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 	if isPlan {
 		if result.HasDestroy && cfg.WarnDestroy {
 			// Notify destroy warning as a new comment before normal plan result
-			if err = g.notifyDestoryWarning(ctx, body, result); err != nil {
+			if err := g.notifyDestoryWarning(ctx, body, result); err != nil {
 				return result.ExitCode, err
 			}
 		}
@@ -98,7 +105,7 @@ func (g *NotifyService) Notify(ctx context.Context, body string) (exit int, err 
 		UseRawOutput: cfg.UseRawOutput,
 		Vars:         cfg.Vars,
 	})
-	body, err = template.Execute()
+	body, err := template.Execute()
 	if err != nil {
 		return result.ExitCode, err
 	}
