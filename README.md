@@ -56,7 +56,7 @@ For `plan` command, you also need to specify `plan` as the argument of tfcmt. In
 
 When running tfcmt, you can specify the configuration path via `--config` option (if it's omitted, the configuration file `{.,}tfcmt.y{,a}ml` is searched from the current directory to the root directory).
 
-The example settings of GitHub and GitHub Enterprise, Slack, [Typetalk](https://www.typetalk.com/) are as follows. Incidentally, there is no need to replace TOKEN string such as `$GITHUB_TOKEN` with the actual token. Instead, it must be defined as environment variables in CI settings.
+The example settings of GitHub and GitHub Enterprise are as follows. Incidentally, there is no need to replace TOKEN string such as `$GITHUB_TOKEN` with the actual token. Instead, it must be defined as environment variables in CI settings.
 
 [template](https://golang.org/pkg/text/template/) of Go can be used for `template`. The templates can be used in `tfcmt.yaml` are as follows:
 
@@ -265,107 +265,6 @@ terraform:
 
 </details>
 
-<details>
-<summary>For GitLab</summary>
-
-```yaml
----
-ci: gitlabci
-notifier:
-  gitlab:
-    token: $GITLAB_TOKEN
-    base_url: $GITLAB_BASE_URL
-    repository:
-      owner: "suzuki-shunsuke"
-      name: "tfcmt"
-terraform:
-  fmt:
-    template: |
-      {{ .Title }}
-
-      {{ .Message }}
-
-      {{ .Result }}
-
-      {{ .Body }}
-  plan:
-    template: |
-      {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
-      {{ .Message }}
-      {{if .Result}}
-      <pre><code> {{ .Result }}
-      </pre></code>
-      {{end}}
-      <details><summary>Details (Click me)</summary>
-      <pre><code> {{ .Body }}
-      </pre></code></details>
-  apply:
-    template: |
-      {{ .Title }}
-      {{ .Message }}
-      {{if .Result}}
-      <pre><code> {{ .Result }}
-      </pre></code>
-      {{end}}
-      <details><summary>Details (Click me)</summary>
-      <pre><code> {{ .Body }}
-      </pre></code></details>
-```
-</details>
-
-<details>
-<summary>For Slack</summary>
-
-```yaml
----
-ci: circleci
-notifier:
-  slack:
-    token: $SLACK_TOKEN
-    channel: $SLACK_CHANNEL_ID
-    bot: $SLACK_BOT_NAME
-terraform:
-  plan:
-    template: |
-      {{ .Message }}
-      {{if .Result}}
-      ```
-      {{ .Result }}
-      ```
-      {{end}}
-      ```
-      {{ .Body }}
-      ```
-```
-
-</details>
-
-<details>
-<summary>For Typetalk</summary>
-
-```yaml
----
-ci: circleci
-notifier:
-  typetalk:
-    token: $TYPETALK_TOKEN
-    topic_id: $TYPETALK_TOPIC_ID
-terraform:
-  plan:
-    template: |
-      {{ .Message }}
-      {{if .Result}}
-      ```
-      {{ .Result }}
-      ```
-      {{end}}
-      ```
-      {{ .Body }}
-      ```
-```
-
-</details>
-
 ## -var option
 
 tfcmt supports to pass variables by `-var` option.
@@ -394,25 +293,13 @@ terraform:
 Currently, supported CI are here:
 
 - CircleCI
-- Travis CI
 - AWS CodeBuild
-- TeamCity
-- Drone
-- Jenkins
-- GitLab CI
 - GitHub Actions
 - Google Cloud Build
 
 ### Private Repository Considerations
 
 GitHub private repositories require the `repo` and `write:discussion` permissions.
-
-### Jenkins Considerations
-
-- Plugin
-  - [Git Plugin](https://wiki.jenkins.io/display/JENKINS/Git+Plugin)
-- Environment Variable
-  - `PULL_REQUEST_NUMBER` or `PULL_REQUEST_URL` are required to set by user for Pull Request Usage
 
 ### Google Cloud Build Considerations
 

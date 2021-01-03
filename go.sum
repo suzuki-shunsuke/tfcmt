@@ -30,8 +30,6 @@ github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
 github.com/lestrrat-go/pdebug v0.0.0-20180220043849-39f9a71bcabe h1:S7XSBlgc/eI2v47LkPPVa+infH3FuTS4tPJbqCtJovo=
 github.com/lestrrat-go/pdebug v0.0.0-20180220043849-39f9a71bcabe/go.mod h1:zvUY6gZZVL2nu7NM+/3b51Z/hxyFZCZxV0hvfZ3NJlg=
-github.com/lestrrat-go/slack v0.0.0-20190827134815-1aaae719550a h1:1SkDXQ4ho+45ip33ibktXcp5GqTdyApegW6jCHac3PQ=
-github.com/lestrrat-go/slack v0.0.0-20190827134815-1aaae719550a/go.mod h1:2wxkiO7lExZoef2wz5rt3Mt2IGSYzQchxuQoWV7mfRM=
 github.com/mattn/go-colorable v0.1.8 h1:c1ghPdyEDarC70ftn0y+A/Ee++9zz8ljHG1b13eJ0s8=
 github.com/mattn/go-colorable v0.1.8/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
 github.com/mattn/go-isatty v0.0.12 h1:wuysRhFDzyxgEmMf5xjvJ2M9dZoWAXNNr5LSBS7uHXY=
@@ -40,8 +38,6 @@ github.com/mitchellh/copystructure v1.0.0 h1:Laisrj+bAB6b/yJwB5Bt3ITZhGJdqmxquMK
 github.com/mitchellh/copystructure v1.0.0/go.mod h1:SNtv71yrdKgLRyLFxmLdkAbkKEFWgYaq1OVrnRcwhnw=
 github.com/mitchellh/reflectwalk v1.0.0 h1:9D+8oIskB4VJBN5SFlmc27fSlIBZaov1Wpk/IfikLNY=
 github.com/mitchellh/reflectwalk v1.0.0/go.mod h1:mSTlrgnPZtwu0c4WaC2kGObEpuNDbx0jmZXqmk4esnw=
-github.com/nulab/go-typetalk v2.1.1+incompatible h1:XdLjQuNVh77Wp7Qu4w8fqFdptxozGyy+Cq7n7/uUvMw=
-github.com/nulab/go-typetalk v2.1.1+incompatible/go.mod h1:m2ResEyH1dMB+0oMK/iCwd/qzCdCT+WdncQILJo/7t4=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
