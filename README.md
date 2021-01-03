@@ -40,13 +40,15 @@ Detailed specifications such as templates and notification destinations can be c
 
 tfcmt is just CLI command. So you can run it from your local after grabbing the binary.
 
-Basically tfcmt waits for the input from Stdin. So tfcmt needs to pipe the output of Terraform command like the following:
+tfcmt accpepts a command as arguments and run the command.
 
 ```console
-$ terraform plan | tfcmt plan
+$ tfcmt plan -- terraform plan -detailed-exitcode
 ```
 
-For `plan` command, you also need to specify `plan` as the argument of tfcmt. In the case of `apply`, you need to do `apply`. Currently supported commands can be checked with `tfcmt --help`.
+```console
+$ tfcmt apply -- terraform apply -auto-approve
+```
 
 ### Configurations
 

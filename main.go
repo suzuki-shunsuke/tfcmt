@@ -5,11 +5,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
+	"os/exec"
 	"strings"
 	"text/template"
 
 	"github.com/Masterminds/sprig"
+	"github.com/mattn/go-colorable"
 	"github.com/mercari/tfnotify/config"
 	"github.com/mercari/tfnotify/notifier"
 	"github.com/mercari/tfnotify/notifier/github"
@@ -155,16 +158,33 @@ func (t *tfnotify) Run(ctx context.Context) error {
 		selectedNotifier = t.context.String("notifier")
 	}
 
-	notifier, err := t.getNotifier(ctx, ci, selectedNotifier)
+	ntf, err := t.getNotifier(ctx, ci, selectedNotifier)
 	if err != nil {
 		return err
 	}
 
-	if notifier == nil {
+	if ntf == nil {
 		return errors.New("no notifier specified at all")
 	}
 
-	return NewExitError(notifier.Notify(ctx, tee(os.Stdin, os.Stdout)))
+	args := t.context.Args()
+	cmd := exec.CommandContext(ctx, args.First(), args.Tail()...) //nolint:gosec
+	stdout := &bytes.Buffer{}
+	uncolorize := colorable.NewNonColorable(stdout)
+	stderr := &bytes.Buffer{}
+	combinedOutput := &bytes.Buffer{}
+	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorize, combinedOutput)
+	cmd.Stderr = io.MultiWriter(os.Stderr, stderr, combinedOutput)
+	_ = cmd.Run()
+
+	return NewExitError(ntf.Notify(ctx, notifier.ParamExec{
+		Stdout:         stdout.String(),
+		Stderr:         stderr.String(),
+		CombinedOutput: combinedOutput.String(),
+		Cmd:            cmd,
+		Args:           args,
+		ExitCode:       cmd.ProcessState.ExitCode(),
+	}))
 }
 
 func main() {

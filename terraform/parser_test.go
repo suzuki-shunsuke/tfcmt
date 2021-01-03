@@ -347,6 +347,7 @@ func TestPlanParserParse(t *testing.T) {
 				HasDestroy:         false,
 				HasNoChanges:       false,
 				HasPlanError:       false,
+				HasParseError:      true,
 				ExitCode:           1,
 				Error:              errors.New("cannot parse plan result"),
 			},
@@ -423,10 +424,14 @@ func TestPlanParserParse(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		result := NewPlanParser().Parse(testCase.body)
-		if !reflect.DeepEqual(result, testCase.result) {
-			t.Errorf("got %v but want %v", result, testCase.result)
-		}
+		testCase := testCase
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			result := NewPlanParser().Parse(testCase.body)
+			if !reflect.DeepEqual(result, testCase.result) {
+				t.Errorf("got %v but want %v", result, testCase.result)
+			}
+		})
 	}
 }
 
@@ -441,9 +446,10 @@ func TestApplyParserParse(t *testing.T) {
 			name: "no stdin",
 			body: "",
 			result: ParseResult{
-				Result:   "",
-				ExitCode: 1,
-				Error:    errors.New("cannot parse apply result"),
+				Result:        "",
+				ExitCode:      1,
+				HasParseError: true,
+				Error:         errors.New("cannot parse apply result"),
 			},
 		},
 		{
@@ -471,10 +477,14 @@ func TestApplyParserParse(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		result := NewApplyParser().Parse(testCase.body)
-		if !reflect.DeepEqual(result, testCase.result) {
-			t.Errorf("got %v but want %v", result, testCase.result)
-		}
+		testCase := testCase
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			result := NewApplyParser().Parse(testCase.body)
+			if !reflect.DeepEqual(result, testCase.result) {
+				t.Errorf("got %v but want %v", result, testCase.result)
+			}
+		})
 	}
 }
 
