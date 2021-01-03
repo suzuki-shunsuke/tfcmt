@@ -17,14 +17,10 @@ We forked [suzuki-shunsuke/tfnotify v1.3.3](https://github.com/suzuki-shunsuke/t
 
 There are commands such as `plan` and `apply` on Terraform command, but many developers think they would like to check if the execution of those commands succeeded.
 Terraform commands are often executed via CI like CircleCI, but in that case you need to go to the CI page to check it.
-This is very troublesome. It is very efficient if you can check it with GitHub comments or Slack etc.
+This is very troublesome. It is very efficient if you can check it with GitHub comments.
 You can do this by using this command.
 
 <img src="./misc/images/1.png" width="600">
-
-<img src="./misc/images/2.png" width="500">
-
-<img src="./misc/images/3.png" width="600">
 
 ## Installation
 

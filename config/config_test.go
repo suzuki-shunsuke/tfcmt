@@ -23,15 +23,15 @@ func TestLoadFile(t *testing.T) {
 		ok   bool
 	}{
 		{
-			file: "../example.tfnotify.yaml",
+			file: "../example.tfcmt.yaml",
 			cfg: Config{
 				CI: "circleci",
 				Notifier: Notifier{
 					Github: GithubNotifier{
 						Token: "$GITHUB_TOKEN",
 						Repository: Repository{
-							Owner: "mercari",
-							Name:  "tfnotify",
+							Owner: "suzuki-shunsuke",
+							Name:  "tfcmt",
 						},
 					},
 				},
@@ -48,20 +48,20 @@ func TestLoadFile(t *testing.T) {
 					},
 					UseRawOutput: false,
 				},
-				path: "../example.tfnotify.yaml",
+				path: "../example.tfcmt.yaml",
 			},
 			ok: true,
 		},
 		{
-			file: "../example-with-destroy-and-result-labels.tfnotify.yaml",
+			file: "../example-with-destroy-and-result-labels.tfcmt.yaml",
 			cfg: Config{
 				CI: "circleci",
 				Notifier: Notifier{
 					Github: GithubNotifier{
 						Token: "$GITHUB_TOKEN",
 						Repository: Repository{
-							Owner: "mercari",
-							Name:  "tfnotify",
+							Owner: "suzuki-shunsuke",
+							Name:  "tfcmt",
 						},
 					},
 				},
@@ -90,7 +90,7 @@ func TestLoadFile(t *testing.T) {
 					},
 					UseRawOutput: false,
 				},
-				path: "../example-with-destroy-and-result-labels.tfnotify.yaml",
+				path: "../example-with-destroy-and-result-labels.tfcmt.yaml",
 			},
 			ok: true,
 		},
@@ -102,8 +102,8 @@ func TestLoadFile(t *testing.T) {
 					Github: GithubNotifier{
 						Token: "$GITHUB_TOKEN",
 						Repository: Repository{
-							Owner: "mercari",
-							Name:  "tfnotify",
+							Owner: "suzuki-shunsuke",
+							Name:  "tfcmt",
 						},
 					},
 				},
@@ -249,10 +249,10 @@ func TestGetNotifierType(t *testing.T) {
 func createDummy(file string) {
 	validConfig := func(file string) bool {
 		for _, c := range []string{
-			"tfnotify.yaml",
-			"tfnotify.yml",
-			".tfnotify.yaml",
-			".tfnotify.yml",
+			"tfcmt.yaml",
+			"tfcmt.yml",
+			".tfcmt.yaml",
+			".tfcmt.yml",
 		} {
 			if file == c {
 				return true
@@ -289,26 +289,26 @@ func TestFind(t *testing.T) { //nolint:paralleltest
 	}{
 		{
 			// valid config
-			file:   ".tfnotify.yaml",
-			expect: ".tfnotify.yaml",
+			file:   ".tfcmt.yaml",
+			expect: ".tfcmt.yaml",
 			ok:     true,
 		},
 		{
 			// valid config
-			file:   "tfnotify.yaml",
-			expect: "tfnotify.yaml",
+			file:   "tfcmt.yaml",
+			expect: "tfcmt.yaml",
 			ok:     true,
 		},
 		{
 			// valid config
-			file:   ".tfnotify.yml",
-			expect: ".tfnotify.yml",
+			file:   ".tfcmt.yml",
+			expect: ".tfcmt.yml",
 			ok:     true,
 		},
 		{
 			// valid config
-			file:   "tfnotify.yml",
-			expect: "tfnotify.yml",
+			file:   "tfcmt.yml",
+			expect: "tfcmt.yml",
 			ok:     true,
 		},
 		{
@@ -320,7 +320,7 @@ func TestFind(t *testing.T) { //nolint:paralleltest
 		{
 			// in case of no args passed
 			file:   "",
-			expect: filepath.Join(wd, "tfnotify.yaml"),
+			expect: filepath.Join(wd, "tfcmt.yaml"),
 			ok:     true,
 		},
 	}
