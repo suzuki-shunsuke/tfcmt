@@ -26,12 +26,6 @@ type ParseResult struct {
 type DefaultParser struct {
 }
 
-// FmtParser is a parser for terraform fmt
-type FmtParser struct {
-	Pass *regexp.Regexp
-	Fail *regexp.Regexp
-}
-
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
 	Pass         *regexp.Regexp
@@ -49,13 +43,6 @@ type ApplyParser struct {
 // NewDefaultParser is DefaultParser initializer
 func NewDefaultParser() *DefaultParser {
 	return &DefaultParser{}
-}
-
-// NewFmtParser is FmtParser initialized with its Regexp
-func NewFmtParser() *FmtParser {
-	return &FmtParser{
-		Fail: regexp.MustCompile(`(?m)^@@[^@]+@@`),
-	}
 }
 
 // NewPlanParser is PlanParser initialized with its Regexp
@@ -84,16 +71,6 @@ func (p *DefaultParser) Parse(body string) ParseResult {
 		ExitCode: ExitPass,
 		Error:    nil,
 	}
-}
-
-// Parse returns ParseResult related with terraform fmt
-func (p *FmtParser) Parse(body string) ParseResult {
-	result := ParseResult{}
-	if p.Fail.MatchString(body) {
-		result.Result = "There is diff in your .tf file (need to be formatted)"
-		result.ExitCode = ExitFail
-	}
-	return result
 }
 
 // Parse returns ParseResult related with terraform plan

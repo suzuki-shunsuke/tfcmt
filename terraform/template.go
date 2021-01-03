@@ -11,8 +11,6 @@ import (
 const (
 	// DefaultDefaultTitle is a default title for terraform commands
 	DefaultDefaultTitle = "## Terraform result"
-	// DefaultFmtTitle is a default title for terraform fmt
-	DefaultFmtTitle = "## Fmt result"
 	// DefaultPlanTitle is a default title for terraform plan
 	DefaultPlanTitle = "## Plan result"
 	// DefaultDestroyWarningTitle is a default title of destroy warning
@@ -35,17 +33,6 @@ const (
 
 <pre><code>{{ .Body }}
 </code></pre></details>
-`
-
-	// DefaultFmtTemplate is a default template for terraform fmt
-	DefaultFmtTemplate = `
-{{ .Title }}
-
-{{ .Message }}
-
-{{ .Result }}
-
-{{ .Body }}
 `
 
 	// DefaultPlanTemplate is a default template for terraform plan
@@ -120,13 +107,6 @@ type DefaultTemplate struct {
 	CommonTemplate
 }
 
-// FmtTemplate is a default template for terraform fmt
-type FmtTemplate struct {
-	Template string
-
-	CommonTemplate
-}
-
 // PlanTemplate is a default template for terraform plan
 type PlanTemplate struct {
 	Template string
@@ -154,16 +134,6 @@ func NewDefaultTemplate(template string) *DefaultTemplate {
 		template = DefaultDefaultTemplate
 	}
 	return &DefaultTemplate{
-		Template: template,
-	}
-}
-
-// NewFmtTemplate is FmtTemplate initializer
-func NewFmtTemplate(template string) *FmtTemplate {
-	if template == "" {
-		template = DefaultFmtTemplate
-	}
-	return &FmtTemplate{
 		Template: template,
 	}
 }
@@ -241,25 +211,6 @@ func (t *DefaultTemplate) Execute() (string, error) {
 	return resp, nil
 }
 
-// Execute binds the execution result of terraform fmt into template
-func (t *FmtTemplate) Execute() (string, error) {
-	data := map[string]interface{}{
-		"Title":   t.Title,
-		"Message": t.Message,
-		"Result":  "",
-		"Body":    t.Result,
-		"Link":    t.Link,
-		"Vars":    t.Vars,
-	}
-
-	resp, err := generateOutput("fmt", t.Template, data, t.UseRawOutput)
-	if err != nil {
-		return "", err
-	}
-
-	return resp, nil
-}
-
 // Execute binds the execution result of terraform plan into template
 func (t *PlanTemplate) Execute() (string, error) {
 	data := map[string]interface{}{
@@ -325,14 +276,6 @@ func (t *DefaultTemplate) SetValue(ct CommonTemplate) {
 	t.CommonTemplate = ct
 }
 
-// SetValue sets template entities about terraform fmt to CommonTemplate
-func (t *FmtTemplate) SetValue(ct CommonTemplate) {
-	if ct.Title == "" {
-		ct.Title = DefaultFmtTitle
-	}
-	t.CommonTemplate = ct
-}
-
 // SetValue sets template entities about terraform plan to CommonTemplate
 func (t *PlanTemplate) SetValue(ct CommonTemplate) {
 	if ct.Title == "" {
@@ -359,11 +302,6 @@ func (t *ApplyTemplate) SetValue(ct CommonTemplate) {
 
 // GetValue gets template entities
 func (t *DefaultTemplate) GetValue() CommonTemplate {
-	return t.CommonTemplate
-}
-
-// GetValue gets template entities
-func (t *FmtTemplate) GetValue() CommonTemplate {
 	return t.CommonTemplate
 }
 

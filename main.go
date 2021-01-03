@@ -180,21 +180,6 @@ func main() {
 	}
 	app.Commands = []*cli.Command{
 		{
-			Name:   "fmt",
-			Usage:  "Parse stdin as a fmt result",
-			Action: cmdFmt,
-			Flags: []cli.Flag{
-				&cli.StringFlag{
-					Name:  "title, t",
-					Usage: "Specify the title to use for notification",
-				},
-				&cli.StringFlag{
-					Name:  "message, m",
-					Usage: "Specify the message to use for notification",
-				},
-			},
-		},
-		{
 			Name:   "plan",
 			Usage:  "Parse stdin as a plan result",
 			Action: cmdPlan,
@@ -270,20 +255,6 @@ func newConfig(ctx *cli.Context) (config.Config, error) {
 		return cfg, err
 	}
 	return cfg, nil
-}
-
-func cmdFmt(ctx *cli.Context) error {
-	cfg, err := newConfig(ctx)
-	if err != nil {
-		return err
-	}
-	t := &tfnotify{
-		config:   cfg,
-		context:  ctx,
-		parser:   terraform.NewFmtParser(),
-		template: terraform.NewFmtTemplate(cfg.Terraform.Fmt.Template),
-	}
-	return t.Run(ctx.Context)
 }
 
 func cmdPlan(ctx *cli.Context) error {

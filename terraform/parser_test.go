@@ -6,42 +6,6 @@ import (
 	"testing"
 )
 
-// terraform fmt -diff=true -write=false (version 0.11.x)
-const fmtFailResult0_11 = `
-google_spanner_database.tf
-diff a/google_spanner_database.tf b/google_spanner_database.tf
---- /tmp/398669432
-+++ /tmp/536670071
-@@ -9,3 +9,4 @@
- #   instance = "${google_spanner_instance.my_service_dev.name}"
- #   name     = "my-service-dev"
- # }
-+
-
-google_spanner_instance.tf
-diff a/google_spanner_instance.tf b/google_spanner_instance.tf
---- /tmp/314409578
-+++ /tmp/686207681
-@@ -13,3 +13,4 @@
- #   name         = "my-service-dev"
- #   num_nodes    = 1
- # }
-+
-`
-
-// terraform fmt -diff=true -write=false (version 0.12.x)
-const fmtFailResult0_12 = `
-versions.tf
---- old/versions.tf
-+++ new/versions.tf
-@@ -1,4 +1,4 @@
- 
- terraform {
--  required_version     = ">= 0.12"
-+  required_version = ">= 0.12"
- }
-`
-
 const planSuccessResult = `
 Refreshing Terraform state in-memory prior to plan...
 The refreshed state will be used to calculate this plan, but will not be
@@ -348,49 +312,6 @@ func TestDefaultParserParse(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		result := NewDefaultParser().Parse(testCase.body)
-		if !reflect.DeepEqual(result, testCase.result) {
-			t.Errorf("got %v but want %v", result, testCase.result)
-		}
-	}
-}
-
-func TestFmtParserParse(t *testing.T) {
-	t.Parallel()
-	testCases := []struct {
-		name   string
-		body   string
-		result ParseResult
-	}{
-		{
-			name: "diff",
-			body: fmtFailResult0_11,
-			result: ParseResult{
-				Result:   "There is diff in your .tf file (need to be formatted)",
-				ExitCode: 1,
-				Error:    nil,
-			},
-		},
-		{
-			name: "diff",
-			body: fmtFailResult0_12,
-			result: ParseResult{
-				Result:   "There is diff in your .tf file (need to be formatted)",
-				ExitCode: 1,
-				Error:    nil,
-			},
-		},
-		{
-			name: "no stdin",
-			body: "",
-			result: ParseResult{
-				Result:   "",
-				ExitCode: 0,
-				Error:    nil,
-			},
-		},
-	}
-	for _, testCase := range testCases {
-		result := NewFmtParser().Parse(testCase.body)
 		if !reflect.DeepEqual(result, testCase.result) {
 			t.Errorf("got %v but want %v", result, testCase.result)
 		}
