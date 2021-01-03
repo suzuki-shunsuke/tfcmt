@@ -12,13 +12,10 @@ require (
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
-	github.com/lestrrat-go/slack v0.0.0-20190827134815-1aaae719550a
 	github.com/mattn/go-colorable v0.1.8
 	github.com/mitchellh/copystructure v1.0.0 // indirect
-	github.com/nulab/go-typetalk v2.1.1+incompatible
 	github.com/suzuki-shunsuke/go-findconfig v1.0.0
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/xanzy/go-gitlab v0.22.3
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect

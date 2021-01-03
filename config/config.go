@@ -23,10 +23,7 @@ type Config struct {
 
 // Notifier is a notification notifier
 type Notifier struct {
-	Github   GithubNotifier   `yaml:"github"`
-	Gitlab   GitlabNotifier   `yaml:"gitlab"`
-	Slack    SlackNotifier    `yaml:"slack"`
-	Typetalk TypetalkNotifier `yaml:"typetalk"`
+	Github GithubNotifier `yaml:"github"`
 }
 
 // GithubNotifier is a notifier for GitHub
@@ -36,30 +33,10 @@ type GithubNotifier struct {
 	Repository Repository `yaml:"repository"`
 }
 
-// GitlabNotifier is a notifier for GitLab
-type GitlabNotifier struct {
-	Token      string     `yaml:"token"`
-	BaseURL    string     `yaml:"base_url"`
-	Repository Repository `yaml:"repository"`
-}
-
 // Repository represents a GitHub repository
 type Repository struct {
 	Owner string `yaml:"owner"`
 	Name  string `yaml:"name"`
-}
-
-// SlackNotifier is a notifier for Slack
-type SlackNotifier struct {
-	Token   string `yaml:"token"`
-	Channel string `yaml:"channel"`
-	Bot     string `yaml:"bot"`
-}
-
-// TypetalkNotifier is a notifier for Typetalk
-type TypetalkNotifier struct {
-	Token   string `yaml:"token"`
-	TopicID string `yaml:"topic_id"`
 }
 
 // Terraform represents terraform configurations
@@ -136,19 +113,9 @@ func (cfg *Config) Validation() error {
 	switch strings.ToLower(cfg.CI) {
 	case "":
 		return errors.New("ci: need to be set")
-	case "circleci", "circle-ci":
-		// ok pattern
-	case "gitlabci", "gitlab-ci":
-		// ok pattern
-	case "travis", "travisci", "travis-ci":
+	case "circleci":
 		// ok pattern
 	case "codebuild":
-		// ok pattern
-	case "teamcity":
-		// ok pattern
-	case "drone":
-		// ok pattern
-	case "jenkins":
 		// ok pattern
 	case "github-actions":
 		// ok pattern
@@ -165,24 +132,6 @@ func (cfg *Config) Validation() error {
 			return errors.New("repository name is missing")
 		}
 	}
-	if cfg.isDefinedGitlab() {
-		if cfg.Notifier.Gitlab.Repository.Owner == "" {
-			return errors.New("repository owner is missing")
-		}
-		if cfg.Notifier.Gitlab.Repository.Name == "" {
-			return errors.New("repository name is missing")
-		}
-	}
-	if cfg.isDefinedSlack() {
-		if cfg.Notifier.Slack.Channel == "" {
-			return errors.New("slack channel id is missing")
-		}
-	}
-	if cfg.isDefinedTypetalk() {
-		if cfg.Notifier.Typetalk.TopicID == "" {
-			return errors.New("Typetalk topic id is missing") //nolint:stylecheck
-		}
-	}
 	notifier := cfg.GetNotifierType()
 	if notifier == "" {
 		return errors.New("notifier is missing")
@@ -195,34 +144,10 @@ func (cfg *Config) isDefinedGithub() bool {
 	return cfg.Notifier.Github != (GithubNotifier{})
 }
 
-func (cfg *Config) isDefinedGitlab() bool {
-	// not empty
-	return cfg.Notifier.Gitlab != (GitlabNotifier{})
-}
-
-func (cfg *Config) isDefinedSlack() bool {
-	// not empty
-	return cfg.Notifier.Slack != (SlackNotifier{})
-}
-
-func (cfg *Config) isDefinedTypetalk() bool {
-	// not empty
-	return cfg.Notifier.Typetalk != (TypetalkNotifier{})
-}
-
 // GetNotifierType return notifier type described in Config
 func (cfg *Config) GetNotifierType() string {
 	if cfg.isDefinedGithub() {
 		return "github"
-	}
-	if cfg.isDefinedGitlab() {
-		return "gitlab"
-	}
-	if cfg.isDefinedSlack() {
-		return "slack"
-	}
-	if cfg.isDefinedTypetalk() {
-		return "typetalk"
 	}
 	return ""
 }
