@@ -71,7 +71,7 @@ By this change, tfcmt can handle the standard error output and exit code of the 
 * support template functions [sprig](http://masterminds.github.io/sprig/)
 * support to pass variables by -var option
 * support to find the configuration file recursively
-* support --version option
+* support --version option and add `version` command
 
 ### don't recreate labels
 
@@ -108,6 +108,9 @@ TO BE
 
 ```
 $ tfcmt --version
+tfcmt version 0.1.0
+
+$ tfcmt version
 tfcmt version 0.1.0
 ```
 
