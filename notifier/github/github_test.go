@@ -10,7 +10,6 @@ import (
 type fakeAPI struct {
 	API
 	FakeIssuesCreateComment       func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
-	FakeIssuesDeleteComment       func(ctx context.Context, commentID int64) (*github.Response, error)
 	FakeIssuesListComments        func(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error)
 	FakeIssuesListLabels          func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error)
 	FakeIssuesAddLabels           func(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
@@ -22,10 +21,6 @@ type fakeAPI struct {
 
 func (g *fakeAPI) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
 	return g.FakeIssuesCreateComment(ctx, number, comment)
-}
-
-func (g *fakeAPI) IssuesDeleteComment(ctx context.Context, commentID int64) (*github.Response, error) {
-	return g.FakeIssuesDeleteComment(ctx, commentID)
 }
 
 func (g *fakeAPI) IssuesListComments(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error) {
@@ -63,9 +58,6 @@ func newFakeAPI() fakeAPI {
 				ID:   github.Int64(371748792),
 				Body: github.String("comment 1"),
 			}, nil, nil
-		},
-		FakeIssuesDeleteComment: func(ctx context.Context, commentID int64) (*github.Response, error) {
-			return nil, nil
 		},
 		FakeIssuesListComments: func(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error) {
 			comments := []*github.IssueComment{
