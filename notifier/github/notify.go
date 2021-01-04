@@ -87,8 +87,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 					}
 				} else if labelColor != "" && labelColor != currentLabelColor {
 					// set the color of label
-					_, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor)
-					if err != nil {
+					if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
 						return result.ExitCode, err
 					}
 				}
@@ -116,8 +115,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		g.client.Comment.DeleteDuplicates(ctx, value.Title)
 	}
 
-	_, isApply := parser.(*terraform.ApplyParser)
-	if isApply {
+	if _, isApply := parser.(*terraform.ApplyParser); isApply {
 		prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision)
 		if err == nil {
 			cfg.PR.Number = prNumber
