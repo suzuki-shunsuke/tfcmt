@@ -5,6 +5,7 @@ tfcmt isn't compatible with tfnotify.
 ## Breaking Changes
 
 * don't support platforms which we don't use
+  * remove `notifier` option
 * don't support `fmt` command
 * configuration file name is changed
 * command usage is changed
