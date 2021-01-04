@@ -37,13 +37,3 @@ func (g *CommentService) Post(ctx context.Context, body string, opt PostOptions)
 	}
 	return errors.New("github.comment.post: Number or Revision is required")
 }
-
-// List lists comments on GitHub issues/pull requests
-func (g *CommentService) List(ctx context.Context, number int) ([]*github.IssueComment, error) {
-	comments, _, err := g.client.API.IssuesListComments(
-		ctx,
-		number,
-		&github.IssueListCommentsOptions{},
-	)
-	return comments, err
-}
