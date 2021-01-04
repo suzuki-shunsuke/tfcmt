@@ -20,11 +20,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const (
-	name        = "tfnotify"
-	description = "Notify the execution result of terraform command"
-)
-
 type tfnotify struct {
 	config                 config.Config
 	context                *cli.Context
@@ -189,8 +184,8 @@ func (t *tfnotify) Run(ctx context.Context) error {
 
 func main() {
 	app := cli.NewApp()
-	app.Name = name
-	app.Usage = description
+	app.Name = "tfcmt"
+	app.Usage = "Notify the execution result of terraform command"
 	app.Version = version
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfnotify"},
