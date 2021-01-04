@@ -109,12 +109,6 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		return result.ExitCode, err
 	}
 
-	value := template.GetValue()
-
-	if cfg.PR.IsNumber() {
-		g.client.Comment.DeleteDuplicates(ctx, value.Title)
-	}
-
 	if _, isApply := parser.(*terraform.ApplyParser); isApply {
 		prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision)
 		if err == nil {
