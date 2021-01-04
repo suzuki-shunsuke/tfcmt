@@ -47,12 +47,3 @@ func (g *CommentService) List(ctx context.Context, number int) ([]*github.IssueC
 	)
 	return comments, err
 }
-
-// Delete deletes comment on GitHub issues/pull requests
-func (g *CommentService) Delete(ctx context.Context, id int) error {
-	_, err := g.client.API.IssuesDeleteComment(
-		ctx,
-		int64(id),
-	)
-	return err
-}
