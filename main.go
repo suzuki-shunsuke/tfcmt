@@ -96,44 +96,37 @@ func (t *tfnotify) renderGitHubLabels() (github.ResultLabels, error) {
 	return labels, nil
 }
 
-func (t *tfnotify) getNotifier(ctx context.Context, ci CI, selectedNotifier string) (notifier.Notifier, error) {
-	switch selectedNotifier {
-	case "github":
-		labels, err := t.renderGitHubLabels()
-		if err != nil {
-			return nil, err
-		}
-		client, err := github.NewClient(ctx, github.Config{
-			Token:   t.config.Notifier.Github.Token,
-			BaseURL: t.config.Notifier.Github.BaseURL,
-			Owner:   t.config.Notifier.Github.Repository.Owner,
-			Repo:    t.config.Notifier.Github.Repository.Name,
-			PR: github.PullRequest{
-				Revision:              ci.PR.Revision,
-				Number:                ci.PR.Number,
-				Title:                 t.context.String("title"),
-				Message:               t.context.String("message"),
-				DestroyWarningTitle:   t.context.String("destroy-warning-title"),
-				DestroyWarningMessage: t.context.String("destroy-warning-message"),
-			},
-			CI:                     ci.URL,
-			Parser:                 t.parser,
-			UseRawOutput:           t.config.Terraform.UseRawOutput,
-			Template:               t.template,
-			DestroyWarningTemplate: t.destroyWarningTemplate,
-			WarnDestroy:            t.warnDestroy,
-			ResultLabels:           labels,
-			Vars:                   t.config.Vars,
-		})
-		if err != nil {
-			return nil, err
-		}
-		return client.Notify, nil
-	case "":
-		return nil, errors.New("notifier is missing")
-	default:
-		return nil, fmt.Errorf("%s: not supported notifier yet", selectedNotifier)
+func (t *tfnotify) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, error) {
+	labels, err := t.renderGitHubLabels()
+	if err != nil {
+		return nil, err
 	}
+	client, err := github.NewClient(ctx, github.Config{
+		Token:   t.config.Notifier.Github.Token,
+		BaseURL: t.config.Notifier.Github.BaseURL,
+		Owner:   t.config.Notifier.Github.Repository.Owner,
+		Repo:    t.config.Notifier.Github.Repository.Name,
+		PR: github.PullRequest{
+			Revision:              ci.PR.Revision,
+			Number:                ci.PR.Number,
+			Title:                 t.context.String("title"),
+			Message:               t.context.String("message"),
+			DestroyWarningTitle:   t.context.String("destroy-warning-title"),
+			DestroyWarningMessage: t.context.String("destroy-warning-message"),
+		},
+		CI:                     ci.URL,
+		Parser:                 t.parser,
+		UseRawOutput:           t.config.Terraform.UseRawOutput,
+		Template:               t.template,
+		DestroyWarningTemplate: t.destroyWarningTemplate,
+		WarnDestroy:            t.warnDestroy,
+		ResultLabels:           labels,
+		Vars:                   t.config.Vars,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return client.Notify, nil
 }
 
 // Run sends the notification with notifier
@@ -148,12 +141,7 @@ func (t *tfnotify) Run(ctx context.Context) error {
 		return err
 	}
 
-	selectedNotifier := t.config.GetNotifierType()
-	if t.context.String("notifier") != "" {
-		selectedNotifier = t.context.String("notifier")
-	}
-
-	ntf, err := t.getNotifier(ctx, ci, selectedNotifier)
+	ntf, err := t.getNotifier(ctx, ci)
 	if err != nil {
 		return err
 	}
@@ -190,7 +178,6 @@ func main() {
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfnotify"},
 		&cli.StringFlag{Name: "config", Usage: "config path"},
-		&cli.StringFlag{Name: "notifier", Usage: "notification destination"},
 		&cli.StringSliceFlag{Name: "var", Usage: "template variables. The format of value is '<name>:<value>'"},
 	}
 	app.Commands = []*cli.Command{
