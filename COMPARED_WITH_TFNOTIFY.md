@@ -9,6 +9,7 @@ tfcmt isn't compatible with tfnotify.
 * don't support `fmt` command
 * configuration file name is changed
 * command usage is changed
+* don't remove duplicated comments
 
 ### don't support platforms which we don't use
 
@@ -64,6 +65,13 @@ tfcmt apply -- terraform apply
 ```
 
 By this change, tfcmt can handle the standard error output and exit code of the terraform command.
+
+### don't remove duplicated comments
+
+tfnotify removes duplicated comments, but this feature isn't documented and confusing.
+The link to the comment would be broken when the comment would be removed.
+
+So this feature is removed from tfcmt.
 
 ## Features
 

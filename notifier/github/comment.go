@@ -3,7 +3,6 @@ package github
 import (
 	"context"
 	"errors"
-	"regexp"
 
 	"github.com/google/go-github/github"
 )
@@ -47,34 +46,4 @@ func (g *CommentService) List(ctx context.Context, number int) ([]*github.IssueC
 		&github.IssueListCommentsOptions{},
 	)
 	return comments, err
-}
-
-// Delete deletes comment on GitHub issues/pull requests
-func (g *CommentService) Delete(ctx context.Context, id int) error {
-	_, err := g.client.API.IssuesDeleteComment(
-		ctx,
-		int64(id),
-	)
-	return err
-}
-
-// DeleteDuplicates deletes duplicate comments containing arbitrary character strings
-func (g *CommentService) DeleteDuplicates(ctx context.Context, title string) {
-	for _, comment := range g.getDuplicates(ctx, title) {
-		_ = g.client.Comment.Delete(ctx, int(*comment.ID))
-	}
-}
-
-func (g *CommentService) getDuplicates(ctx context.Context, title string) []*github.IssueComment {
-	var dup []*github.IssueComment
-	re := regexp.MustCompile(`(?m)^(\n+)?` + title + `( +.*)?\n+` + g.client.Config.PR.Message + `\n+`)
-
-	comments, _ := g.client.Comment.List(ctx, g.client.Config.PR.Number)
-	for _, comment := range comments {
-		if re.MatchString(*comment.Body) {
-			dup = append(dup, comment)
-		}
-	}
-
-	return dup
 }
