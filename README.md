@@ -13,6 +13,10 @@ tfcmt parses Terraform commands' execution result and applies it to an arbitrary
 
 We forked [suzuki-shunsuke/tfnotify v1.3.3](https://github.com/suzuki-shunsuke/tfnotify/releases/tag/v1.3.3).
 
+## Compared with tfnotify
+
+Please see [Compared with tfnotify](COMPARED_WITH_TFNOTIFY.md).
+
 ## Motivation
 
 There are commands such as `plan` and `apply` on Terraform command, but many developers think they would like to check if the execution of those commands succeeded.
