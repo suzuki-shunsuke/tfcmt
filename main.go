@@ -232,6 +232,14 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:  "version",
+			Usage: "Show version",
+			Action: func(ctx *cli.Context) error {
+				cli.ShowVersion(ctx)
+				return nil
+			},
+		},
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
