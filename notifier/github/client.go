@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/github"
-	"github.com/mercari/tfnotify/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/terraform"
 	"golang.org/x/oauth2"
 )
 

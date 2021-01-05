@@ -1,4 +1,4 @@
-module github.com/mercari/tfnotify
+module github.com/suzuki-shunsuke/tfcmt
 
 go 1.13
 

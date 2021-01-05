@@ -260,7 +260,7 @@ func TestCI(t *testing.T) { //nolint:paralleltest
 					name: "case 0",
 					fn: func() {
 						os.Setenv("GITHUB_SHA", "abcdefg")
-						os.Setenv("GITHUB_REPOSITORY", "mercari/tfnotify")
+						os.Setenv("GITHUB_REPOSITORY", "suzuki-shunsuke/tfcmt")
 						os.Setenv("GITHUB_RUN_ID", "12345")
 					},
 					ci: CI{
@@ -268,7 +268,7 @@ func TestCI(t *testing.T) { //nolint:paralleltest
 							Revision: "abcdefg",
 							Number:   0,
 						},
-						URL: "https://github.com/mercari/tfnotify/actions/runs/12345",
+						URL: "https://github.com/suzuki-shunsuke/tfcmt/actions/runs/12345",
 					},
 					ok: true,
 				},

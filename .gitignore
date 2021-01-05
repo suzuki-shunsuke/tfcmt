@@ -17,6 +17,6 @@
 
 # End of https://www.gitignore.io/api/go
 
-tfnotify
+tfcmt
 vendor
 dist

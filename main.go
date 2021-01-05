@@ -13,14 +13,14 @@ import (
 
 	"github.com/Masterminds/sprig"
 	"github.com/mattn/go-colorable"
-	"github.com/mercari/tfnotify/config"
-	"github.com/mercari/tfnotify/notifier"
-	"github.com/mercari/tfnotify/notifier/github"
-	"github.com/mercari/tfnotify/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/config"
+	"github.com/suzuki-shunsuke/tfcmt/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/notifier/github"
+	"github.com/suzuki-shunsuke/tfcmt/terraform"
 	"github.com/urfave/cli/v2"
 )
 
-type tfnotify struct {
+type tfcmt struct {
 	config                 config.Config
 	context                *cli.Context
 	parser                 terraform.Parser
@@ -48,7 +48,7 @@ func getCI(ciname string) (CI, error) {
 	}
 }
 
-func (t *tfnotify) renderTemplate(tpl string) (string, error) {
+func (t *tfcmt) renderTemplate(tpl string) (string, error) {
 	tmpl, err := template.New("_").Funcs(sprig.TxtFuncMap()).Parse(tpl)
 	if err != nil {
 		return "", err
@@ -62,7 +62,7 @@ func (t *tfnotify) renderTemplate(tpl string) (string, error) {
 	return buf.String(), nil
 }
 
-func (t *tfnotify) renderGitHubLabels() (github.ResultLabels, error) {
+func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
 	labels := github.ResultLabels{
 		AddOrUpdateLabelColor: t.config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
 		DestroyLabelColor:     t.config.Terraform.Plan.WhenDestroy.Color,
@@ -97,7 +97,7 @@ func (t *tfnotify) renderGitHubLabels() (github.ResultLabels, error) {
 	return labels, nil
 }
 
-func (t *tfnotify) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, error) {
+func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, error) {
 	labels, err := t.renderGitHubLabels()
 	if err != nil {
 		return nil, err
@@ -132,7 +132,7 @@ func (t *tfnotify) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, e
 }
 
 // Run sends the notification with notifier
-func (t *tfnotify) Run(ctx context.Context) error {
+func (t *tfcmt) Run(ctx context.Context) error {
 	ciname := t.config.CI
 	if t.context.String("ci") != "" {
 		ciname = t.context.String("ci")
@@ -180,7 +180,7 @@ func main() {
 	app.Usage = "Notify the execution result of terraform command"
 	app.Version = version
 	app.Flags = []cli.Flag{
-		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfnotify"},
+		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfcmt"},
 		&cli.StringFlag{Name: "config", Usage: "config path"},
 		&cli.StringSliceFlag{Name: "var", Usage: "template variables. The format of value is '<name>:<value>'"},
 	}
@@ -277,10 +277,10 @@ func cmdPlan(ctx *cli.Context) error {
 		return err
 	}
 
-	// If when_destroy is not defined in configuration, tfnotify should not notify it
+	// If when_destroy is not defined in configuration, tfcmt should not notify it
 	warnDestroy := cfg.Terraform.Plan.WhenDestroy.Template != ""
 
-	t := &tfnotify{
+	t := &tfcmt{
 		config:                 cfg,
 		context:                ctx,
 		parser:                 terraform.NewPlanParser(),
@@ -297,7 +297,7 @@ func cmdApply(ctx *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	t := &tfnotify{
+	t := &tfcmt{
 		config:             cfg,
 		context:            ctx,
 		parser:             terraform.NewApplyParser(),
