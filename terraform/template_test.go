@@ -1,7 +1,6 @@
 package terraform
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -418,30 +417,6 @@ message
 		}
 		if resp != testCase.resp {
 			t.Errorf("got %q but want %q", resp, testCase.resp)
-		}
-	}
-}
-
-func TestGetValue(t *testing.T) {
-	t.Parallel()
-	testCases := []struct {
-		template Template
-		expected CommonTemplate
-	}{
-		{
-			template: NewPlanTemplate(""),
-			expected: CommonTemplate{},
-		},
-		{
-			template: NewApplyTemplate(""),
-			expected: CommonTemplate{},
-		},
-	}
-	for _, testCase := range testCases {
-		template := testCase.template
-		value := template.GetValue()
-		if !reflect.DeepEqual(value, testCase.expected) {
-			t.Errorf("got %#v but want %#v", value, testCase.expected)
 		}
 	}
 }
