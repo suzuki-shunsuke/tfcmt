@@ -102,69 +102,42 @@ type CommonTemplate struct {
 
 // DefaultTemplate is a default template for terraform commands
 type DefaultTemplate struct {
-	Template string
+	Template     string
+	defaultTitle string
 
 	CommonTemplate
-}
-
-// PlanTemplate is a default template for terraform plan
-type PlanTemplate struct {
-	Template string
-
-	CommonTemplate
-}
-
-// DestroyWarningTemplate is a default template for warning of destroy operation in plan
-type DestroyWarningTemplate struct {
-	Template string
-
-	CommonTemplate
-}
-
-// ApplyTemplate is a default template for terraform apply
-type ApplyTemplate struct {
-	Template string
-
-	CommonTemplate
-}
-
-// NewDefaultTemplate is DefaultTemplate initializer
-func NewDefaultTemplate(template string) *DefaultTemplate {
-	if template == "" {
-		template = DefaultDefaultTemplate
-	}
-	return &DefaultTemplate{
-		Template: template,
-	}
 }
 
 // NewPlanTemplate is PlanTemplate initializer
-func NewPlanTemplate(template string) *PlanTemplate {
+func NewPlanTemplate(template string) *DefaultTemplate {
 	if template == "" {
 		template = DefaultPlanTemplate
 	}
-	return &PlanTemplate{
-		Template: template,
+	return &DefaultTemplate{
+		Template:     template,
+		defaultTitle: DefaultPlanTitle,
 	}
 }
 
 // NewDestroyWarningTemplate is DestroyWarningTemplate initializer
-func NewDestroyWarningTemplate(template string) *DestroyWarningTemplate {
+func NewDestroyWarningTemplate(template string) *DefaultTemplate {
 	if template == "" {
 		template = DefaultDestroyWarningTemplate
 	}
-	return &DestroyWarningTemplate{
-		Template: template,
+	return &DefaultTemplate{
+		Template:     template,
+		defaultTitle: DefaultDestroyWarningTitle,
 	}
 }
 
 // NewApplyTemplate is ApplyTemplate initializer
-func NewApplyTemplate(template string) *ApplyTemplate {
+func NewApplyTemplate(template string) *DefaultTemplate {
 	if template == "" {
 		template = DefaultApplyTemplate
 	}
-	return &ApplyTemplate{
-		Template: template,
+	return &DefaultTemplate{
+		Template:     template,
+		defaultTitle: DefaultApplyTitle,
 	}
 }
 
@@ -197,8 +170,8 @@ func (t *DefaultTemplate) Execute() (string, error) {
 	data := map[string]interface{}{
 		"Title":   t.Title,
 		"Message": t.Message,
-		"Result":  "",
-		"Body":    t.Result,
+		"Result":  t.Result,
+		"Body":    t.Body,
 		"Link":    t.Link,
 		"Vars":    t.Vars,
 	}
@@ -211,111 +184,15 @@ func (t *DefaultTemplate) Execute() (string, error) {
 	return resp, nil
 }
 
-// Execute binds the execution result of terraform plan into template
-func (t *PlanTemplate) Execute() (string, error) {
-	data := map[string]interface{}{
-		"Title":   t.Title,
-		"Message": t.Message,
-		"Result":  t.Result,
-		"Body":    t.Body,
-		"Link":    t.Link,
-		"Vars":    t.Vars,
-	}
-
-	resp, err := generateOutput("plan", t.Template, data, t.UseRawOutput)
-	if err != nil {
-		return "", err
-	}
-
-	return resp, nil
-}
-
-// Execute binds the execution result of terraform plan into template
-func (t *DestroyWarningTemplate) Execute() (string, error) {
-	data := map[string]interface{}{
-		"Title":   t.Title,
-		"Message": t.Message,
-		"Result":  t.Result,
-		"Body":    t.Body,
-		"Link":    t.Link,
-		"Vars":    t.Vars,
-	}
-
-	resp, err := generateOutput("destroy_warning", t.Template, data, t.UseRawOutput)
-	if err != nil {
-		return "", err
-	}
-
-	return resp, nil
-}
-
-// Execute binds the execution result of terraform apply into template
-func (t *ApplyTemplate) Execute() (string, error) {
-	data := map[string]interface{}{
-		"Title":   t.Title,
-		"Message": t.Message,
-		"Result":  t.Result,
-		"Body":    t.Body,
-		"Link":    t.Link,
-		"Vars":    t.Vars,
-	}
-
-	resp, err := generateOutput("apply", t.Template, data, t.UseRawOutput)
-	if err != nil {
-		return "", err
-	}
-
-	return resp, nil
-}
-
 // SetValue sets template entities to CommonTemplate
 func (t *DefaultTemplate) SetValue(ct CommonTemplate) {
 	if ct.Title == "" {
-		ct.Title = DefaultDefaultTitle
-	}
-	t.CommonTemplate = ct
-}
-
-// SetValue sets template entities about terraform plan to CommonTemplate
-func (t *PlanTemplate) SetValue(ct CommonTemplate) {
-	if ct.Title == "" {
-		ct.Title = DefaultPlanTitle
-	}
-	t.CommonTemplate = ct
-}
-
-// SetValue sets template entities about destroy warning to CommonTemplate
-func (t *DestroyWarningTemplate) SetValue(ct CommonTemplate) {
-	if ct.Title == "" {
-		ct.Title = DefaultDestroyWarningTitle
-	}
-	t.CommonTemplate = ct
-}
-
-// SetValue sets template entities about terraform apply to CommonTemplate
-func (t *ApplyTemplate) SetValue(ct CommonTemplate) {
-	if ct.Title == "" {
-		ct.Title = DefaultApplyTitle
+		ct.Title = t.defaultTitle
 	}
 	t.CommonTemplate = ct
 }
 
 // GetValue gets template entities
 func (t *DefaultTemplate) GetValue() CommonTemplate {
-	return t.CommonTemplate
-}
-
-// GetValue gets template entities
-func (t *PlanTemplate) GetValue() CommonTemplate {
-	return t.CommonTemplate
-}
-
-// GetValue gets template entities
-func (t *DestroyWarningTemplate) GetValue() CommonTemplate {
-	return t.CommonTemplate
-}
-
-// GetValue gets template entities
-func (t *ApplyTemplate) GetValue() CommonTemplate {
 	return t.CommonTemplate
 }
