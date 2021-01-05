@@ -7,11 +7,13 @@ import (
 func TestPlanTemplateExecute(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
+		name     string
 		template string
 		value    CommonTemplate
 		resp     string
 	}{
 		{
+			name:     "case 0",
 			template: DefaultPlanTemplate,
 			value:    CommonTemplate{},
 			resp: `
@@ -28,6 +30,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 `,
 		},
 		{
+			name:     "case 1",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
 				Title:   "title",
@@ -52,6 +55,7 @@ message
 `,
 		},
 		{
+			name:     "case 2",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
 				Title:   "title",
@@ -73,6 +77,7 @@ message
 `,
 		},
 		{
+			name:     "case 3",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
 				Title:   "title",
@@ -94,6 +99,7 @@ message
 `,
 		},
 		{
+			name:     "case 4",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
 				Title:        "title",
@@ -116,6 +122,7 @@ message
 `,
 		},
 		{
+			name:     "case 5",
 			template: "",
 			value: CommonTemplate{
 				Title:   "title",
@@ -137,6 +144,7 @@ message
 `,
 		},
 		{
+			name:     "case 6",
 			template: `{{ .Title }}-{{ .Message }}-{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
 				Title:   "a",
@@ -147,27 +155,36 @@ message
 			resp: `a-b-c-d`,
 		},
 	}
-	for _, testCase := range testCases {
-		template := NewPlanTemplate(testCase.template)
-		template.SetValue(testCase.value)
-		resp, err := template.Execute()
-		if err != nil {
-			t.Fatal(err)
+	for i, testCase := range testCases {
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf("testCase.name is required: index %d", i)
 		}
-		if resp != testCase.resp {
-			t.Errorf("got %q but want %q", resp, testCase.resp)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			template := NewPlanTemplate(testCase.template)
+			template.SetValue(testCase.value)
+			resp, err := template.Execute()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if resp != testCase.resp {
+				t.Errorf("got %s but want %s", resp, testCase.resp)
+			}
+		})
 	}
 }
 
 func TestDestroyWarningTemplateExecute(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
+		name     string
 		template string
 		value    CommonTemplate
 		resp     string
 	}{
 		{
+			name:     "case 0",
 			template: DefaultDestroyWarningTemplate,
 			value:    CommonTemplate{},
 			resp: `
@@ -179,6 +196,7 @@ This plan contains resource delete operation. Please check the plan result very 
 `,
 		},
 		{
+			name:     "case 1",
 			template: DefaultDestroyWarningTemplate,
 			value: CommonTemplate{
 				Title:  "title",
@@ -196,6 +214,7 @@ This plan contains resource delete operation. Please check the plan result very 
 `,
 		},
 		{
+			name:     "case 2",
 			template: DefaultDestroyWarningTemplate,
 			value: CommonTemplate{
 				Title:        "title",
@@ -214,6 +233,7 @@ This plan contains resource delete operation. Please check the plan result very 
 `,
 		},
 		{
+			name:     "case 3",
 			template: DefaultDestroyWarningTemplate,
 			value: CommonTemplate{
 				Title:  "title",
@@ -228,6 +248,7 @@ This plan contains resource delete operation. Please check the plan result very 
 `,
 		},
 		{
+			name:     "case 4",
 			template: "",
 			value: CommonTemplate{
 				Title:  "title",
@@ -242,6 +263,7 @@ This plan contains resource delete operation. Please check the plan result very 
 `,
 		},
 		{
+			name:     "case 5",
 			template: `{{ .Title }}-{{ .Message }}-{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
 				Title:   "a",
@@ -252,27 +274,36 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `a-b-c-d`,
 		},
 	}
-	for _, testCase := range testCases {
-		template := NewDestroyWarningTemplate(testCase.template)
-		template.SetValue(testCase.value)
-		resp, err := template.Execute()
-		if err != nil {
-			t.Fatal(err)
+	for i, testCase := range testCases {
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf("testCase.name is required: index %d", i)
 		}
-		if resp != testCase.resp {
-			t.Errorf("got %q but want %q", resp, testCase.resp)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			template := NewDestroyWarningTemplate(testCase.template)
+			template.SetValue(testCase.value)
+			resp, err := template.Execute()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if resp != testCase.resp {
+				t.Errorf("got %s but want %s", resp, testCase.resp)
+			}
+		})
 	}
 }
 
 func TestApplyTemplateExecute(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
+		name     string
 		template string
 		value    CommonTemplate
 		resp     string
 	}{
 		{
+			name:     "case 0",
 			template: DefaultApplyTemplate,
 			value:    CommonTemplate{},
 			resp: `
@@ -289,6 +320,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 `,
 		},
 		{
+			name:     "case 1",
 			template: DefaultApplyTemplate,
 			value: CommonTemplate{
 				Title:   "title",
@@ -313,6 +345,7 @@ message
 `,
 		},
 		{
+			name:     "case 2",
 			template: DefaultApplyTemplate,
 			value: CommonTemplate{
 				Title:   "title",
@@ -334,6 +367,7 @@ message
 `,
 		},
 		{
+			name:     "case 3",
 			template: "",
 			value: CommonTemplate{
 				Title:   "title",
@@ -355,6 +389,7 @@ message
 `,
 		},
 		{
+			name:     "case 4",
 			template: "",
 			value: CommonTemplate{
 				Title:   "title",
@@ -376,6 +411,7 @@ message
 `,
 		},
 		{
+			name:     "case 5",
 			template: "",
 			value: CommonTemplate{
 				Title:        "title",
@@ -398,6 +434,7 @@ message
 `,
 		},
 		{
+			name:     "case 6",
 			template: `{{ .Title }}-{{ .Message }}-{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
 				Title:   "a",
@@ -408,15 +445,22 @@ message
 			resp: `a-b-c-d`,
 		},
 	}
-	for _, testCase := range testCases {
-		template := NewApplyTemplate(testCase.template)
-		template.SetValue(testCase.value)
-		resp, err := template.Execute()
-		if err != nil {
-			t.Error(err)
+	for i, testCase := range testCases {
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf("testCase.name is required: index %d", i)
 		}
-		if resp != testCase.resp {
-			t.Errorf("got %q but want %q", resp, testCase.resp)
-		}
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			template := NewApplyTemplate(testCase.template)
+			template.SetValue(testCase.value)
+			resp, err := template.Execute()
+			if err != nil {
+				t.Error(err)
+			}
+			if resp != testCase.resp {
+				t.Errorf("got %s but want %s", resp, testCase.resp)
+			}
+		})
 	}
 }
