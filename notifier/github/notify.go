@@ -106,6 +106,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		Stdout:         param.Stdout,
 		Stderr:         param.Stderr,
 		CombinedOutput: param.CombinedOutput,
+		ExitCode:       param.ExitCode,
 	})
 	body, err := template.Execute()
 	if err != nil {
