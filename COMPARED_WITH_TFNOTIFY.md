@@ -82,6 +82,7 @@ So this feature is removed from tfcmt.
 * support to find the configuration file recursively
 * support --version option and add `version` command
 * support to post a comment when it failed to parse the result
+* complement CI and GitHub Repository owner and name from environment variables
 
 ### don't recreate labels
 
@@ -161,6 +162,31 @@ terraform:
         </pre></code></details>
 ```
 
+## complement CI and GitHub Repository owner and name from environment variables
+
+tfcmt complement the configuration CI and GitHub Repository owner and name from CI builtin environment variables.
+tfcmt uses [suzuki-shunsuke/go-ci-env](https://github.com/suzuki-shunsuke/go-ci-env) for this feature.
+So currently, this feature doesn't support Google CloudBuild for now.
+
+AS IS
+
+```yaml
+ci: circleci
+notifier:
+  github:
+    token: $GITHUB_TOKEN
+    repository:
+      owner: suzuki-shunsuke
+      name: tfcmt
+```
+
+We can omit `ci` and `repository`.
+
+```yaml
+notifier:
+  github:
+    token: $GITHUB_TOKEN
+```
 
 ## Others
 

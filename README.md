@@ -17,6 +17,8 @@ We forked [suzuki-shunsuke/tfnotify v1.3.3](https://github.com/suzuki-shunsuke/t
 
 Please see [Compared with tfnotify](COMPARED_WITH_TFNOTIFY.md).
 
+**We recommend to read [Compared with tfnotify](COMPARED_WITH_TFNOTIFY.md) because there are some features which aren't described at README.**
+
 ## Motivation
 
 There are commands such as `plan` and `apply` on Terraform command, but many developers think they would like to check if the execution of those commands succeeded.
