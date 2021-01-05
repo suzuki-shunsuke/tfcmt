@@ -162,7 +162,7 @@ terraform:
         </pre></code></details>
 ```
 
-## complement CI and GitHub Repository owner and name from environment variables
+### complement CI and GitHub Repository owner and name from environment variables
 
 tfcmt complement the configuration CI and GitHub Repository owner and name from CI builtin environment variables.
 tfcmt uses [suzuki-shunsuke/go-ci-env](https://github.com/suzuki-shunsuke/go-ci-env) for this feature.
