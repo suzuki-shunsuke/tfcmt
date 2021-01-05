@@ -188,7 +188,7 @@ func main() {
 	app.Commands = []*cli.Command{
 		{
 			Name:   "plan",
-			Usage:  "Parse stdin as a plan result",
+			Usage:  "Run terraform plan and post a comment to GitHub commit or pull request",
 			Action: cmdPlan,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
@@ -211,7 +211,7 @@ func main() {
 		},
 		{
 			Name:   "apply",
-			Usage:  "Parse stdin as a apply result",
+			Usage:  "Run terraform apply and post a comment to GitHub commit or pull request",
 			Action: cmdApply,
 			Flags: []cli.Flag{
 				&cli.StringFlag{
