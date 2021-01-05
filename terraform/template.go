@@ -54,7 +54,6 @@ This plan contains resource delete operation. Please check the plan result very 
 type Template interface {
 	Execute() (resp string, err error)
 	SetValue(template CommonTemplate)
-	GetValue() CommonTemplate
 }
 
 // CommonTemplate represents template entities
@@ -158,9 +157,4 @@ func (t *DefaultTemplate) SetValue(ct CommonTemplate) {
 		ct.Title = t.defaultTitle
 	}
 	t.CommonTemplate = ct
-}
-
-// GetValue gets template entities
-func (t *DefaultTemplate) GetValue() CommonTemplate {
-	return t.CommonTemplate
 }
