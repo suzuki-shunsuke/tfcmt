@@ -75,6 +75,7 @@ So this feature is removed from tfcmt.
 
 ## Features
 
+* add template variables
 * don't recreate labels
 * support to configure label colors
 * support template functions [sprig](http://masterminds.github.io/sprig/)
@@ -83,6 +84,14 @@ So this feature is removed from tfcmt.
 * support --version option and `version` command
 * support to post a comment when it failed to parse the result
 * complement CI and GitHub Repository owner and name from environment variables
+
+### add template variables
+
+* Stdout: standard output of terraform command
+* Stderr: standard error output of terraform command
+* CombinedOutput: output of terraform command
+* ExitCode: exit code of terraform command
+* Vars: variables which are passed by `-var` option
 
 ### don't recreate labels
 
