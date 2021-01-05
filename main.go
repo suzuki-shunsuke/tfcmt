@@ -11,7 +11,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/Masterminds/sprig"
+	"github.com/Masterminds/sprig/v3"
 	"github.com/mattn/go-colorable"
 	"github.com/suzuki-shunsuke/tfcmt/config"
 	"github.com/suzuki-shunsuke/tfcmt/notifier"

@@ -5,7 +5,7 @@ import (
 	htmltemplate "html/template"
 	texttemplate "text/template"
 
-	"github.com/Masterminds/sprig"
+	"github.com/Masterminds/sprig/v3"
 )
 
 const (
