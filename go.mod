@@ -10,6 +10,8 @@ require (
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.8
+	github.com/mitchellh/copystructure v1.0.0 // indirect
+	github.com/suzuki-shunsuke/go-ci-env v1.1.0
 	github.com/suzuki-shunsuke/go-findconfig v1.0.0
 	github.com/urfave/cli/v2 v2.3.0
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect

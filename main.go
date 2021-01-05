@@ -13,6 +13,7 @@ import (
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/mattn/go-colorable"
+	"github.com/suzuki-shunsuke/go-ci-env/cienv"
 	"github.com/suzuki-shunsuke/tfcmt/config"
 	"github.com/suzuki-shunsuke/tfcmt/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/notifier/github"
@@ -265,6 +266,25 @@ func newConfig(ctx *cli.Context) (config.Config, error) {
 		return cfg, err
 	}
 	cfg.Vars = vm
+
+	var platform cienv.Platform
+	if cfg.CI == "" {
+		platform = cienv.Get()
+		if platform != nil {
+			cfg.CI = platform.CI()
+		}
+	} else {
+		platform = cienv.GetByName(cfg.CI)
+	}
+	if platform != nil {
+		if cfg.Notifier.Github.Repository.Owner == "" {
+			cfg.Notifier.Github.Repository.Owner = platform.RepoOwner()
+		}
+		if cfg.Notifier.Github.Repository.Name == "" {
+			cfg.Notifier.Github.Repository.Name = platform.RepoName()
+		}
+	}
+
 	if err := cfg.Validation(); err != nil {
 		return cfg, err
 	}
