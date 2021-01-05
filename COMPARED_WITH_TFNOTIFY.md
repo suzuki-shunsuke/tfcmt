@@ -46,7 +46,7 @@ We notify the result of `terraform fmt` with [github-comment](https://github.com
 
 ### configuration file name is changed
 
-Not`{.,}tfnotify.y{,a}ml` but `{.,}tfcmt.y{,a}ml`.
+Not `{.,}tfnotify.y{,a}ml` but `{.,}tfcmt.y{,a}ml`.
 
 ### command usage is changed
 
