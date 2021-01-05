@@ -74,6 +74,35 @@ The link to the comment would be broken when the comment would be removed.
 
 So this feature is removed from tfcmt.
 
+### change the behavior of deletion warning
+
+tfnotify posts a deletion warning comment as the other comment.
+tfcmt posts only one comment whose template is `when_destroy.template`.
+
+```yaml
+    when_destroy:
+      label: "destroy"
+      label_color: "d93f0b"  # red
+      template: |
+        {{ .Title }}
+
+        [CI link]( {{ .Link }} )
+
+        This plan contains **resource deletion**. Please check the plan result very carefully!
+
+        {{ .Message }}
+        {{if .Result}}
+        <pre><code>{{ .Result }}
+        </pre></code>
+        {{end}}
+        <details><summary>Details (Click me)</summary>
+
+        <pre><code>{{ .Body }}
+        </pre></code></details>
+```
+
+And the default title of destroy warning is changed to `## :warning: Resource Deletion will happen :warning:`.
+
 ## Features
 
 * add template variables
@@ -197,35 +226,6 @@ notifier:
   github:
     token: $GITHUB_TOKEN
 ```
-
-### change the behavior of deletion warning
-
-tfnotify posts a deletion warning comment as the other comment.
-tfcmt posts only one comment whose template is `when_destroy.template`.
-
-```yaml
-    when_destroy:
-      label: "destroy"
-      label_color: "d93f0b"  # red
-      template: |
-        {{ .Title }}
-
-        [CI link]( {{ .Link }} )
-
-        This plan contains **resource deletion**. Please check the plan result very carefully!
-
-        {{ .Message }}
-        {{if .Result}}
-        <pre><code>{{ .Result }}
-        </pre></code>
-        {{end}}
-        <details><summary>Details (Click me)</summary>
-
-        <pre><code>{{ .Body }}
-        </pre></code></details>
-```
-
-And the default title of destroy warning is changed to `## :warning: Resource Deletion will happen :warning:`.
 
 ## Others
 
