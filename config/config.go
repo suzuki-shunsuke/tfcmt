@@ -59,6 +59,7 @@ type Plan struct {
 	WhenDestroy         WhenDestroy         `yaml:"when_destroy,omitempty"`
 	WhenNoChanges       WhenNoChanges       `yaml:"when_no_changes,omitempty"`
 	WhenPlanError       WhenPlanError       `yaml:"when_plan_error,omitempty"`
+	WhenParseError      WhenParseError      `yaml:"when_parse_error,omitempty"`
 }
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
@@ -86,9 +87,15 @@ type WhenPlanError struct {
 	Color string `yaml:"label_color,omitempty"`
 }
 
+// WhenParseError is a configuration to notify the plan result returns an error
+type WhenParseError struct {
+	Template string `yaml:"template"`
+}
+
 // Apply is a terraform apply config
 type Apply struct {
-	Template string `yaml:"template"`
+	Template       string         `yaml:"template"`
+	WhenParseError WhenParseError `yaml:"when_parse_error,omitempty"`
 }
 
 // LoadFile binds the config file to Config structure

@@ -81,6 +81,7 @@ So this feature is removed from tfcmt.
 * support to pass variables by -var option
 * support to find the configuration file recursively
 * support --version option and add `version` command
+* support to post a comment when it failed to parse the result
 
 ### don't recreate labels
 
@@ -122,6 +123,44 @@ tfcmt version 0.1.0
 $ tfcmt version
 tfcmt version 0.1.0
 ```
+
+### support to post a comment when it failed to parse the result
+
+tfnotify doesn't post a comment when it failed to parse the result.
+tfcmt posts a comment when it failed to parse the result.
+
+tfcmt supports to configure the template for the parse error.
+
+```yaml
+terraform:
+  plan:
+    when_parse_error:
+      template: |
+        {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+
+        :warning: It failed to parse the result. :warning:
+
+        {{ .Message }}
+
+        <details><summary>Details (Click me)</summary>
+
+        <pre><code>{{ .CombinedOutput }}
+        </pre></code></details>
+  apply:
+    when_parse_error:
+      template: |
+        {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+
+        :warning: It failed to parse the result. :warning:
+
+        {{ .Message }}
+
+        <details><summary>Details (Click me)</summary>
+
+        <pre><code>{{ .CombinedOutput }}
+        </pre></code></details>
+```
+
 
 ## Others
 

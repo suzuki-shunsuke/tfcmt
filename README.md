@@ -70,6 +70,10 @@ Placeholder | Usage
 `{{ .Body }}` | The entire of Terraform execution result
 `{{ .Link }}` | The link of the build page on CI
 `{{ .Vars }}` | The variables which are passed by `-var` option
+`{{ .Stdout }}` | The standard output of terraform command
+`{{ .Stderr }}` | The standard error output of terraform command
+`{{ .CombinedOutput }}` | The output of terraform command
+`{{ .ExitCode }}` | The exit code of terraform command
 
 On GitHub, tfcmt can also put a warning message if the plan result contains resource deletion (optional).
 
