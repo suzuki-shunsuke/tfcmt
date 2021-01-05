@@ -80,7 +80,7 @@ So this feature is removed from tfcmt.
 * support template functions [sprig](http://masterminds.github.io/sprig/)
 * support to pass variables by -var option
 * support to find the configuration file recursively
-* support --version option and add `version` command
+* support --version option and `version` command
 * support to post a comment when it failed to parse the result
 * complement CI and GitHub Repository owner and name from environment variables
 
@@ -106,7 +106,7 @@ We can access the variable in the template by `{{.Vars.<variable name>}}`.
 
 tfcmt searches the configuration file from the current directory to the root directory recursively.
 
-### support --version option
+### support --version option and version command
 
 AS IS
 
