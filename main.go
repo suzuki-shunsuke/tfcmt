@@ -24,8 +24,8 @@ type tfnotify struct {
 	config                 config.Config
 	context                *cli.Context
 	parser                 terraform.Parser
-	template               terraform.Template
-	destroyWarningTemplate terraform.Template
+	template               *terraform.Template
+	destroyWarningTemplate *terraform.Template
 	warnDestroy            bool
 }
 

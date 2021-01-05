@@ -50,12 +50,6 @@ This plan contains resource delete operation. Please check the plan result very 
 `
 )
 
-// Template is an template interface for parsed terraform execution result
-type Template interface {
-	Execute() (resp string, err error)
-	SetValue(template CommonTemplate)
-}
-
 // CommonTemplate represents template entities
 type CommonTemplate struct {
 	Title        string
@@ -67,8 +61,8 @@ type CommonTemplate struct {
 	Vars         map[string]string
 }
 
-// DefaultTemplate is a default template for terraform commands
-type DefaultTemplate struct {
+// Template is a default template for terraform commands
+type Template struct {
 	Template     string
 	defaultTitle string
 
@@ -76,33 +70,33 @@ type DefaultTemplate struct {
 }
 
 // NewPlanTemplate is PlanTemplate initializer
-func NewPlanTemplate(template string) *DefaultTemplate {
+func NewPlanTemplate(template string) *Template {
 	if template == "" {
 		template = DefaultPlanTemplate
 	}
-	return &DefaultTemplate{
+	return &Template{
 		Template:     template,
 		defaultTitle: DefaultPlanTitle,
 	}
 }
 
 // NewDestroyWarningTemplate is DestroyWarningTemplate initializer
-func NewDestroyWarningTemplate(template string) *DefaultTemplate {
+func NewDestroyWarningTemplate(template string) *Template {
 	if template == "" {
 		template = DefaultDestroyWarningTemplate
 	}
-	return &DefaultTemplate{
+	return &Template{
 		Template:     template,
 		defaultTitle: DefaultDestroyWarningTitle,
 	}
 }
 
 // NewApplyTemplate is ApplyTemplate initializer
-func NewApplyTemplate(template string) *DefaultTemplate {
+func NewApplyTemplate(template string) *Template {
 	if template == "" {
 		template = DefaultApplyTemplate
 	}
-	return &DefaultTemplate{
+	return &Template{
 		Template:     template,
 		defaultTitle: DefaultApplyTitle,
 	}
@@ -133,7 +127,7 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 }
 
 // Execute binds the execution result of terraform command into template
-func (t *DefaultTemplate) Execute() (string, error) {
+func (t *Template) Execute() (string, error) {
 	data := map[string]interface{}{
 		"Title":   t.Title,
 		"Message": t.Message,
@@ -152,7 +146,7 @@ func (t *DefaultTemplate) Execute() (string, error) {
 }
 
 // SetValue sets template entities to CommonTemplate
-func (t *DefaultTemplate) SetValue(ct CommonTemplate) {
+func (t *Template) SetValue(ct CommonTemplate) {
 	if ct.Title == "" {
 		ct.Title = t.defaultTitle
 	}

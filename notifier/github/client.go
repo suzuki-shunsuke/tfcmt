@@ -45,10 +45,10 @@ type Config struct {
 	UseRawOutput bool
 	WarnDestroy  bool
 	// Template is used for all Terraform command output
-	Template terraform.Template
+	Template *terraform.Template
 	// DestroyWarningTemplate is used only for additional warning
 	// the plan result contains destroy operation
-	DestroyWarningTemplate terraform.Template
+	DestroyWarningTemplate *terraform.Template
 	// ResultLabels is a set of labels to apply depending on the plan result
 	ResultLabels ResultLabels
 	Vars         map[string]string
