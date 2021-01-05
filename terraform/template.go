@@ -12,7 +12,7 @@ const (
 	// DefaultPlanTitle is a default title for terraform plan
 	DefaultPlanTitle = "## Plan result"
 	// DefaultDestroyWarningTitle is a default title of destroy warning
-	DefaultDestroyWarningTitle = "## WARNING: Resource Deletion will happen"
+	DefaultDestroyWarningTitle = "## :warning: Resource Deletion will happen :warning:"
 	// DefaultApplyTitle is a default title for terraform apply
 	DefaultApplyTitle = "## Apply result"
 
