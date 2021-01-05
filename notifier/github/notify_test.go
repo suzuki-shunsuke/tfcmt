@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mercari/tfnotify/notifier"
-	"github.com/mercari/tfnotify/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/terraform"
 )
 
 func TestNotifyNotify(t *testing.T) {
@@ -245,7 +245,7 @@ func TestNotifyNotify(t *testing.T) {
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
-					Revision: "Merge pull request #123 from mercari/tfnotify",
+					Revision: "Merge pull request #123 from suzuki-shunsuke/tfcmt",
 					Number:   0, // For apply, it is always 0
 					Message:  "message",
 				},

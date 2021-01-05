@@ -103,12 +103,12 @@ func TestMergedPRNumber(t *testing.T) {
 		{
 			prNumber: 1,
 			ok:       true,
-			revision: "Merge pull request #1 from mercari/tfnotify",
+			revision: "Merge pull request #1 from suzuki-shunsuke/tfcmt",
 		},
 		{
 			prNumber: 123,
 			ok:       true,
-			revision: "Merge pull request #123 from mercari/tfnotify",
+			revision: "Merge pull request #123 from suzuki-shunsuke/tfcmt",
 		},
 		{
 			prNumber: 0,
@@ -118,7 +118,7 @@ func TestMergedPRNumber(t *testing.T) {
 		{
 			prNumber: 0,
 			ok:       false,
-			revision: "Merge pull request #string from mercari/tfnotify",
+			revision: "Merge pull request #string from suzuki-shunsuke/tfcmt",
 		},
 	}
 

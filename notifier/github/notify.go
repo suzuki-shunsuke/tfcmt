@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/mercari/tfnotify/notifier"
-	"github.com/mercari/tfnotify/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/terraform"
 )
 
 // NotifyService handles communication with the notification related
