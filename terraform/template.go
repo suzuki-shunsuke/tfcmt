@@ -9,8 +9,6 @@ import (
 )
 
 const (
-	// DefaultDefaultTitle is a default title for terraform commands
-	DefaultDefaultTitle = "## Terraform result"
 	// DefaultPlanTitle is a default title for terraform plan
 	DefaultPlanTitle = "## Plan result"
 	// DefaultDestroyWarningTitle is a default title of destroy warning
@@ -18,8 +16,7 @@ const (
 	// DefaultApplyTitle is a default title for terraform apply
 	DefaultApplyTitle = "## Apply result"
 
-	// DefaultDefaultTemplate is a default template for terraform commands
-	DefaultDefaultTemplate = `
+	defaultTemplate = `
 {{ .Title }}
 
 {{ .Message }}
@@ -36,21 +33,9 @@ const (
 `
 
 	// DefaultPlanTemplate is a default template for terraform plan
-	DefaultPlanTemplate = `
-{{ .Title }}
-
-{{ .Message }}
-
-{{if .Result}}
-<pre><code>{{ .Result }}
-</code></pre>
-{{end}}
-
-<details><summary>Details (Click me)</summary>
-
-<pre><code>{{ .Body }}
-</code></pre></details>
-`
+	DefaultPlanTemplate = defaultTemplate
+	// DefaultApplyTemplate is a default template for terraform apply
+	DefaultApplyTemplate = defaultTemplate
 
 	// DefaultDestroyWarningTemplate is a default template for terraform plan
 	DefaultDestroyWarningTemplate = `
@@ -62,23 +47,6 @@ This plan contains resource delete operation. Please check the plan result very 
 <pre><code>{{ .Result }}
 </code></pre>
 {{end}}
-`
-
-	// DefaultApplyTemplate is a default template for terraform apply
-	DefaultApplyTemplate = `
-{{ .Title }}
-
-{{ .Message }}
-
-{{if .Result}}
-<pre><code>{{ .Result }}
-</code></pre>
-{{end}}
-
-<details><summary>Details (Click me)</summary>
-
-<pre><code>{{ .Body }}
-</code></pre></details>
 `
 )
 
