@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// Config is for tfnotify config structure
+// Config is for tfcmt config structure
 type Config struct {
 	CI        string            `yaml:"ci"`
 	Notifier  Notifier          `yaml:"notifier"`
@@ -152,7 +152,7 @@ func (cfg *Config) Find(file string) (string, error) {
 		if _, err := os.Stat(file); err == nil {
 			return file, nil
 		}
-		return "", errors.New("config for tfnotify is not found at all")
+		return "", errors.New("config for tfcmt is not found at all")
 	}
 	wd, err := os.Getwd()
 	if err != nil {
@@ -161,5 +161,5 @@ func (cfg *Config) Find(file string) (string, error) {
 	if p := findconfig.Find(wd, findconfig.Exist, "tfcmt.yaml", "tfcmt.yml", ".tfcmt.yaml", ".tfcmt.yml"); p != "" {
 		return p, nil
 	}
-	return "", errors.New("config for tfnotify is not found at all")
+	return "", errors.New("config for tfcmt is not found at all")
 }
