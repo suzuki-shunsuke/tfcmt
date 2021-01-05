@@ -26,6 +26,7 @@ type tfnotify struct {
 	parser                 terraform.Parser
 	template               *terraform.Template
 	destroyWarningTemplate *terraform.Template
+	parseErrorTemplate     *terraform.Template
 	warnDestroy            bool
 }
 
@@ -119,6 +120,7 @@ func (t *tfnotify) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, e
 		UseRawOutput:           t.config.Terraform.UseRawOutput,
 		Template:               t.template,
 		DestroyWarningTemplate: t.destroyWarningTemplate,
+		ParseErrorTemplate:     t.parseErrorTemplate,
 		WarnDestroy:            t.warnDestroy,
 		ResultLabels:           labels,
 		Vars:                   t.config.Vars,
@@ -153,11 +155,13 @@ func (t *tfnotify) Run(ctx context.Context) error {
 	args := t.context.Args()
 	cmd := exec.CommandContext(ctx, args.First(), args.Tail()...) //nolint:gosec
 	stdout := &bytes.Buffer{}
-	uncolorize := colorable.NewNonColorable(stdout)
 	stderr := &bytes.Buffer{}
 	combinedOutput := &bytes.Buffer{}
-	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorize, combinedOutput)
-	cmd.Stderr = io.MultiWriter(os.Stderr, stderr, combinedOutput)
+	uncolorizedStdout := colorable.NewNonColorable(stdout)
+	uncolorizedStderr := colorable.NewNonColorable(stderr)
+	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
+	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
+	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
 	_ = cmd.Run()
 
 	return NewExitError(ntf.Notify(ctx, notifier.ParamExec{
@@ -282,6 +286,7 @@ func cmdPlan(ctx *cli.Context) error {
 		parser:                 terraform.NewPlanParser(),
 		template:               terraform.NewPlanTemplate(cfg.Terraform.Plan.Template),
 		destroyWarningTemplate: terraform.NewDestroyWarningTemplate(cfg.Terraform.Plan.WhenDestroy.Template),
+		parseErrorTemplate:     terraform.NewPlanParseErrorTemplate(cfg.Terraform.Plan.WhenParseError.Template),
 		warnDestroy:            warnDestroy,
 	}
 	return t.Run(ctx.Context)
@@ -293,10 +298,11 @@ func cmdApply(ctx *cli.Context) error {
 		return err
 	}
 	t := &tfnotify{
-		config:   cfg,
-		context:  ctx,
-		parser:   terraform.NewApplyParser(),
-		template: terraform.NewApplyTemplate(cfg.Terraform.Apply.Template),
+		config:             cfg,
+		context:            ctx,
+		parser:             terraform.NewApplyParser(),
+		template:           terraform.NewApplyTemplate(cfg.Terraform.Apply.Template),
+		parseErrorTemplate: terraform.NewApplyParseErrorTemplate(cfg.Terraform.Apply.WhenParseError.Template),
 	}
 	return t.Run(ctx.Context)
 }

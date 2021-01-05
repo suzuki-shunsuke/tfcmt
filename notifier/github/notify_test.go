@@ -11,11 +11,11 @@ import (
 func TestNotifyNotify(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
-		name     string
-		config   Config
-		body     string
-		ok       bool
-		exitCode int
+		name      string
+		config    Config
+		ok        bool
+		exitCode  int
+		paramExec notifier.ParamExec
 	}{
 		{
 			name: "case 0",
@@ -29,12 +29,16 @@ func TestNotifyNotify(t *testing.T) {
 					Number:   1,
 					Message:  "message",
 				},
-				Parser:   terraform.NewPlanParser(),
-				Template: terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				Parser:             terraform.NewPlanParser(),
+				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			body:     "body",
-			ok:       false,
-			exitCode: 0,
+			paramExec: notifier.ParamExec{
+				Stdout:   "body",
+				ExitCode: 1,
+			},
+			ok:       true,
+			exitCode: 1,
 		},
 		{
 			name: "case 1",
@@ -48,10 +52,14 @@ func TestNotifyNotify(t *testing.T) {
 					Number:   0,
 					Message:  "message",
 				},
-				Parser:   terraform.NewPlanParser(),
-				Template: terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				Parser:             terraform.NewPlanParser(),
+				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			body:     "Plan: 1 to add",
+			paramExec: notifier.ParamExec{
+				Stdout:   "Plan: 1 to add",
+				ExitCode: 0,
+			},
 			ok:       false,
 			exitCode: 0,
 		},
@@ -67,12 +75,16 @@ func TestNotifyNotify(t *testing.T) {
 					Number:   1,
 					Message:  "message",
 				},
-				Parser:   terraform.NewPlanParser(),
-				Template: terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				Parser:             terraform.NewPlanParser(),
+				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			body:     "Error: hoge",
+			paramExec: notifier.ParamExec{
+				Stdout:   "Error: hoge",
+				ExitCode: 1,
+			},
 			ok:       true,
-			exitCode: 0,
+			exitCode: 1,
 		},
 		{
 			name: "case 3",
@@ -86,12 +98,16 @@ func TestNotifyNotify(t *testing.T) {
 					Number:   1,
 					Message:  "message",
 				},
-				Parser:   terraform.NewPlanParser(),
-				Template: terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				Parser:             terraform.NewPlanParser(),
+				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			body:     "Plan: 1 to add",
+			paramExec: notifier.ParamExec{
+				Stdout:   "Plan: 1 to add",
+				ExitCode: 2,
+			},
 			ok:       true,
-			exitCode: 0,
+			exitCode: 2,
 		},
 		{
 			name: "case 4",
@@ -105,12 +121,16 @@ func TestNotifyNotify(t *testing.T) {
 					Number:   0,
 					Message:  "message",
 				},
-				Parser:   terraform.NewPlanParser(),
-				Template: terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				Parser:             terraform.NewPlanParser(),
+				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			body:     "Plan: 1 to add",
+			paramExec: notifier.ParamExec{
+				Stdout:   "Plan: 1 to add",
+				ExitCode: 2,
+			},
 			ok:       true,
-			exitCode: 0,
+			exitCode: 2,
 		},
 		{
 			name: "case 5",
@@ -128,11 +148,15 @@ func TestNotifyNotify(t *testing.T) {
 				Parser:                 terraform.NewPlanParser(),
 				Template:               terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				DestroyWarningTemplate: terraform.NewDestroyWarningTemplate(terraform.DefaultDestroyWarningTemplate),
+				ParseErrorTemplate:     terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 				WarnDestroy:            true,
 			},
-			body:     "Plan: 1 to add, 1 to destroy",
+			paramExec: notifier.ParamExec{
+				Stdout:   "Plan: 1 to add, 1 to destroy",
+				ExitCode: 2,
+			},
 			ok:       true,
-			exitCode: 0,
+			exitCode: 2,
 		},
 		{
 			name: "case 6",
@@ -147,8 +171,9 @@ func TestNotifyNotify(t *testing.T) {
 					Number:   1,
 					Message:  "message",
 				},
-				Parser:   terraform.NewPlanParser(),
-				Template: terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				Parser:             terraform.NewPlanParser(),
+				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 				ResultLabels: ResultLabels{
 					AddOrUpdateLabel: "add-or-update",
 					DestroyLabel:     "destroy",
@@ -156,7 +181,10 @@ func TestNotifyNotify(t *testing.T) {
 					PlanErrorLabel:   "error",
 				},
 			},
-			body:     "No changes. Infrastructure is up-to-date.",
+			paramExec: notifier.ParamExec{
+				Stdout:   "No changes. Infrastructure is up-to-date.",
+				ExitCode: 0,
+			},
 			ok:       true,
 			exitCode: 0,
 		},
@@ -175,11 +203,15 @@ func TestNotifyNotify(t *testing.T) {
 				Parser:                 terraform.NewPlanParser(),
 				Template:               terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				DestroyWarningTemplate: terraform.NewDestroyWarningTemplate(terraform.DefaultDestroyWarningTemplate),
+				ParseErrorTemplate:     terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 				WarnDestroy:            false,
 			},
-			body:     "Plan: 1 to add, 1 to destroy",
+			paramExec: notifier.ParamExec{
+				Stdout:   "Plan: 1 to add, 1 to destroy",
+				ExitCode: 2,
+			},
 			ok:       true,
-			exitCode: 0,
+			exitCode: 2,
 		},
 		{
 			name: "case 8",
@@ -193,10 +225,14 @@ func TestNotifyNotify(t *testing.T) {
 					Number:   0, // For apply, it is always 0
 					Message:  "message",
 				},
-				Parser:   terraform.NewApplyParser(),
-				Template: terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			body:     "Apply complete!",
+			paramExec: notifier.ParamExec{
+				Stdout:   "Apply complete!",
+				ExitCode: 0,
+			},
 			ok:       true,
 			exitCode: 0,
 		},
@@ -213,10 +249,14 @@ func TestNotifyNotify(t *testing.T) {
 					Number:   0, // For apply, it is always 0
 					Message:  "message",
 				},
-				Parser:   terraform.NewApplyParser(),
-				Template: terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			body:     "Apply complete!",
+			paramExec: notifier.ParamExec{
+				Stdout:   "Apply complete!",
+				ExitCode: 0,
+			},
 			ok:       true,
 			exitCode: 0,
 		},
@@ -235,9 +275,7 @@ func TestNotifyNotify(t *testing.T) {
 			}
 			api := newFakeAPI()
 			client.API = &api
-			exitCode, err := client.Notify.Notify(context.Background(), notifier.ParamExec{
-				Stdout: testCase.body,
-			})
+			exitCode, err := client.Notify.Notify(context.Background(), testCase.paramExec)
 			if (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}

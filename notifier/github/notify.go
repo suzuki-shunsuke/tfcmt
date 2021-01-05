@@ -2,7 +2,6 @@ package github
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/mercari/tfnotify/notifier"
@@ -23,13 +22,14 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	result := parser.Parse(body)
 	result.ExitCode = param.ExitCode
 	if result.HasParseError {
-		log.Println("[ERROR][tfcmt]", result.Error)
-	}
-	if result.Error != nil {
-		return result.ExitCode, result.Error
-	}
-	if result.Result == "" {
-		return result.ExitCode, result.Error
+		template = g.client.Config.ParseErrorTemplate
+	} else {
+		if result.Error != nil {
+			return result.ExitCode, result.Error
+		}
+		if result.Result == "" {
+			return result.ExitCode, result.Error
+		}
 	}
 
 	_, isPlan := parser.(*terraform.PlanParser)
@@ -96,13 +96,16 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	}
 
 	template.SetValue(terraform.CommonTemplate{
-		Title:        cfg.PR.Title,
-		Message:      cfg.PR.Message,
-		Result:       result.Result,
-		Body:         body,
-		Link:         cfg.CI,
-		UseRawOutput: cfg.UseRawOutput,
-		Vars:         cfg.Vars,
+		Title:          cfg.PR.Title,
+		Message:        cfg.PR.Message,
+		Result:         result.Result,
+		Body:           body,
+		Link:           cfg.CI,
+		UseRawOutput:   cfg.UseRawOutput,
+		Vars:           cfg.Vars,
+		Stdout:         param.Stdout,
+		Stderr:         param.Stderr,
+		CombinedOutput: param.CombinedOutput,
 	})
 	body, err := template.Execute()
 	if err != nil {

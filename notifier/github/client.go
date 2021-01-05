@@ -49,6 +49,7 @@ type Config struct {
 	// DestroyWarningTemplate is used only for additional warning
 	// the plan result contains destroy operation
 	DestroyWarningTemplate *terraform.Template
+	ParseErrorTemplate     *terraform.Template
 	// ResultLabels is a set of labels to apply depending on the plan result
 	ResultLabels ResultLabels
 	Vars         map[string]string

@@ -48,17 +48,34 @@ This plan contains resource delete operation. Please check the plan result very 
 </code></pre>
 {{end}}
 `
+
+	DefaultParseErrorTemplate = `
+{{ .Title }}
+
+It failed to parse the result.
+
+{{ .Message }}
+
+<details><summary>Details (Click me)</summary>
+
+<pre><code>{{ .CombinedOutput }}
+</code></pre></details>
+`
 )
 
 // CommonTemplate represents template entities
 type CommonTemplate struct {
-	Title        string
-	Message      string
-	Result       string
-	Body         string
-	Link         string
-	UseRawOutput bool
-	Vars         map[string]string
+	Title          string
+	Message        string
+	Result         string
+	Body           string
+	Link           string
+	UseRawOutput   bool
+	Vars           map[string]string
+	Stdout         string
+	Stderr         string
+	CombinedOutput string
+	ExitCode       int
 }
 
 // Template is a default template for terraform commands
@@ -102,6 +119,26 @@ func NewApplyTemplate(template string) *Template {
 	}
 }
 
+func NewPlanParseErrorTemplate(template string) *Template {
+	if template == "" {
+		template = DefaultParseErrorTemplate
+	}
+	return &Template{
+		Template:     template,
+		defaultTitle: DefaultPlanTitle,
+	}
+}
+
+func NewApplyParseErrorTemplate(template string) *Template {
+	if template == "" {
+		template = DefaultParseErrorTemplate
+	}
+	return &Template{
+		Template:     template,
+		defaultTitle: DefaultApplyTitle,
+	}
+}
+
 func generateOutput(kind, template string, data map[string]interface{}, useRawOutput bool) (string, error) {
 	var b bytes.Buffer
 
@@ -129,12 +166,16 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 // Execute binds the execution result of terraform command into template
 func (t *Template) Execute() (string, error) {
 	data := map[string]interface{}{
-		"Title":   t.Title,
-		"Message": t.Message,
-		"Result":  t.Result,
-		"Body":    t.Body,
-		"Link":    t.Link,
-		"Vars":    t.Vars,
+		"Title":          t.Title,
+		"Message":        t.Message,
+		"Result":         t.Result,
+		"Body":           t.Body,
+		"Link":           t.Link,
+		"Vars":           t.Vars,
+		"Stdout":         t.Stdout,
+		"Stderr":         t.Stderr,
+		"CombinedOutput": t.CombinedOutput,
+		"ExitCode":       t.ExitCode,
 	}
 
 	resp, err := generateOutput("default", t.Template, data, t.UseRawOutput)
