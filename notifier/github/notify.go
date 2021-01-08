@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/suzuki-shunsuke/tfcmt/notifier"
@@ -60,23 +61,22 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 
 			currentLabelColor, err := g.removeResultLabels(ctx, labelToAdd)
 			if err != nil {
-				return result.ExitCode, err
+				log.Printf("[ERROR][tfcmt] remove labelss: %v", err)
 			}
 
 			if labelToAdd != "" {
 				if currentLabelColor == "" {
 					labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
 					if err != nil {
-						return result.ExitCode, err
+						log.Printf("[ERROR][tfcmt] add a label %s: %v", labelToAdd, err)
 					}
 					if labelColor != "" {
 						// set the color of label
 						for _, label := range labels {
 							if labelToAdd == label.GetName() {
 								if label.GetColor() != labelColor {
-									_, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor)
-									if err != nil {
-										return result.ExitCode, err
+									if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
+										log.Printf("[ERROR][tfcmt] update a label color(name: %s, color: %s): %v", labelToAdd, labelColor, err)
 									}
 								}
 							}
@@ -85,7 +85,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 				} else if labelColor != "" && labelColor != currentLabelColor {
 					// set the color of label
 					if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
-						return result.ExitCode, err
+						log.Printf("[ERROR][tfcmt] update a label color(name: %s, color: %s): %v", labelToAdd, labelColor, err)
 					}
 				}
 			}
