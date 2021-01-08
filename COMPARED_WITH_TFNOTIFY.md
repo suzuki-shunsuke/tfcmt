@@ -10,6 +10,7 @@ tfcmt isn't compatible with tfnotify.
   * [Command usage is changed](#breaking-change-command-usage-is-changed)
   * [Don't remove duplicate comments](#breaking-change-dont-remove-duplicate-comments)
   * [Change the behavior of deletion warning](#breaking-change-change-the-behavior-of-deletion-warning)
+  * [Post a comment even if it failed to post a comment](#breaking-change-post-a-comment-even-if-it-failed-to-post-a-comment)
 * Features
   * [Post a comment when it failed to parse the result](#feature-post-a-comment-when-it-failed-to-parse-the-result)
   * [Find the configuration file recursively](#feature-find-the-configuration-file-recursively)
@@ -114,6 +115,15 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
 ```
 
 And the default title of destroy warning is changed to `## :warning: Resource Deletion will happen :warning:`.
+
+## Breaking Change: Post a comment even if it failed to post a comment
+
+tfnotify doesn't post a comment when it failed to update labels.
+For example, when the label length is too long, tfnotify failed to add the label and the comment isn't posted.
+tfnotify exits immediately and the exit code isn't non zero.
+
+On the other hand, tfcmt outputs the error log but the process continues even if it failed to update labels.
+And the exit code is same as the result of terraform command.
 
 ### Feature: Post a comment when it failed to parse the result
 
