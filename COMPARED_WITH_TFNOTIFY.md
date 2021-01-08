@@ -225,6 +225,7 @@ We can access the variable in the template by `{{.Vars.<variable name>}}`.
 * CombinedOutput: output of terraform command
 * ExitCode: exit code of terraform command
 * Vars: variables which are passed by `-var` option
+* ErrorMessages: a list of error messages which occur in tfcmt
 
 ## Feature: Don't recreate labels
 

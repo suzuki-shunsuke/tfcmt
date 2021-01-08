@@ -18,6 +18,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
+	var errMsgs []string
 
 	body := param.Stdout
 	result := parser.Parse(body)
@@ -61,14 +62,18 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 
 			currentLabelColor, err := g.removeResultLabels(ctx, labelToAdd)
 			if err != nil {
-				log.Printf("[ERROR][tfcmt] remove labels: %v", err)
+				msg := "remove labels: " + err.Error()
+				log.Printf("[ERROR][tfcmt] " + msg)
+				errMsgs = append(errMsgs, msg)
 			}
 
 			if labelToAdd != "" {
 				if currentLabelColor == "" {
 					labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
 					if err != nil {
-						log.Printf("[ERROR][tfcmt] add a label %s: %v", labelToAdd, err)
+						msg := "add a label " + labelToAdd + ": " + err.Error()
+						log.Printf("[ERROR][tfcmt] " + msg)
+						errMsgs = append(errMsgs, msg)
 					}
 					if labelColor != "" {
 						// set the color of label
@@ -76,7 +81,9 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 							if labelToAdd == label.GetName() {
 								if label.GetColor() != labelColor {
 									if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
-										log.Printf("[ERROR][tfcmt] update a label color(name: %s, color: %s): %v", labelToAdd, labelColor, err)
+										msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+										log.Printf("[ERROR][tfcmt] " + msg)
+										errMsgs = append(errMsgs, msg)
 									}
 								}
 							}
@@ -85,7 +92,9 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 				} else if labelColor != "" && labelColor != currentLabelColor {
 					// set the color of label
 					if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
-						log.Printf("[ERROR][tfcmt] update a label color(name: %s, color: %s): %v", labelToAdd, labelColor, err)
+						msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+						log.Printf("[ERROR][tfcmt] " + msg)
+						errMsgs = append(errMsgs, msg)
 					}
 				}
 			}
@@ -104,6 +113,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		Stderr:         param.Stderr,
 		CombinedOutput: param.CombinedOutput,
 		ExitCode:       param.ExitCode,
+		ErrorMessages:  errMsgs,
 	})
 	body, err := template.Execute()
 	if err != nil {
