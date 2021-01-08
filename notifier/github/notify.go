@@ -61,7 +61,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 
 			currentLabelColor, err := g.removeResultLabels(ctx, labelToAdd)
 			if err != nil {
-				log.Printf("[ERROR][tfcmt] remove labelss: %v", err)
+				log.Printf("[ERROR][tfcmt] remove labels: %v", err)
 			}
 
 			if labelToAdd != "" {
