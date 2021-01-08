@@ -30,7 +30,11 @@ const (
 
 <pre><code>{{ .Body }}
 </code></pre></details>
-`
+{{if .ErrorMessages}}
+## :warning: Errors
+{{range .ErrorMessages}}
+* {{. -}}
+{{- end}}{{end}}`
 
 	// DefaultPlanTemplate is a default template for terraform plan
 	DefaultPlanTemplate = defaultTemplate
@@ -76,6 +80,7 @@ type CommonTemplate struct {
 	Stderr         string
 	CombinedOutput string
 	ExitCode       int
+	ErrorMessages  []string
 }
 
 // Template is a default template for terraform commands
@@ -176,6 +181,7 @@ func (t *Template) Execute() (string, error) {
 		"Stderr":         t.Stderr,
 		"CombinedOutput": t.CombinedOutput,
 		"ExitCode":       t.ExitCode,
+		"ErrorMessages":  t.ErrorMessages,
 	}
 
 	resp, err := generateOutput("default", t.Template, data, t.UseRawOutput)
