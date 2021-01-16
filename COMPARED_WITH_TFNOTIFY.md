@@ -8,6 +8,7 @@ tfcmt isn't compatible with tfnotify.
   * [Remove `fmt` command](#breaking-change-remove-fmt-command)
   * [Configuration file name is changed](#breaking-change-configuration-file-name-is-changed)
   * [Command usage is changed](#breaking-change-command-usage-is-changed)
+  * [Remove --message option and template variable .Message](#breaking-change-remove---message-option-and-template-variable-message)
   * [Don't remove duplicate comments](#breaking-change-dont-remove-duplicate-comments)
   * [Change the behavior of deletion warning](#breaking-change-change-the-behavior-of-deletion-warning)
 * Features
@@ -89,6 +90,11 @@ tfcmt apply -- terraform apply
 ```
 
 By this change, tfcmt can handle the standard error output and exit code of the terraform command.
+
+## Breaking Change: Remove --message option and template variable .Message
+
+We introduced more general option `-var` and template variable `.Vars`,
+so the `--message` option isn't needed.
 
 ## Breaking Change: Don't remove duplicate comments
 
