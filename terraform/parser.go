@@ -21,6 +21,10 @@ type ParseResult struct {
 	HasParseError      bool
 	ExitCode           int
 	Error              error
+	CreatedResources   []string
+	UpdatedResources   []string
+	DeletedResources   []string
+	ReplacedResources  []string
 }
 
 // DefaultParser is a parser for terraform commands
@@ -33,6 +37,10 @@ type PlanParser struct {
 	Fail         *regexp.Regexp
 	HasDestroy   *regexp.Regexp
 	HasNoChanges *regexp.Regexp
+	Create       *regexp.Regexp
+	Update       *regexp.Regexp
+	Delete       *regexp.Regexp
+	Replace      *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -54,6 +62,10 @@ func NewPlanParser() *PlanParser {
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:   regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		HasNoChanges: regexp.MustCompile(`(?m)^(No changes. Infrastructure is up-to-date.)`),
+		Create:       regexp.MustCompile(`^ *# (.*) will be created$`),
+		Update:       regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
+		Delete:       regexp.MustCompile(`^ *# (.*) will be destroyed$`),
+		Replace:      regexp.MustCompile(`^ *# (.*) must be replaced$`),
 	}
 }
 
@@ -74,6 +86,13 @@ func (p *DefaultParser) Parse(body string) ParseResult {
 	}
 }
 
+func extractResource(pattern *regexp.Regexp, line string) string {
+	if arr := pattern.FindStringSubmatch(line); len(arr) == 2 { //nolint:gomnd
+		return arr[1]
+	}
+	return ""
+}
+
 // Parse returns ParseResult related with terraform plan
 func (p *PlanParser) Parse(body string) ParseResult {
 	var exitCode int
@@ -91,24 +110,37 @@ func (p *PlanParser) Parse(body string) ParseResult {
 		}
 	}
 	lines := strings.Split(body, "\n")
-	var i int
-	var result, line string
-	for i, line = range lines {
-		if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
-			break
+	firstMatchLineIndex := -1
+	var result, firstMatchLine string
+	var createdResources, updatedResources, deletedResources, replacedResources []string
+	for i, line := range lines {
+		if firstMatchLineIndex == -1 {
+			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
+				firstMatchLineIndex = i
+				firstMatchLine = line
+			}
+		}
+		if rsc := extractResource(p.Create, line); rsc != "" {
+			createdResources = append(createdResources, rsc)
+		} else if rsc := extractResource(p.Update, line); rsc != "" {
+			updatedResources = append(updatedResources, rsc)
+		} else if rsc := extractResource(p.Delete, line); rsc != "" {
+			deletedResources = append(deletedResources, rsc)
+		} else if rsc := extractResource(p.Replace, line); rsc != "" {
+			replacedResources = append(replacedResources, rsc)
 		}
 	}
 	var hasPlanError bool
 	switch {
-	case p.Pass.MatchString(line):
-		result = lines[i]
-	case p.Fail.MatchString(line):
+	case p.Pass.MatchString(firstMatchLine):
+		result = lines[firstMatchLineIndex]
+	case p.Fail.MatchString(firstMatchLine):
 		hasPlanError = true
-		result = strings.Join(trimLastNewline(lines[i:]), "\n")
+		result = strings.Join(trimLastNewline(lines[firstMatchLineIndex:]), "\n")
 	}
 
-	hasDestroy := p.HasDestroy.MatchString(line)
-	hasNoChanges := p.HasNoChanges.MatchString(line)
+	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
+	hasNoChanges := p.HasNoChanges.MatchString(firstMatchLine)
 	HasAddOrUpdateOnly := !hasNoChanges && !hasDestroy && !hasPlanError
 
 	return ParseResult{
@@ -119,6 +151,10 @@ func (p *PlanParser) Parse(body string) ParseResult {
 		HasPlanError:       hasPlanError,
 		ExitCode:           exitCode,
 		Error:              nil,
+		CreatedResources:   createdResources,
+		UpdatedResources:   updatedResources,
+		DeletedResources:   deletedResources,
+		ReplacedResources:  replacedResources,
 	}
 }
 
