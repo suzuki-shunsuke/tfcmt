@@ -69,21 +69,22 @@ It failed to parse the result.
 
 // CommonTemplate represents template entities
 type CommonTemplate struct {
-	Title            string
-	Message          string
-	Result           string
-	Body             string
-	Link             string
-	UseRawOutput     bool
-	Vars             map[string]string
-	Stdout           string
-	Stderr           string
-	CombinedOutput   string
-	ExitCode         int
-	ErrorMessages    []string
-	CreatedResources []string
-	UpdatedResources []string
-	DeletedResources []string
+	Title             string
+	Message           string
+	Result            string
+	Body              string
+	Link              string
+	UseRawOutput      bool
+	Vars              map[string]string
+	Stdout            string
+	Stderr            string
+	CombinedOutput    string
+	ExitCode          int
+	ErrorMessages     []string
+	CreatedResources  []string
+	UpdatedResources  []string
+	DeletedResources  []string
+	ReplacedResources []string
 }
 
 // Template is a default template for terraform commands
@@ -174,20 +175,21 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 // Execute binds the execution result of terraform command into template
 func (t *Template) Execute() (string, error) {
 	data := map[string]interface{}{
-		"Title":            t.Title,
-		"Message":          t.Message,
-		"Result":           t.Result,
-		"Body":             t.Body,
-		"Link":             t.Link,
-		"Vars":             t.Vars,
-		"Stdout":           t.Stdout,
-		"Stderr":           t.Stderr,
-		"CombinedOutput":   t.CombinedOutput,
-		"ExitCode":         t.ExitCode,
-		"ErrorMessages":    t.ErrorMessages,
-		"CreatedResources": t.CreatedResources,
-		"UpdatedResources": t.UpdatedResources,
-		"DeletedResources": t.DeletedResources,
+		"Title":             t.Title,
+		"Message":           t.Message,
+		"Result":            t.Result,
+		"Body":              t.Body,
+		"Link":              t.Link,
+		"Vars":              t.Vars,
+		"Stdout":            t.Stdout,
+		"Stderr":            t.Stderr,
+		"CombinedOutput":    t.CombinedOutput,
+		"ExitCode":          t.ExitCode,
+		"ErrorMessages":     t.ErrorMessages,
+		"CreatedResources":  t.CreatedResources,
+		"UpdatedResources":  t.UpdatedResources,
+		"DeletedResources":  t.DeletedResources,
+		"ReplacedResources": t.ReplacedResources,
 	}
 
 	resp, err := generateOutput("default", t.Template, data, t.UseRawOutput)

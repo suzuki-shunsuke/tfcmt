@@ -24,6 +24,7 @@ type ParseResult struct {
 	CreatedResources   []string
 	UpdatedResources   []string
 	DeletedResources   []string
+	ReplacedResources  []string
 }
 
 // DefaultParser is a parser for terraform commands
@@ -39,6 +40,7 @@ type PlanParser struct {
 	Create       *regexp.Regexp
 	Update       *regexp.Regexp
 	Delete       *regexp.Regexp
+	Replace      *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -63,6 +65,7 @@ func NewPlanParser() *PlanParser {
 		Create:       regexp.MustCompile(`^ *# (.*) will be created$`),
 		Update:       regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
 		Delete:       regexp.MustCompile(`^ *# (.*) will be destroyed$`),
+		Replace:      regexp.MustCompile(`^ *# (.*) must be replaced$`),
 	}
 }
 
@@ -109,7 +112,7 @@ func (p *PlanParser) Parse(body string) ParseResult {
 	lines := strings.Split(body, "\n")
 	firstMatchLineIndex := -1
 	var result, firstMatchLine string
-	var createdResources, updatedResources, deletedResources []string
+	var createdResources, updatedResources, deletedResources, replacedResources []string
 	for i, line := range lines {
 		if firstMatchLineIndex == -1 {
 			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
@@ -123,6 +126,8 @@ func (p *PlanParser) Parse(body string) ParseResult {
 			updatedResources = append(updatedResources, rsc)
 		} else if rsc := extractResource(p.Delete, line); rsc != "" {
 			deletedResources = append(deletedResources, rsc)
+		} else if rsc := extractResource(p.Replace, line); rsc != "" {
+			replacedResources = append(replacedResources, rsc)
 		}
 	}
 	var hasPlanError bool
@@ -149,6 +154,7 @@ func (p *PlanParser) Parse(body string) ParseResult {
 		CreatedResources:   createdResources,
 		UpdatedResources:   updatedResources,
 		DeletedResources:   deletedResources,
+		ReplacedResources:  replacedResources,
 	}
 }
 
