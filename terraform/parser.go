@@ -21,6 +21,7 @@ type ParseResult struct {
 	HasParseError      bool
 	ExitCode           int
 	Error              error
+	CreatedResources   []string
 }
 
 // DefaultParser is a parser for terraform commands
@@ -33,6 +34,7 @@ type PlanParser struct {
 	Fail         *regexp.Regexp
 	HasDestroy   *regexp.Regexp
 	HasNoChanges *regexp.Regexp
+	Create       *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -54,6 +56,7 @@ func NewPlanParser() *PlanParser {
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:   regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		HasNoChanges: regexp.MustCompile(`(?m)^(No changes. Infrastructure is up-to-date.)`),
+		Create:       regexp.MustCompile(`^ *# (.*) will be created$`),
 	}
 }
 
@@ -91,24 +94,34 @@ func (p *PlanParser) Parse(body string) ParseResult {
 		}
 	}
 	lines := strings.Split(body, "\n")
-	var i int
-	var result, line string
-	for i, line = range lines {
-		if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
-			break
+	firstMatchLineIndex := -1
+	var result, firstMatchLine string
+	var createdResources []string
+	for i, line := range lines {
+		if firstMatchLineIndex == -1 {
+			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
+				firstMatchLineIndex = i
+				firstMatchLine = line
+			}
+		}
+		if arr := p.Create.FindStringSubmatch(line); len(arr) == 2 { //nolint:gomnd
+			rsc := arr[1]
+			if rsc != "" {
+				createdResources = append(createdResources, rsc)
+			}
 		}
 	}
 	var hasPlanError bool
 	switch {
-	case p.Pass.MatchString(line):
-		result = lines[i]
-	case p.Fail.MatchString(line):
+	case p.Pass.MatchString(firstMatchLine):
+		result = lines[firstMatchLineIndex]
+	case p.Fail.MatchString(firstMatchLine):
 		hasPlanError = true
-		result = strings.Join(trimLastNewline(lines[i:]), "\n")
+		result = strings.Join(trimLastNewline(lines[firstMatchLineIndex:]), "\n")
 	}
 
-	hasDestroy := p.HasDestroy.MatchString(line)
-	hasNoChanges := p.HasNoChanges.MatchString(line)
+	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
+	hasNoChanges := p.HasNoChanges.MatchString(firstMatchLine)
 	HasAddOrUpdateOnly := !hasNoChanges && !hasDestroy && !hasPlanError
 
 	return ParseResult{
@@ -119,6 +132,7 @@ func (p *PlanParser) Parse(body string) ParseResult {
 		HasPlanError:       hasPlanError,
 		ExitCode:           exitCode,
 		Error:              nil,
+		CreatedResources:   createdResources,
 	}
 }
 
