@@ -117,7 +117,6 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
 
         This plan contains **resource deletion**. Please check the plan result very carefully!
 
-        {{ .Message }}
         {{if .Result}}
         <pre><code>{{ .Result }}
         </pre></code>
@@ -193,8 +192,6 @@ terraform:
 
         :warning: It failed to parse the result. :warning:
 
-        {{ .Message }}
-
         <details><summary>Details (Click me)</summary>
 
         <pre><code>{{ .CombinedOutput }}
@@ -205,8 +202,6 @@ terraform:
         {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
 
         :warning: It failed to parse the result. :warning:
-
-        {{ .Message }}
 
         <details><summary>Details (Click me)</summary>
 

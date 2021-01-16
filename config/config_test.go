@@ -40,7 +40,7 @@ func TestLoadFile(t *testing.T) {
 						Template: "",
 					},
 					Plan: Plan{
-						Template:    "{{ .Title }}\n{{ .Message }}\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .Body }}\n</pre></code></details>\n",
+						Template:    "{{ .Title }}\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .Body }}\n</pre></code></details>\n",
 						WhenDestroy: WhenDestroy{},
 					},
 					Apply: Apply{
@@ -70,7 +70,7 @@ func TestLoadFile(t *testing.T) {
 						Template: "",
 					},
 					Plan: Plan{
-						Template: "{{ .Title }}\n{{ .Message }}\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .Body }}\n</pre></code></details>\n",
+						Template: "{{ .Title }}\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .Body }}\n</pre></code></details>\n",
 						WhenAddOrUpdateOnly: WhenAddOrUpdateOnly{
 							Label: "add-or-update",
 						},
@@ -112,7 +112,7 @@ func TestLoadFile(t *testing.T) {
 						Template: "",
 					},
 					Plan: Plan{
-						Template:    "{{ .Title }}\n{{ .Message }}\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .Body }}\n</pre></code></details>\n",
+						Template:    "{{ .Title }}\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .Body }}\n</pre></code></details>\n",
 						WhenDestroy: WhenDestroy{},
 					},
 					Apply: Apply{
