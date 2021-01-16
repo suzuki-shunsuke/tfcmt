@@ -82,6 +82,8 @@ type CommonTemplate struct {
 	ExitCode         int
 	ErrorMessages    []string
 	CreatedResources []string
+	UpdatedResources []string
+	DeletedResources []string
 }
 
 // Template is a default template for terraform commands
@@ -184,6 +186,8 @@ func (t *Template) Execute() (string, error) {
 		"ExitCode":         t.ExitCode,
 		"ErrorMessages":    t.ErrorMessages,
 		"CreatedResources": t.CreatedResources,
+		"UpdatedResources": t.UpdatedResources,
+		"DeletedResources": t.DeletedResources,
 	}
 
 	resp, err := generateOutput("default", t.Template, data, t.UseRawOutput)

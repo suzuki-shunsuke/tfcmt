@@ -115,6 +115,8 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		ExitCode:         param.ExitCode,
 		ErrorMessages:    errMsgs,
 		CreatedResources: result.CreatedResources,
+		UpdatedResources: result.UpdatedResources,
+		DeletedResources: result.DeletedResources,
 	})
 	body, err := template.Execute()
 	if err != nil {

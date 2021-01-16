@@ -22,6 +22,8 @@ type ParseResult struct {
 	ExitCode           int
 	Error              error
 	CreatedResources   []string
+	UpdatedResources   []string
+	DeletedResources   []string
 }
 
 // DefaultParser is a parser for terraform commands
@@ -35,6 +37,8 @@ type PlanParser struct {
 	HasDestroy   *regexp.Regexp
 	HasNoChanges *regexp.Regexp
 	Create       *regexp.Regexp
+	Update       *regexp.Regexp
+	Delete       *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -57,6 +61,8 @@ func NewPlanParser() *PlanParser {
 		HasDestroy:   regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		HasNoChanges: regexp.MustCompile(`(?m)^(No changes. Infrastructure is up-to-date.)`),
 		Create:       regexp.MustCompile(`^ *# (.*) will be created$`),
+		Update:       regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
+		Delete:       regexp.MustCompile(`^ *# (.*) will be destroyed$`),
 	}
 }
 
@@ -75,6 +81,13 @@ func (p *DefaultParser) Parse(body string) ParseResult {
 		ExitCode: ExitPass,
 		Error:    nil,
 	}
+}
+
+func extractResource(pattern *regexp.Regexp, line string) string {
+	if arr := pattern.FindStringSubmatch(line); len(arr) == 2 { //nolint:gomnd
+		return arr[1]
+	}
+	return ""
 }
 
 // Parse returns ParseResult related with terraform plan
@@ -96,7 +109,7 @@ func (p *PlanParser) Parse(body string) ParseResult {
 	lines := strings.Split(body, "\n")
 	firstMatchLineIndex := -1
 	var result, firstMatchLine string
-	var createdResources []string
+	var createdResources, updatedResources, deletedResources []string
 	for i, line := range lines {
 		if firstMatchLineIndex == -1 {
 			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
@@ -104,11 +117,12 @@ func (p *PlanParser) Parse(body string) ParseResult {
 				firstMatchLine = line
 			}
 		}
-		if arr := p.Create.FindStringSubmatch(line); len(arr) == 2 { //nolint:gomnd
-			rsc := arr[1]
-			if rsc != "" {
-				createdResources = append(createdResources, rsc)
-			}
+		if rsc := extractResource(p.Create, line); rsc != "" {
+			createdResources = append(createdResources, rsc)
+		} else if rsc := extractResource(p.Update, line); rsc != "" {
+			updatedResources = append(updatedResources, rsc)
+		} else if rsc := extractResource(p.Delete, line); rsc != "" {
+			deletedResources = append(deletedResources, rsc)
 		}
 	}
 	var hasPlanError bool
@@ -133,6 +147,8 @@ func (p *PlanParser) Parse(body string) ParseResult {
 		ExitCode:           exitCode,
 		Error:              nil,
 		CreatedResources:   createdResources,
+		UpdatedResources:   updatedResources,
+		DeletedResources:   deletedResources,
 	}
 }
 
