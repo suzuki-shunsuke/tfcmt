@@ -11,6 +11,7 @@ tfcmt isn't compatible with tfnotify.
   * [Don't remove duplicate comments](#breaking-change-dont-remove-duplicate-comments)
   * [Change the behavior of deletion warning](#breaking-change-change-the-behavior-of-deletion-warning)
 * Features
+  * [Add template variables of changed resource paths](#feature-add-template-variables-of-changed-resource-paths)
   * [Post a comment when it failed to parse the result](#feature-post-a-comment-when-it-failed-to-parse-the-result)
   * [Find the configuration file recursively](#feature-find-the-configuration-file-recursively)
   * [Complement CI and GitHub Repository owner and name from environment variables](#feature-complement-ci-and-github-repository-owner-and-name-from-environment-variables)
@@ -128,6 +129,51 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
 ```
 
 And the default title of destroy warning is changed to `## :warning: Resource Deletion will happen :warning:`.
+
+### Feature: Add template variables of changed resource paths
+
+[#39](https://github.com/suzuki-shunsuke/tfcmt/pull/39)
+
+As a summary of the result of `terraform plan`, it is convenient to show a list of resource paths.
+So the following template variables are added.
+
+* `.CreatedResources`: a list of created resource paths ([]string)
+* `.UpdatedResources`: a list of updated resource paths ([]string)
+* `.DeletedResources`: a list of deleted resource paths ([]string)
+* `.ReplacedResources`: a list of replaced resource paths ([]string)
+
+For example,
+
+```
+{{if .CreatedResources}}
+* Create
+{{- range .CreatedResources}}
+  * {{.}}
+{{- end}}{{end}}{{if .UpdatedResources}}
+* Update
+{{- range .UpdatedResources}}
+  * {{.}}
+{{- end}}{{end}}{{if .DeletedResources}}
+* Delete
+{{- range .DeletedResources}}
+  * {{.}}
+{{- end}}{{end}}{{if .ReplacedResources}}
+* Replace
+{{- range .ReplacedResources}}
+  * {{.}}
+{{- end}}{{end}}
+```
+
+```
+* Create
+  * null_resource.foo
+* Update
+  * mysql_database.bar
+* Delete
+  * null_resource.bar
+* Replace
+  * mysql_database.foo
+```
 
 ### Feature: Post a comment when it failed to parse the result
 

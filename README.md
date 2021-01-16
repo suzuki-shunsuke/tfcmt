@@ -77,6 +77,10 @@ Placeholder | Usage
 `{{ .CombinedOutput }}` | The output of terraform command
 `{{ .ExitCode }}` | The exit code of terraform command
 `{{ .ErrorMessages }}` | a list of error messages which occur in tfcmt
+`{{ .CreatedResources }}` | a list of created resource paths. This variable can be used at only plan
+`{{ .UpdatedResources }}` | a list of updated resource paths. This variable can be used at only plan
+`{{ .DeletedResources }}` | a list of deleted resource paths. This variable can be used at only plan
+`{{ .ReplaecedResources }}` | a list of deleted resource paths. This variable can be used at only plan
 
 On GitHub, tfcmt can also put a warning message if the plan result contains resource deletion (optional).
 
