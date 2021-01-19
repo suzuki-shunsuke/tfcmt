@@ -117,7 +117,7 @@ func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
 		if target == "" {
 			labels.NoChangesLabel = "no-changes"
 		} else {
-			labels.NoChangesLabel = "/no-changes"
+			labels.NoChangesLabel = target + "/no-changes"
 		}
 	} else {
 		nochangesLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenNoChanges.Label)
