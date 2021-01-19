@@ -12,7 +12,7 @@ import (
 const (
 	// DefaultPlanTemplate is a default template for terraform plan
 	DefaultPlanTemplate = `
-## Plan Result
+## Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 
 [CI link]({{ .Link }})
 
@@ -40,7 +40,7 @@ const (
 
 	// DefaultApplyTemplate is a default template for terraform apply
 	DefaultApplyTemplate = `
-## Apply Result
+## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 
 [CI link]({{ .Link }})
 
@@ -60,7 +60,7 @@ const (
 
 	// DefaultDestroyWarningTemplate is a default template for terraform plan
 	DefaultDestroyWarningTemplate = `
-## :warning: Plan Result: Resource Deletion will happen :warning:
+## :warning: Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}: Resource Deletion will happen :warning:
 
 [CI link]({{ .Link }})
 
@@ -93,7 +93,7 @@ This plan contains resource delete operation. Please check the plan result very 
 `
 
 	DefaultPlanParseErrorTemplate = `
-## Plan Result
+## Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 
 [CI link]({{ .Link }})
 
@@ -105,7 +105,7 @@ It failed to parse the result.
 `
 
 	DefaultApplyParseErrorTemplate = `
-## Apply Result
+## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 
 [CI link]({{ .Link }})
 

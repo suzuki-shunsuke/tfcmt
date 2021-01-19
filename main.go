@@ -70,6 +70,11 @@ func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
 		PlanErrorLabelColor:   t.config.Terraform.Plan.WhenPlanError.Color,
 	}
 
+	target, ok := t.config.Vars["target"]
+	if !ok {
+		target = ""
+	}
+
 	if labels.AddOrUpdateLabelColor == "" {
 		labels.AddOrUpdateLabelColor = "1d76db" // blue
 	}
@@ -81,7 +86,11 @@ func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
 	}
 
 	if t.config.Terraform.Plan.WhenAddOrUpdateOnly.Label == "" {
-		labels.AddOrUpdateLabel = "add-or-update"
+		if target == "" {
+			labels.AddOrUpdateLabel = "add-or-update"
+		} else {
+			labels.AddOrUpdateLabel = target + "/add-or-update"
+		}
 	} else {
 		addOrUpdateLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenAddOrUpdateOnly.Label)
 		if err != nil {
@@ -91,7 +100,11 @@ func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
 	}
 
 	if t.config.Terraform.Plan.WhenDestroy.Label == "" {
-		labels.DestroyLabel = "destroy"
+		if target == "" {
+			labels.DestroyLabel = "destroy"
+		} else {
+			labels.DestroyLabel = target + "/destroy"
+		}
 	} else {
 		destroyLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenDestroy.Label)
 		if err != nil {
@@ -101,7 +114,11 @@ func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
 	}
 
 	if t.config.Terraform.Plan.WhenNoChanges.Label == "" {
-		labels.NoChangesLabel = "no-changes"
+		if target == "" {
+			labels.NoChangesLabel = "no-changes"
+		} else {
+			labels.NoChangesLabel = "/no-changes"
+		}
 	} else {
 		nochangesLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenNoChanges.Label)
 		if err != nil {

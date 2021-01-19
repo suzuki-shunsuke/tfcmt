@@ -304,6 +304,11 @@ This feature is useful especially for Monorepo.
 tfcmt supports to pass variables to template by `-var <name>:<value>` options.
 We can access the variable in the template by `{{.Vars.<variable name>}}`.
 
+The variable `target` has a special meaning.
+This variable is used at the default template and default label name.
+This is useful for Monorepo. By setting `target`, we can distinguish the comment and label of each service.
+When this variable isn't set, this is just ignored.
+
 ## Feature: Add template variables
 
 * Stdout: standard output of terraform command
