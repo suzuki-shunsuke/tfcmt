@@ -109,11 +109,8 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 		Owner:   t.config.Notifier.Github.Repository.Owner,
 		Repo:    t.config.Notifier.Github.Repository.Name,
 		PR: github.PullRequest{
-			Revision:              ci.PR.Revision,
-			Number:                ci.PR.Number,
-			Title:                 t.context.String("title"),
-			DestroyWarningTitle:   t.context.String("destroy-warning-title"),
-			DestroyWarningMessage: t.context.String("destroy-warning-message"),
+			Revision: ci.PR.Revision,
+			Number:   ci.PR.Number,
 		},
 		CI:                     ci.URL,
 		Parser:                 t.parser,
@@ -189,31 +186,11 @@ func main() {
 			Name:   "plan",
 			Usage:  "Run terraform plan and post a comment to GitHub commit or pull request",
 			Action: cmdPlan,
-			Flags: []cli.Flag{
-				&cli.StringFlag{
-					Name:  "title, t",
-					Usage: "Specify the title to use for notification",
-				},
-				&cli.StringFlag{
-					Name:  "destroy-warning-title",
-					Usage: "Specify the title to use for destroy warning notification",
-				},
-				&cli.StringFlag{
-					Name:  "destroy-warning-message",
-					Usage: "Specify the message to use for destroy warning notification",
-				},
-			},
 		},
 		{
 			Name:   "apply",
 			Usage:  "Run terraform apply and post a comment to GitHub commit or pull request",
 			Action: cmdApply,
-			Flags: []cli.Flag{
-				&cli.StringFlag{
-					Name:  "title, t",
-					Usage: "Specify the title to use for notification",
-				},
-			},
 		},
 		{
 			Name:  "version",

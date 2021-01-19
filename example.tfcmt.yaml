@@ -8,7 +8,7 @@ notifier:
 terraform:
   plan:
     template: |
-      {{ .Title }}
+      ## Plan Result
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>

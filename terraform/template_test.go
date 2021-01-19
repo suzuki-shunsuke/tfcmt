@@ -17,7 +17,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 			template: DefaultPlanTemplate,
 			value:    CommonTemplate{},
 			resp: `
-## Plan result
+## Plan Result
 
 
 
@@ -31,12 +31,11 @@ func TestPlanTemplateExecute(t *testing.T) {
 			name:     "case 1",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "result",
 				Body:   "body",
 			},
 			resp: `
-title
+## Plan Result
 
 
 <pre><code>result
@@ -53,12 +52,11 @@ title
 			name:     "case 2",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "",
 				Body:   "body",
 			},
 			resp: `
-title
+## Plan Result
 
 
 
@@ -72,12 +70,11 @@ title
 			name:     "case 3",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "",
 				Body:   `This is a "body".`,
 			},
 			resp: `
-title
+## Plan Result
 
 
 
@@ -91,13 +88,12 @@ title
 			name:     "case 4",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Title:        "title",
 				Result:       "",
 				Body:         `This is a "body".`,
 				UseRawOutput: true,
 			},
 			resp: `
-title
+## Plan Result
 
 
 
@@ -111,12 +107,11 @@ title
 			name:     "case 5",
 			template: "",
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "",
 				Body:   "body",
 			},
 			resp: `
-title
+## Plan Result
 
 
 
@@ -128,13 +123,12 @@ title
 		},
 		{
 			name:     "case 6",
-			template: `{{ .Title }}-{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
-				Title:  "a",
 				Result: "c",
 				Body:   "d",
 			},
-			resp: `a-c-d`,
+			resp: `c-d`,
 		},
 	}
 	for i, testCase := range testCases {
@@ -170,7 +164,7 @@ func TestDestroyWarningTemplateExecute(t *testing.T) {
 			template: DefaultDestroyWarningTemplate,
 			value:    CommonTemplate{},
 			resp: `
-## :warning: Resource Deletion will happen :warning:
+## :warning: Plan Result: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -181,11 +175,10 @@ This plan contains resource delete operation. Please check the plan result very 
 			name:     "case 1",
 			template: DefaultDestroyWarningTemplate,
 			value: CommonTemplate{
-				Title:  "title",
 				Result: `This is a "result".`,
 			},
 			resp: `
-title
+## :warning: Plan Result: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -199,12 +192,11 @@ This plan contains resource delete operation. Please check the plan result very 
 			name:     "case 2",
 			template: DefaultDestroyWarningTemplate,
 			value: CommonTemplate{
-				Title:        "title",
 				Result:       `This is a "result".`,
 				UseRawOutput: true,
 			},
 			resp: `
-title
+## :warning: Plan Result: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -218,11 +210,10 @@ This plan contains resource delete operation. Please check the plan result very 
 			name:     "case 3",
 			template: DefaultDestroyWarningTemplate,
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "",
 			},
 			resp: `
-title
+## :warning: Plan Result: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -233,11 +224,10 @@ This plan contains resource delete operation. Please check the plan result very 
 			name:     "case 4",
 			template: "",
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "",
 			},
 			resp: `
-title
+## :warning: Plan Result: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -246,13 +236,12 @@ This plan contains resource delete operation. Please check the plan result very 
 		},
 		{
 			name:     "case 5",
-			template: `{{ .Title }}-{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
-				Title:  "a",
 				Result: "c",
 				Body:   "d",
 			},
-			resp: `a-c-d`,
+			resp: `c-d`,
 		},
 	}
 	for i, testCase := range testCases {
@@ -288,7 +277,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 			template: DefaultApplyTemplate,
 			value:    CommonTemplate{},
 			resp: `
-## Apply result
+## Apply Result
 
 
 
@@ -302,12 +291,11 @@ func TestApplyTemplateExecute(t *testing.T) {
 			name:     "case 1",
 			template: DefaultApplyTemplate,
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "result",
 				Body:   "body",
 			},
 			resp: `
-title
+## Apply Result
 
 
 <pre><code>result
@@ -324,12 +312,11 @@ title
 			name:     "case 2",
 			template: DefaultApplyTemplate,
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "",
 				Body:   "body",
 			},
 			resp: `
-title
+## Apply Result
 
 
 
@@ -343,12 +330,11 @@ title
 			name:     "case 3",
 			template: "",
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "",
 				Body:   "body",
 			},
 			resp: `
-title
+## Apply Result
 
 
 
@@ -362,12 +348,11 @@ title
 			name:     "case 4",
 			template: "",
 			value: CommonTemplate{
-				Title:  "title",
 				Result: "",
 				Body:   `This is a "body".`,
 			},
 			resp: `
-title
+## Apply Result
 
 
 
@@ -381,13 +366,12 @@ title
 			name:     "case 5",
 			template: "",
 			value: CommonTemplate{
-				Title:        "title",
 				Result:       "",
 				Body:         `This is a "body".`,
 				UseRawOutput: true,
 			},
 			resp: `
-title
+## Apply Result
 
 
 
@@ -399,13 +383,12 @@ title
 		},
 		{
 			name:     "case 6",
-			template: `{{ .Title }}-{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
-				Title:  "a",
 				Result: "c",
 				Body:   "d",
 			},
-			resp: `a-c-d`,
+			resp: `c-d`,
 		},
 	}
 	for i, testCase := range testCases {

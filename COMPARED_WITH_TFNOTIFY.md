@@ -8,7 +8,8 @@ tfcmt isn't compatible with tfnotify.
   * [Remove `fmt` command](#breaking-change-remove-fmt-command)
   * [Configuration file name is changed](#breaking-change-configuration-file-name-is-changed)
   * [Command usage is changed](#breaking-change-command-usage-is-changed)
-  * [Remove --message option and template variable .Message](#breaking-change-remove---message-option-and-template-variable-message)
+  * [Remove --message and --destroy-warning-message option and template variable .Message](#breaking-change-remove---message-and---destroy-warning-message-option-and-template-variable-message)
+  * [Remove --title and --destroy-warning-title options and template variable .Title](#breaking-change-remove---title-and---destroy-warning-title-options-and-template-variable-title)
   * [Don't remove duplicate comments](#breaking-change-dont-remove-duplicate-comments)
   * [Change the behavior of deletion warning](#breaking-change-change-the-behavior-of-deletion-warning)
 * Features
@@ -91,10 +92,19 @@ tfcmt apply -- terraform apply
 
 By this change, tfcmt can handle the standard error output and exit code of the terraform command.
 
-## Breaking Change: Remove --message option and template variable .Message
+## Breaking Change: Remove --message and --destroy-warning-message option and template variable .Message
+
+[#40](https://github.com/suzuki-shunsuke/tfcmt/pull/40)
 
 We introduced more general option `-var` and template variable `.Vars`,
-so the `--message` option isn't needed.
+so the `--message` and `--destroy-warning-message` options aren't needed.
+
+## Breaking Change: Remove --title and --destroy-warning-title options and template variable .Title
+
+[#41](https://github.com/suzuki-shunsuke/tfcmt/pull/41)
+
+We introduced more general option `-var` and template variable `.Vars`,
+so the `--title` and `--destroy-warning-title` options aren't needed.
 
 ## Breaking Change: Don't remove duplicate comments
 
@@ -117,7 +127,7 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
       label: "destroy"
       label_color: "d93f0b"  # red
       template: |
-        {{ .Title }}
+        ## Plan Result
 
         [CI link]( {{ .Link }} )
 
@@ -132,8 +142,6 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
         <pre><code>{{ .Body }}
         </pre></code></details>
 ```
-
-And the default title of destroy warning is changed to `## :warning: Resource Deletion will happen :warning:`.
 
 ### Feature: Add template variables of changed resource paths
 
@@ -194,7 +202,7 @@ terraform:
   plan:
     when_parse_error:
       template: |
-        {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+        ## Plan Result <sup>[CI link]( {{ .Link }} )</sup>
 
         :warning: It failed to parse the result. :warning:
 
@@ -205,7 +213,7 @@ terraform:
   apply:
     when_parse_error:
       template: |
-        {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+        ## Apply Result <sup>[CI link]( {{ .Link }} )</sup>
 
         :warning: It failed to parse the result. :warning:
 

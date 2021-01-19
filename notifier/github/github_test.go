@@ -131,7 +131,6 @@ func newFakeConfig() Config {
 		PR: PullRequest{
 			Revision: "abcd",
 			Number:   1,
-			Message:  "message",
 		},
 		Parser:   terraform.NewPlanParser(),
 		Template: terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),

@@ -102,7 +102,6 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	}
 
 	template.SetValue(terraform.CommonTemplate{
-		Title:             cfg.PR.Title,
 		Result:            result.Result,
 		Body:              body,
 		Link:              cfg.CI,

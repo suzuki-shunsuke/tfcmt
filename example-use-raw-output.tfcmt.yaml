@@ -9,7 +9,7 @@ terraform:
   use_raw_output: true
   plan:
     template: |
-      {{ .Title }}
+      ## Plan Result
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>
