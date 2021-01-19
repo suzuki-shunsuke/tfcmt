@@ -9,7 +9,6 @@ terraform:
   plan:
     template: |
       {{ .Title }}
-      {{ .Message }}
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>

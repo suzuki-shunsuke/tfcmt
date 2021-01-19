@@ -19,8 +19,6 @@ const (
 	defaultTemplate = `
 {{ .Title }}
 
-{{ .Message }}
-
 {{if .Result}}
 <pre><code>{{ .Result }}
 </code></pre>
@@ -58,8 +56,6 @@ This plan contains resource delete operation. Please check the plan result very 
 
 It failed to parse the result.
 
-{{ .Message }}
-
 <details><summary>Details (Click me)</summary>
 
 <pre><code>{{ .CombinedOutput }}
@@ -70,7 +66,6 @@ It failed to parse the result.
 // CommonTemplate represents template entities
 type CommonTemplate struct {
 	Title             string
-	Message           string
 	Result            string
 	Body              string
 	Link              string
@@ -176,7 +171,6 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 func (t *Template) Execute() (string, error) {
 	data := map[string]interface{}{
 		"Title":             t.Title,
-		"Message":           t.Message,
 		"Result":            t.Result,
 		"Body":              t.Body,
 		"Link":              t.Link,

@@ -21,8 +21,6 @@ func TestPlanTemplateExecute(t *testing.T) {
 
 
 
-
-
 <details><summary>Details (Click me)</summary>
 
 <pre><code>
@@ -33,15 +31,12 @@ func TestPlanTemplateExecute(t *testing.T) {
 			name:     "case 1",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Title:   "title",
-				Message: "message",
-				Result:  "result",
-				Body:    "body",
+				Title:  "title",
+				Result: "result",
+				Body:   "body",
 			},
 			resp: `
 title
-
-message
 
 
 <pre><code>result
@@ -58,15 +53,12 @@ message
 			name:     "case 2",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Title:   "title",
-				Message: "message",
-				Result:  "",
-				Body:    "body",
+				Title:  "title",
+				Result: "",
+				Body:   "body",
 			},
 			resp: `
 title
-
-message
 
 
 
@@ -80,15 +72,12 @@ message
 			name:     "case 3",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Title:   "title",
-				Message: "message",
-				Result:  "",
-				Body:    `This is a "body".`,
+				Title:  "title",
+				Result: "",
+				Body:   `This is a "body".`,
 			},
 			resp: `
 title
-
-message
 
 
 
@@ -103,15 +92,12 @@ message
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
 				Title:        "title",
-				Message:      "message",
 				Result:       "",
 				Body:         `This is a "body".`,
 				UseRawOutput: true,
 			},
 			resp: `
 title
-
-message
 
 
 
@@ -125,15 +111,12 @@ message
 			name:     "case 5",
 			template: "",
 			value: CommonTemplate{
-				Title:   "title",
-				Message: "message",
-				Result:  "",
-				Body:    "body",
+				Title:  "title",
+				Result: "",
+				Body:   "body",
 			},
 			resp: `
 title
-
-message
 
 
 
@@ -145,14 +128,13 @@ message
 		},
 		{
 			name:     "case 6",
-			template: `{{ .Title }}-{{ .Message }}-{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Title }}-{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
-				Title:   "a",
-				Message: "b",
-				Result:  "c",
-				Body:    "d",
+				Title:  "a",
+				Result: "c",
+				Body:   "d",
 			},
-			resp: `a-b-c-d`,
+			resp: `a-c-d`,
 		},
 	}
 	for i, testCase := range testCases {
@@ -264,14 +246,13 @@ This plan contains resource delete operation. Please check the plan result very 
 		},
 		{
 			name:     "case 5",
-			template: `{{ .Title }}-{{ .Message }}-{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Title }}-{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
-				Title:   "a",
-				Message: "b",
-				Result:  "c",
-				Body:    "d",
+				Title:  "a",
+				Result: "c",
+				Body:   "d",
 			},
-			resp: `a-b-c-d`,
+			resp: `a-c-d`,
 		},
 	}
 	for i, testCase := range testCases {
@@ -311,8 +292,6 @@ func TestApplyTemplateExecute(t *testing.T) {
 
 
 
-
-
 <details><summary>Details (Click me)</summary>
 
 <pre><code>
@@ -323,15 +302,12 @@ func TestApplyTemplateExecute(t *testing.T) {
 			name:     "case 1",
 			template: DefaultApplyTemplate,
 			value: CommonTemplate{
-				Title:   "title",
-				Message: "message",
-				Result:  "result",
-				Body:    "body",
+				Title:  "title",
+				Result: "result",
+				Body:   "body",
 			},
 			resp: `
 title
-
-message
 
 
 <pre><code>result
@@ -348,15 +324,12 @@ message
 			name:     "case 2",
 			template: DefaultApplyTemplate,
 			value: CommonTemplate{
-				Title:   "title",
-				Message: "message",
-				Result:  "",
-				Body:    "body",
+				Title:  "title",
+				Result: "",
+				Body:   "body",
 			},
 			resp: `
 title
-
-message
 
 
 
@@ -370,15 +343,12 @@ message
 			name:     "case 3",
 			template: "",
 			value: CommonTemplate{
-				Title:   "title",
-				Message: "message",
-				Result:  "",
-				Body:    "body",
+				Title:  "title",
+				Result: "",
+				Body:   "body",
 			},
 			resp: `
 title
-
-message
 
 
 
@@ -392,15 +362,12 @@ message
 			name:     "case 4",
 			template: "",
 			value: CommonTemplate{
-				Title:   "title",
-				Message: "message",
-				Result:  "",
-				Body:    `This is a "body".`,
+				Title:  "title",
+				Result: "",
+				Body:   `This is a "body".`,
 			},
 			resp: `
 title
-
-message
 
 
 
@@ -415,15 +382,12 @@ message
 			template: "",
 			value: CommonTemplate{
 				Title:        "title",
-				Message:      "message",
 				Result:       "",
 				Body:         `This is a "body".`,
 				UseRawOutput: true,
 			},
 			resp: `
 title
-
-message
 
 
 
@@ -435,14 +399,13 @@ message
 		},
 		{
 			name:     "case 6",
-			template: `{{ .Title }}-{{ .Message }}-{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Title }}-{{ .Result }}-{{ .Body }}`,
 			value: CommonTemplate{
-				Title:   "a",
-				Message: "b",
-				Result:  "c",
-				Body:    "d",
+				Title:  "a",
+				Result: "c",
+				Body:   "d",
 			},
-			resp: `a-b-c-d`,
+			resp: `a-c-d`,
 		},
 	}
 	for i, testCase := range testCases {

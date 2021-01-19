@@ -112,7 +112,6 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 			Revision:              ci.PR.Revision,
 			Number:                ci.PR.Number,
 			Title:                 t.context.String("title"),
-			Message:               t.context.String("message"),
 			DestroyWarningTitle:   t.context.String("destroy-warning-title"),
 			DestroyWarningMessage: t.context.String("destroy-warning-message"),
 		},
@@ -196,10 +195,6 @@ func main() {
 					Usage: "Specify the title to use for notification",
 				},
 				&cli.StringFlag{
-					Name:  "message, m",
-					Usage: "Specify the message to use for notification",
-				},
-				&cli.StringFlag{
 					Name:  "destroy-warning-title",
 					Usage: "Specify the title to use for destroy warning notification",
 				},
@@ -217,10 +212,6 @@ func main() {
 				&cli.StringFlag{
 					Name:  "title, t",
 					Usage: "Specify the title to use for notification",
-				},
-				&cli.StringFlag{
-					Name:  "message, m",
-					Usage: "Specify the message to use for notification",
 				},
 			},
 		},
