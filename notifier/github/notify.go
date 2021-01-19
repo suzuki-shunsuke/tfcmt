@@ -116,35 +116,37 @@ func (g *NotifyService) updateLabels(ctx context.Context, result terraform.Parse
 		errMsgs = append(errMsgs, msg)
 	}
 
-	if labelToAdd != "" {
-		if currentLabelColor == "" {
-			labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
-			if err != nil {
-				msg := "add a label " + labelToAdd + ": " + err.Error()
-				log.Printf("[ERROR][tfcmt] " + msg)
-				errMsgs = append(errMsgs, msg)
-			}
-			if labelColor != "" {
-				// set the color of label
-				for _, label := range labels {
-					if labelToAdd == label.GetName() {
-						if label.GetColor() != labelColor {
-							if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
-								msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
-								log.Printf("[ERROR][tfcmt] " + msg)
-								errMsgs = append(errMsgs, msg)
-							}
+	if labelToAdd == "" {
+		return errMsgs
+	}
+
+	if currentLabelColor == "" {
+		labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
+		if err != nil {
+			msg := "add a label " + labelToAdd + ": " + err.Error()
+			log.Printf("[ERROR][tfcmt] " + msg)
+			errMsgs = append(errMsgs, msg)
+		}
+		if labelColor != "" {
+			// set the color of label
+			for _, label := range labels {
+				if labelToAdd == label.GetName() {
+					if label.GetColor() != labelColor {
+						if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
+							msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+							log.Printf("[ERROR][tfcmt] " + msg)
+							errMsgs = append(errMsgs, msg)
 						}
 					}
 				}
 			}
-		} else if labelColor != "" && labelColor != currentLabelColor {
-			// set the color of label
-			if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
-				msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
-				log.Printf("[ERROR][tfcmt] " + msg)
-				errMsgs = append(errMsgs, msg)
-			}
+		}
+	} else if labelColor != "" && labelColor != currentLabelColor {
+		// set the color of label
+		if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
+			msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+			log.Printf("[ERROR][tfcmt] " + msg)
+			errMsgs = append(errMsgs, msg)
 		}
 	}
 	return errMsgs
