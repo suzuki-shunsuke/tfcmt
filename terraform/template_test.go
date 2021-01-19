@@ -44,10 +44,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 
 [CI link]()
 
-
-<pre><code>result
-</code></pre>
-
+<pre><code>result</code></pre>
 
 <details><summary>Details (Click me)</summary>
 
@@ -199,7 +196,6 @@ func TestDestroyWarningTemplateExecute(t *testing.T) {
 [CI link]()
 
 ### :warning: Resource Deletion will happen :warning:
-
 This plan contains resource delete operation. Please check the plan result very carefully!
 
 
@@ -225,12 +221,8 @@ This plan contains resource delete operation. Please check the plan result very 
 [CI link]()
 
 ### :warning: Resource Deletion will happen :warning:
-
 This plan contains resource delete operation. Please check the plan result very carefully!
-
-
-<pre><code>This is a &#34;result&#34;.
-</code></pre>
+<pre><code>This is a &#34;result&#34;.</code></pre>
 
 
 <details><summary>Details (Click me)</summary>
@@ -255,12 +247,8 @@ This plan contains resource delete operation. Please check the plan result very 
 [CI link]()
 
 ### :warning: Resource Deletion will happen :warning:
-
 This plan contains resource delete operation. Please check the plan result very carefully!
-
-
-<pre><code>This is a "result".
-</code></pre>
+<pre><code>This is a "result".</code></pre>
 
 
 <details><summary>Details (Click me)</summary>
@@ -284,7 +272,6 @@ This plan contains resource delete operation. Please check the plan result very 
 [CI link]()
 
 ### :warning: Resource Deletion will happen :warning:
-
 This plan contains resource delete operation. Please check the plan result very carefully!
 
 
@@ -310,7 +297,6 @@ This plan contains resource delete operation. Please check the plan result very 
 [CI link]()
 
 ### :warning: Resource Deletion will happen :warning:
-
 This plan contains resource delete operation. Please check the plan result very carefully!
 
 
@@ -394,10 +380,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 
 [CI link]()
 
-
-<pre><code>result
-</code></pre>
-
+<pre><code>result</code></pre>
 
 <details><summary>Details (Click me)</summary>
 
