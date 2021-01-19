@@ -40,64 +40,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 			template = g.client.Config.DestroyWarningTemplate
 		}
 		if cfg.PR.IsNumber() && cfg.ResultLabels.HasAnyLabelDefined() {
-			var (
-				labelToAdd string
-				labelColor string
-			)
-
-			switch {
-			case result.HasAddOrUpdateOnly:
-				labelToAdd = cfg.ResultLabels.AddOrUpdateLabel
-				labelColor = cfg.ResultLabels.AddOrUpdateLabelColor
-			case result.HasDestroy:
-				labelToAdd = cfg.ResultLabels.DestroyLabel
-				labelColor = cfg.ResultLabels.DestroyLabelColor
-			case result.HasNoChanges:
-				labelToAdd = cfg.ResultLabels.NoChangesLabel
-				labelColor = cfg.ResultLabels.NoChangesLabelColor
-			case result.HasPlanError:
-				labelToAdd = cfg.ResultLabels.PlanErrorLabel
-				labelColor = cfg.ResultLabels.PlanErrorLabelColor
-			}
-
-			currentLabelColor, err := g.removeResultLabels(ctx, labelToAdd)
-			if err != nil {
-				msg := "remove labels: " + err.Error()
-				log.Printf("[ERROR][tfcmt] " + msg)
-				errMsgs = append(errMsgs, msg)
-			}
-
-			if labelToAdd != "" {
-				if currentLabelColor == "" {
-					labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
-					if err != nil {
-						msg := "add a label " + labelToAdd + ": " + err.Error()
-						log.Printf("[ERROR][tfcmt] " + msg)
-						errMsgs = append(errMsgs, msg)
-					}
-					if labelColor != "" {
-						// set the color of label
-						for _, label := range labels {
-							if labelToAdd == label.GetName() {
-								if label.GetColor() != labelColor {
-									if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
-										msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
-										log.Printf("[ERROR][tfcmt] " + msg)
-										errMsgs = append(errMsgs, msg)
-									}
-								}
-							}
-						}
-					}
-				} else if labelColor != "" && labelColor != currentLabelColor {
-					// set the color of label
-					if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
-						msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
-						log.Printf("[ERROR][tfcmt] " + msg)
-						errMsgs = append(errMsgs, msg)
-					}
-				}
-			}
+			errMsgs = append(errMsgs, g.updateLabels(ctx, result)...)
 		}
 	}
 
@@ -140,6 +83,73 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	})
+}
+
+func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string {
+	cfg := g.client.Config
+	var (
+		labelToAdd string
+		labelColor string
+	)
+
+	switch {
+	case result.HasAddOrUpdateOnly:
+		labelToAdd = cfg.ResultLabels.AddOrUpdateLabel
+		labelColor = cfg.ResultLabels.AddOrUpdateLabelColor
+	case result.HasDestroy:
+		labelToAdd = cfg.ResultLabels.DestroyLabel
+		labelColor = cfg.ResultLabels.DestroyLabelColor
+	case result.HasNoChanges:
+		labelToAdd = cfg.ResultLabels.NoChangesLabel
+		labelColor = cfg.ResultLabels.NoChangesLabelColor
+	case result.HasPlanError:
+		labelToAdd = cfg.ResultLabels.PlanErrorLabel
+		labelColor = cfg.ResultLabels.PlanErrorLabelColor
+	}
+
+	errMsgs := []string{}
+
+	currentLabelColor, err := g.removeResultLabels(ctx, labelToAdd)
+	if err != nil {
+		msg := "remove labels: " + err.Error()
+		log.Printf("[ERROR][tfcmt] " + msg)
+		errMsgs = append(errMsgs, msg)
+	}
+
+	if labelToAdd == "" {
+		return errMsgs
+	}
+
+	if currentLabelColor == "" {
+		labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
+		if err != nil {
+			msg := "add a label " + labelToAdd + ": " + err.Error()
+			log.Printf("[ERROR][tfcmt] " + msg)
+			errMsgs = append(errMsgs, msg)
+		}
+		if labelColor != "" {
+			// set the color of label
+			for _, label := range labels {
+				if labelToAdd == label.GetName() {
+					if label.GetColor() != labelColor {
+						if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
+							msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+							log.Printf("[ERROR][tfcmt] " + msg)
+							errMsgs = append(errMsgs, msg)
+						}
+					}
+				}
+			}
+		}
+	} else if labelColor != "" && labelColor != currentLabelColor {
+		// set the color of label
+		if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
+			msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+			log.Printf("[ERROR][tfcmt] " + msg)
+			errMsgs = append(errMsgs, msg)
+		}
+	}
+	return errMsgs
 }
 
 func (g *NotifyService) removeResultLabels(ctx context.Context, label string) (string, error) {

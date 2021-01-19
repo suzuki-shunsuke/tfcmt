@@ -12,6 +12,7 @@ tfcmt isn't compatible with tfnotify.
   * [Remove --title and --destroy-warning-title options and template variable .Title](#breaking-change-remove---title-and---destroy-warning-title-options-and-template-variable-title)
   * [Don't remove duplicate comments](#breaking-change-dont-remove-duplicate-comments)
   * [Change the behavior of deletion warning](#breaking-change-change-the-behavior-of-deletion-warning)
+  * [Update labels by default](#breaking-change-update-pull-request-labels-by-default)
 * Features
   * [Add template variables of changed resource paths](#feature-add-template-variables-of-changed-resource-paths)
   * [Post a comment when it failed to parse the result](#feature-post-a-comment-when-it-failed-to-parse-the-result)
@@ -142,6 +143,24 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
 
         <pre><code>{{ .Body }}
         </pre></code></details>
+```
+
+## Breaking Change: Update pull request labels by default
+
+[#44](https://github.com/suzuki-shunsuke/tfcmt/pull/44)
+
+tfcmt updates pull request labels by default using default label name and color.
+
+* no-changes, green
+* add-or-update, blue
+* destroy, red
+
+If you don't want to update labels, please configure `disable_label: true`.
+
+```yaml
+terraform:
+  plan:
+    disable_label: true
 ```
 
 ### Feature: Add template variables of changed resource paths
