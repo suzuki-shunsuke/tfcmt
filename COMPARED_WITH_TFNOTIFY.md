@@ -24,6 +24,7 @@ tfcmt isn't compatible with tfnotify.
   * Support template functions [sprig](http://masterminds.github.io/sprig/)
   * [Support to pass variables by -var option](#feature-support-to-pass-variables-by--var-option)
   * [Add template variables](#feature-add-template-variables)
+  * [Add templates configuration](#feature-add-templates-configuration)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
 * Fixes
@@ -317,6 +318,21 @@ When this variable isn't set, this is just ignored.
 * ExitCode: exit code of terraform command
 * Vars: variables which are passed by `-var` option
 * ErrorMessages: a list of error messages which occur in tfcmt
+
+## Feature: Add templates configuration
+
+[#50](https://github.com/suzuki-shunsuke/tfcmt/issues/50) [#51](https://github.com/suzuki-shunsuke/tfcmt/pull/51)
+
+ex.
+
+```yaml
+templates:
+  title: "## Plan Result ({{.Vars.target}})"
+terraform:
+  plan:
+    template: |
+      {{template "title" .}}
+```
 
 ## Feature: Don't recreate labels
 
