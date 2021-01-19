@@ -169,5 +169,5 @@ func (cfg *Config) Find(file string) (string, error) {
 	if p := findconfig.Find(wd, findconfig.Exist, "tfcmt.yaml", "tfcmt.yml", ".tfcmt.yaml", ".tfcmt.yml"); p != "" {
 		return p, nil
 	}
-	return "", errors.New("config for tfcmt is not found at all")
+	return "", nil
 }

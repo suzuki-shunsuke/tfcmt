@@ -17,12 +17,13 @@ tfcmt isn't compatible with tfnotify.
   * [Add template variables of changed resource paths](#feature-add-template-variables-of-changed-resource-paths)
   * [Post a comment when it failed to parse the result](#feature-post-a-comment-when-it-failed-to-parse-the-result)
   * [Find the configuration file recursively](#feature-find-the-configuration-file-recursively)
-  * [Complement CI and GitHub Repository owner and name from environment variables](#feature-complement-ci-and-github-repository-owner-and-name-from-environment-variables)
+  * [Make a configuration file optional](#feature-make-a-configuration-file-optional)
+    * [Complement CI and GitHub Repository owner and name from environment variables](#feature-complement-ci-and-github-repository-owner-and-name-from-environment-variables)
+    * [Get GitHub Token from the environment variable "GITHUB_TOKEN" by default](#feature-get-github-token-from-the-environment-variable-github_token-by-default)
   * [Support to configure label colors](#feature-support-to-configure-label-colors)
   * Support template functions [sprig](http://masterminds.github.io/sprig/)
   * [Support to pass variables by -var option](#feature-support-to-pass-variables-by--var-option)
   * [Add template variables](#feature-add-template-variables)
-  * [Get GitHub Token from the environment variable "GITHUB_TOKEN" by default](#feature-get-github-token-from-the-environment-variable-github_token-by-default)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
 * Fixes
@@ -249,7 +250,13 @@ terraform:
 
 tfcmt searches the configuration file from the current directory to the root directory recursively.
 
-## Feature: Complement CI and GitHub Repository owner and name from environment variables
+## Feature: Make a configuration file optional
+
+[#45](https://github.com/suzuki-shunsuke/tfcmt/pull/45)
+
+When a configuration file path isn't specified and it isn't found, tfcmt works with the default configuration.
+
+### Feature: Complement CI and GitHub Repository owner and name from environment variables
 
 [#25](https://github.com/suzuki-shunsuke/tfcmt/pull/25)
 
@@ -277,6 +284,10 @@ notifier:
     token: $GITHUB_TOKEN
 ```
 
+### Feature: Get GitHub Token from the environment variable "GITHUB_TOKEN" by default
+
+We can omit the configuration `notifier.github.token`.
+
 ## Feature: Support to configure label colors
 
 [98547135a6d37b11b641feb399eec17721fe0bc0](https://github.com/suzuki-shunsuke/tfnotify/commit/98547135a6d37b11b641feb399eec17721fe0bc0)
@@ -301,10 +312,6 @@ We can access the variable in the template by `{{.Vars.<variable name>}}`.
 * ExitCode: exit code of terraform command
 * Vars: variables which are passed by `-var` option
 * ErrorMessages: a list of error messages which occur in tfcmt
-
-## Feature: Get GitHub Token from the environment variable "GITHUB_TOKEN" by default
-
-We can omit the configuration `notifier.github.token`.
 
 ## Feature: Don't recreate labels
 

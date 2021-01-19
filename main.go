@@ -249,8 +249,10 @@ func newConfig(ctx *cli.Context) (config.Config, error) {
 	if err != nil {
 		return cfg, err
 	}
-	if err := cfg.LoadFile(confPath); err != nil {
-		return cfg, err
+	if confPath != "" {
+		if err := cfg.LoadFile(confPath); err != nil {
+			return cfg, err
+		}
 	}
 	vars := ctx.StringSlice("var")
 	vm := make(map[string]string, len(vars))
