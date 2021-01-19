@@ -36,7 +36,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 
 	_, isPlan := parser.(*terraform.PlanParser)
 	if isPlan {
-		if result.HasDestroy && cfg.WarnDestroy {
+		if result.HasDestroy {
 			template = g.client.Config.DestroyWarningTemplate
 		}
 		if cfg.PR.IsNumber() && cfg.ResultLabels.HasAnyLabelDefined() {

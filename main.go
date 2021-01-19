@@ -28,7 +28,6 @@ type tfcmt struct {
 	template               *terraform.Template
 	destroyWarningTemplate *terraform.Template
 	parseErrorTemplate     *terraform.Template
-	warnDestroy            bool
 }
 
 func getCI(ciname string) (CI, error) {
@@ -118,7 +117,6 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 		Template:               t.template,
 		DestroyWarningTemplate: t.destroyWarningTemplate,
 		ParseErrorTemplate:     t.parseErrorTemplate,
-		WarnDestroy:            t.warnDestroy,
 		ResultLabels:           labels,
 		Vars:                   t.config.Vars,
 	})
@@ -265,9 +263,6 @@ func cmdPlan(ctx *cli.Context) error {
 		return err
 	}
 
-	// If when_destroy is not defined in configuration, tfcmt should not notify it
-	warnDestroy := cfg.Terraform.Plan.WhenDestroy.Template != ""
-
 	t := &tfcmt{
 		config:                 cfg,
 		context:                ctx,
@@ -275,7 +270,6 @@ func cmdPlan(ctx *cli.Context) error {
 		template:               terraform.NewPlanTemplate(cfg.Terraform.Plan.Template),
 		destroyWarningTemplate: terraform.NewDestroyWarningTemplate(cfg.Terraform.Plan.WhenDestroy.Template),
 		parseErrorTemplate:     terraform.NewPlanParseErrorTemplate(cfg.Terraform.Plan.WhenParseError.Template),
-		warnDestroy:            warnDestroy,
 	}
 	return t.Run(ctx.Context)
 }

@@ -43,7 +43,6 @@ type Config struct {
 	CI           string
 	Parser       terraform.Parser
 	UseRawOutput bool
-	WarnDestroy  bool
 	// Template is used for all Terraform command output
 	Template *terraform.Template
 	// DestroyWarningTemplate is used only for additional warning

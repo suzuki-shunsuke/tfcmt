@@ -19,12 +19,17 @@ func TestPlanTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>
-</code></pre></details>
+` + "```" + `
+
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -37,6 +42,8 @@ func TestPlanTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
+[CI link]()
+
 
 <pre><code>result
 </code></pre>
@@ -44,8 +51,11 @@ func TestPlanTemplateExecute(t *testing.T) {
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>body
-</code></pre></details>
+` + "```" + `
+body
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -58,12 +68,17 @@ func TestPlanTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>body
-</code></pre></details>
+` + "```" + `
+body
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -76,12 +91,17 @@ func TestPlanTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>This is a &#34;body&#34;.
-</code></pre></details>
+` + "```" + `
+This is a "body".
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -95,12 +115,17 @@ func TestPlanTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>This is a "body".
-</code></pre></details>
+` + "```" + `
+This is a "body".
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -113,12 +138,17 @@ func TestPlanTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>body
-</code></pre></details>
+` + "```" + `
+body
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -166,9 +196,19 @@ func TestDestroyWarningTemplateExecute(t *testing.T) {
 			resp: `
 ## :warning: Plan Result: Resource Deletion will happen :warning:
 
+[CI link]()
+
 This plan contains resource delete operation. Please check the plan result very carefully!
 
 
+
+<details><summary>Details (Click me)</summary>
+
+` + "```" + `
+
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -180,12 +220,22 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `
 ## :warning: Plan Result: Resource Deletion will happen :warning:
 
+[CI link]()
+
 This plan contains resource delete operation. Please check the plan result very carefully!
 
 
 <pre><code>This is a &#34;result&#34;.
 </code></pre>
 
+
+<details><summary>Details (Click me)</summary>
+
+` + "```" + `
+
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -198,12 +248,22 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `
 ## :warning: Plan Result: Resource Deletion will happen :warning:
 
+[CI link]()
+
 This plan contains resource delete operation. Please check the plan result very carefully!
 
 
 <pre><code>This is a "result".
 </code></pre>
 
+
+<details><summary>Details (Click me)</summary>
+
+` + "```" + `
+
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -215,9 +275,19 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `
 ## :warning: Plan Result: Resource Deletion will happen :warning:
 
+[CI link]()
+
 This plan contains resource delete operation. Please check the plan result very carefully!
 
 
+
+<details><summary>Details (Click me)</summary>
+
+` + "```" + `
+
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -229,9 +299,19 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `
 ## :warning: Plan Result: Resource Deletion will happen :warning:
 
+[CI link]()
+
 This plan contains resource delete operation. Please check the plan result very carefully!
 
 
+
+<details><summary>Details (Click me)</summary>
+
+` + "```" + `
+
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -279,12 +359,17 @@ func TestApplyTemplateExecute(t *testing.T) {
 			resp: `
 ## Apply Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>
-</code></pre></details>
+` + "```" + `
+
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -297,6 +382,8 @@ func TestApplyTemplateExecute(t *testing.T) {
 			resp: `
 ## Apply Result
 
+[CI link]()
+
 
 <pre><code>result
 </code></pre>
@@ -304,8 +391,11 @@ func TestApplyTemplateExecute(t *testing.T) {
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>body
-</code></pre></details>
+` + "```" + `
+body
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -318,12 +408,17 @@ func TestApplyTemplateExecute(t *testing.T) {
 			resp: `
 ## Apply Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>body
-</code></pre></details>
+` + "```" + `
+body
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -336,12 +431,17 @@ func TestApplyTemplateExecute(t *testing.T) {
 			resp: `
 ## Apply Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>body
-</code></pre></details>
+` + "```" + `
+body
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -354,12 +454,17 @@ func TestApplyTemplateExecute(t *testing.T) {
 			resp: `
 ## Apply Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>This is a &#34;body&#34;.
-</code></pre></details>
+` + "```" + `
+This is a "body".
+` + "```" + `
+
+</details>
 `,
 		},
 		{
@@ -373,12 +478,17 @@ func TestApplyTemplateExecute(t *testing.T) {
 			resp: `
 ## Apply Result
 
+[CI link]()
+
 
 
 <details><summary>Details (Click me)</summary>
 
-<pre><code>This is a "body".
-</code></pre></details>
+` + "```" + `
+This is a "body".
+` + "```" + `
+
+</details>
 `,
 		},
 		{
