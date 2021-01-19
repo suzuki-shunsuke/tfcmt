@@ -319,7 +319,7 @@ When this variable isn't set, this is just ignored.
 * Vars: variables which are passed by `-var` option
 * ErrorMessages: a list of error messages which occur in tfcmt
 
-## Feature: Add templates configuration
+## Feature: Add templates configuration and builtin templates
 
 [#50](https://github.com/suzuki-shunsuke/tfcmt/issues/50) [#51](https://github.com/suzuki-shunsuke/tfcmt/pull/51)
 
@@ -333,6 +333,14 @@ terraform:
     template: |
       {{template "title" .}}
 ```
+
+The following builtin templates are defined. We can override them.
+
+* plan_title
+* apply_title
+* result
+* updated_resources
+* deletion_warning
 
 ## Feature: Don't recreate labels
 

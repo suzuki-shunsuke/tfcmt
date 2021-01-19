@@ -12,23 +12,12 @@ import (
 const (
 	// DefaultPlanTemplate is a default template for terraform plan
 	DefaultPlanTemplate = `
-## Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
+{{template "plan_title" .}}
 
 [CI link]({{ .Link }})
 
-{{if .Result}}
-<pre><code>{{ .Result }}
-</code></pre>
-{{end}}
-{{if .CreatedResources}}
-* Create
-{{- range .CreatedResources}}
-  * {{.}}
-{{- end}}{{end}}{{if .UpdatedResources}}
-* Update
-{{- range .UpdatedResources}}
-  * {{.}}
-{{- end}}{{end}}
+{{template "result" .}}
+{{template "updated_resources" .}}
 <details><summary>Details (Click me)</summary>
 {{wrapCode .Body}}
 </details>
@@ -40,14 +29,11 @@ const (
 
 	// DefaultApplyTemplate is a default template for terraform apply
 	DefaultApplyTemplate = `
-## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
+{{template "apply_title" .}}
 
 [CI link]({{ .Link }})
 
-{{if .Result}}
-<pre><code>{{ .Result }}
-</code></pre>
-{{end}}
+{{template "result" .}}
 
 <details><summary>Details (Click me)</summary>
 {{wrapCode .Body}}
@@ -60,42 +46,21 @@ const (
 
 	// DefaultDestroyWarningTemplate is a default template for terraform plan
 	DefaultDestroyWarningTemplate = `
-## Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
+{{template "plan_title" .}}
 
 [CI link]({{ .Link }})
 
-### :warning: Resource Deletion will happen :warning:
+{{template "deletion_warning" .}}
+{{template "result" .}}
 
-This plan contains resource delete operation. Please check the plan result very carefully!
-
-{{if .Result}}
-<pre><code>{{ .Result }}
-</code></pre>
-{{end}}
-{{if .CreatedResources}}
-* Create
-{{- range .CreatedResources}}
-  * {{.}}
-{{- end}}{{end}}{{if .UpdatedResources}}
-* Update
-{{- range .UpdatedResources}}
-  * {{.}}
-{{- end}}{{end}}{{if .DeletedResources}}
-* Delete
-{{- range .DeletedResources}}
-  * {{.}}
-{{- end}}{{end}}{{if .ReplacedResources}}
-* Replace
-{{- range .ReplacedResources}}
-  * {{.}}
-{{- end}}{{end}}
+{{template "updated_resources" .}}
 <details><summary>Details (Click me)</summary>
 {{wrapCode .Body}}
 </details>
 `
 
 	DefaultPlanParseErrorTemplate = `
-## Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
+{{template "plan_title" .}}
 
 [CI link]({{ .Link }})
 
@@ -251,7 +216,36 @@ func (t *Template) Execute() (string, error) {
 		"ReplacedResources": t.ReplacedResources,
 	}
 
-	resp, err := generateOutput("default", addTemplates(t.Template, t.Templates), data, t.UseRawOutput)
+	templates := map[string]string{
+		"plan_title":  "## Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}",
+		"apply_title": "## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}",
+		"result":      "{{if .Result}}<pre><code>{{ .Result }}</code></pre>{{end}}",
+		"updated_resources": `{{if .CreatedResources}}
+* Create
+{{- range .CreatedResources}}
+  * {{.}}
+{{- end}}{{end}}{{if .UpdatedResources}}
+* Update
+{{- range .UpdatedResources}}
+  * {{.}}
+{{- end}}{{end}}{{if .DeletedResources}}
+* Delete
+{{- range .DeletedResources}}
+  * {{.}}
+{{- end}}{{end}}{{if .ReplacedResources}}
+* Replace
+{{- range .ReplacedResources}}
+  * {{.}}
+{{- end}}{{end}}`,
+		"deletion_warning": `### :warning: Resource Deletion will happen :warning:
+This plan contains resource delete operation. Please check the plan result very carefully!`,
+	}
+
+	for k, v := range t.Templates {
+		templates[k] = v
+	}
+
+	resp, err := generateOutput("default", addTemplates(t.Template, templates), data, t.UseRawOutput)
 	if err != nil {
 		return "", err
 	}
