@@ -194,9 +194,11 @@ func TestDestroyWarningTemplateExecute(t *testing.T) {
 			template: DefaultDestroyWarningTemplate,
 			value:    CommonTemplate{},
 			resp: `
-## :warning: Plan Result: Resource Deletion will happen :warning:
+## Plan Result
 
 [CI link]()
+
+### :warning: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -218,9 +220,11 @@ This plan contains resource delete operation. Please check the plan result very 
 				Result: `This is a "result".`,
 			},
 			resp: `
-## :warning: Plan Result: Resource Deletion will happen :warning:
+## Plan Result
 
 [CI link]()
+
+### :warning: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -246,9 +250,11 @@ This plan contains resource delete operation. Please check the plan result very 
 				UseRawOutput: true,
 			},
 			resp: `
-## :warning: Plan Result: Resource Deletion will happen :warning:
+## Plan Result
 
 [CI link]()
+
+### :warning: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -273,9 +279,11 @@ This plan contains resource delete operation. Please check the plan result very 
 				Result: "",
 			},
 			resp: `
-## :warning: Plan Result: Resource Deletion will happen :warning:
+## Plan Result
 
 [CI link]()
+
+### :warning: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -297,9 +305,11 @@ This plan contains resource delete operation. Please check the plan result very 
 				Result: "",
 			},
 			resp: `
-## :warning: Plan Result: Resource Deletion will happen :warning:
+## Plan Result
 
 [CI link]()
+
+### :warning: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
