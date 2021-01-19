@@ -70,23 +70,45 @@ func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
 		PlanErrorLabelColor:   t.config.Terraform.Plan.WhenPlanError.Color,
 	}
 
-	addOrUpdateLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenAddOrUpdateOnly.Label)
-	if err != nil {
-		return labels, err
+	if labels.AddOrUpdateLabelColor == "" {
+		labels.AddOrUpdateLabelColor = "1d76db" // blue
 	}
-	labels.AddOrUpdateLabel = addOrUpdateLabel
+	if labels.DestroyLabelColor == "" {
+		labels.DestroyLabelColor = "d93f0b" // red
+	}
+	if labels.NoChangesLabelColor == "" {
+		labels.NoChangesLabelColor = "0e8a16" // green
+	}
 
-	destroyLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenDestroy.Label)
-	if err != nil {
-		return labels, err
+	if t.config.Terraform.Plan.WhenAddOrUpdateOnly.Label == "" {
+		labels.AddOrUpdateLabel = "add-or-update"
+	} else {
+		addOrUpdateLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenAddOrUpdateOnly.Label)
+		if err != nil {
+			return labels, err
+		}
+		labels.AddOrUpdateLabel = addOrUpdateLabel
 	}
-	labels.DestroyLabel = destroyLabel
 
-	nochangesLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenNoChanges.Label)
-	if err != nil {
-		return labels, err
+	if t.config.Terraform.Plan.WhenDestroy.Label == "" {
+		labels.DestroyLabel = "destroy"
+	} else {
+		destroyLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenDestroy.Label)
+		if err != nil {
+			return labels, err
+		}
+		labels.DestroyLabel = destroyLabel
 	}
-	labels.NoChangesLabel = nochangesLabel
+
+	if t.config.Terraform.Plan.WhenNoChanges.Label == "" {
+		labels.NoChangesLabel = "no-changes"
+	} else {
+		nochangesLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenNoChanges.Label)
+		if err != nil {
+			return labels, err
+		}
+		labels.NoChangesLabel = nochangesLabel
+	}
 
 	planErrorLabel, err := t.renderTemplate(t.config.Terraform.Plan.WhenPlanError.Label)
 	if err != nil {
@@ -98,9 +120,13 @@ func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
 }
 
 func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, error) {
-	labels, err := t.renderGitHubLabels()
-	if err != nil {
-		return nil, err
+	labels := github.ResultLabels{}
+	if !t.config.Terraform.Plan.DisableLabel {
+		a, err := t.renderGitHubLabels()
+		if err != nil {
+			return nil, err
+		}
+		labels = a
 	}
 	client, err := github.NewClient(ctx, github.Config{
 		Token:   t.config.Notifier.Github.Token,

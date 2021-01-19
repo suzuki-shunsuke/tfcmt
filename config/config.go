@@ -60,6 +60,7 @@ type Plan struct {
 	WhenNoChanges       WhenNoChanges       `yaml:"when_no_changes,omitempty"`
 	WhenPlanError       WhenPlanError       `yaml:"when_plan_error,omitempty"`
 	WhenParseError      WhenParseError      `yaml:"when_parse_error,omitempty"`
+	DisableLabel        bool                `yaml:"disable_label,omitempty"`
 }
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
