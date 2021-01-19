@@ -60,9 +60,11 @@ const (
 
 	// DefaultDestroyWarningTemplate is a default template for terraform plan
 	DefaultDestroyWarningTemplate = `
-## :warning: Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}: Resource Deletion will happen :warning:
+## Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 
 [CI link]({{ .Link }})
+
+### :warning: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
