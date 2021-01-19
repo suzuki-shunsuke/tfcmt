@@ -72,7 +72,10 @@ func NewClient(ctx context.Context, cfg Config) (*Client, error) {
 		token = os.Getenv(EnvToken)
 	}
 	if token == "" {
-		return &Client{}, errors.New("github token is missing")
+		token = os.Getenv("GITHUB_TOKEN")
+		if token == "" {
+			return &Client{}, errors.New("github token is missing")
+		}
 	}
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
