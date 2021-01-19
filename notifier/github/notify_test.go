@@ -27,7 +27,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "abcd",
 					Number:   1,
-					Message:  "message",
 				},
 				Parser:             terraform.NewPlanParser(),
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
@@ -50,7 +49,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "",
 					Number:   0,
-					Message:  "message",
 				},
 				Parser:             terraform.NewPlanParser(),
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
@@ -73,7 +71,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "",
 					Number:   1,
-					Message:  "message",
 				},
 				Parser:             terraform.NewPlanParser(),
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
@@ -96,7 +93,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "",
 					Number:   1,
-					Message:  "message",
 				},
 				Parser:             terraform.NewPlanParser(),
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
@@ -119,7 +115,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "revision-revision",
 					Number:   0,
-					Message:  "message",
 				},
 				Parser:             terraform.NewPlanParser(),
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
@@ -143,7 +138,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "",
 					Number:   1,
-					Message:  "message",
 				},
 				Parser:                 terraform.NewPlanParser(),
 				Template:               terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
@@ -169,7 +163,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "",
 					Number:   1,
-					Message:  "message",
 				},
 				Parser:             terraform.NewPlanParser(),
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
@@ -198,7 +191,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "",
 					Number:   1,
-					Message:  "message",
 				},
 				Parser:                 terraform.NewPlanParser(),
 				Template:               terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
@@ -223,7 +215,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "revision",
 					Number:   0, // For apply, it is always 0
-					Message:  "message",
 				},
 				Parser:             terraform.NewApplyParser(),
 				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
@@ -247,7 +238,6 @@ func TestNotifyNotify(t *testing.T) {
 				PR: PullRequest{
 					Revision: "Merge pull request #123 from suzuki-shunsuke/tfcmt",
 					Number:   0, // For apply, it is always 0
-					Message:  "message",
 				},
 				Parser:             terraform.NewApplyParser(),
 				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),

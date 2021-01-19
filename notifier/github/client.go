@@ -57,12 +57,8 @@ type Config struct {
 
 // PullRequest represents GitHub Pull Request metadata
 type PullRequest struct {
-	Revision              string
-	Title                 string
-	Message               string
-	Number                int
-	DestroyWarningTitle   string
-	DestroyWarningMessage string
+	Revision string
+	Number   int
 }
 
 type service struct {

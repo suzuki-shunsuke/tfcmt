@@ -9,15 +9,9 @@ import (
 )
 
 const (
-	// DefaultPlanTitle is a default title for terraform plan
-	DefaultPlanTitle = "## Plan result"
-	// DefaultDestroyWarningTitle is a default title of destroy warning
-	DefaultDestroyWarningTitle = "## :warning: Resource Deletion will happen :warning:"
-	// DefaultApplyTitle is a default title for terraform apply
-	DefaultApplyTitle = "## Apply result"
-
-	defaultTemplate = `
-{{ .Title }}
+	// DefaultPlanTemplate is a default template for terraform plan
+	DefaultPlanTemplate = `
+## Plan Result
 
 {{if .Result}}
 <pre><code>{{ .Result }}
@@ -34,14 +28,28 @@ const (
 * {{. -}}
 {{- end}}{{end}}`
 
-	// DefaultPlanTemplate is a default template for terraform plan
-	DefaultPlanTemplate = defaultTemplate
 	// DefaultApplyTemplate is a default template for terraform apply
-	DefaultApplyTemplate = defaultTemplate
+	DefaultApplyTemplate = `
+## Apply Result
+
+{{if .Result}}
+<pre><code>{{ .Result }}
+</code></pre>
+{{end}}
+
+<details><summary>Details (Click me)</summary>
+
+<pre><code>{{ .Body }}
+</code></pre></details>
+{{if .ErrorMessages}}
+## :warning: Errors
+{{range .ErrorMessages}}
+* {{. -}}
+{{- end}}{{end}}`
 
 	// DefaultDestroyWarningTemplate is a default template for terraform plan
 	DefaultDestroyWarningTemplate = `
-{{ .Title }}
+## :warning: Plan Result: Resource Deletion will happen :warning:
 
 This plan contains resource delete operation. Please check the plan result very carefully!
 
@@ -51,8 +59,19 @@ This plan contains resource delete operation. Please check the plan result very 
 {{end}}
 `
 
-	DefaultParseErrorTemplate = `
-{{ .Title }}
+	DefaultPlanParseErrorTemplate = `
+## Plan Result
+
+It failed to parse the result.
+
+<details><summary>Details (Click me)</summary>
+
+<pre><code>{{ .CombinedOutput }}
+</code></pre></details>
+`
+
+	DefaultApplyParseErrorTemplate = `
+## Apply Result
 
 It failed to parse the result.
 
@@ -65,7 +84,6 @@ It failed to parse the result.
 
 // CommonTemplate represents template entities
 type CommonTemplate struct {
-	Title             string
 	Result            string
 	Body              string
 	Link              string
@@ -84,9 +102,7 @@ type CommonTemplate struct {
 
 // Template is a default template for terraform commands
 type Template struct {
-	Template     string
-	defaultTitle string
-
+	Template string
 	CommonTemplate
 }
 
@@ -96,8 +112,7 @@ func NewPlanTemplate(template string) *Template {
 		template = DefaultPlanTemplate
 	}
 	return &Template{
-		Template:     template,
-		defaultTitle: DefaultPlanTitle,
+		Template: template,
 	}
 }
 
@@ -107,8 +122,7 @@ func NewDestroyWarningTemplate(template string) *Template {
 		template = DefaultDestroyWarningTemplate
 	}
 	return &Template{
-		Template:     template,
-		defaultTitle: DefaultDestroyWarningTitle,
+		Template: template,
 	}
 }
 
@@ -118,28 +132,25 @@ func NewApplyTemplate(template string) *Template {
 		template = DefaultApplyTemplate
 	}
 	return &Template{
-		Template:     template,
-		defaultTitle: DefaultApplyTitle,
+		Template: template,
 	}
 }
 
 func NewPlanParseErrorTemplate(template string) *Template {
 	if template == "" {
-		template = DefaultParseErrorTemplate
+		template = DefaultPlanParseErrorTemplate
 	}
 	return &Template{
-		Template:     template,
-		defaultTitle: DefaultPlanTitle,
+		Template: template,
 	}
 }
 
 func NewApplyParseErrorTemplate(template string) *Template {
 	if template == "" {
-		template = DefaultParseErrorTemplate
+		template = DefaultApplyParseErrorTemplate
 	}
 	return &Template{
-		Template:     template,
-		defaultTitle: DefaultApplyTitle,
+		Template: template,
 	}
 }
 
@@ -170,7 +181,6 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 // Execute binds the execution result of terraform command into template
 func (t *Template) Execute() (string, error) {
 	data := map[string]interface{}{
-		"Title":             t.Title,
 		"Result":            t.Result,
 		"Body":              t.Body,
 		"Link":              t.Link,
@@ -196,8 +206,5 @@ func (t *Template) Execute() (string, error) {
 
 // SetValue sets template entities to CommonTemplate
 func (t *Template) SetValue(ct CommonTemplate) {
-	if ct.Title == "" {
-		ct.Title = t.defaultTitle
-	}
 	t.CommonTemplate = ct
 }

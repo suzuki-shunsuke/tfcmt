@@ -117,7 +117,7 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
       label: "destroy"
       label_color: "d93f0b"  # red
       template: |
-        {{ .Title }}
+        ## Plan Result
 
         [CI link]( {{ .Link }} )
 
@@ -132,8 +132,6 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
         <pre><code>{{ .Body }}
         </pre></code></details>
 ```
-
-And the default title of destroy warning is changed to `## :warning: Resource Deletion will happen :warning:`.
 
 ### Feature: Add template variables of changed resource paths
 
@@ -194,7 +192,7 @@ terraform:
   plan:
     when_parse_error:
       template: |
-        {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+      ## Plan Result <sup>[CI link]( {{ .Link }} )</sup>
 
         :warning: It failed to parse the result. :warning:
 
@@ -205,7 +203,7 @@ terraform:
   apply:
     when_parse_error:
       template: |
-        {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+        ## Apply Result <sup>[CI link]( {{ .Link }} )</sup>
 
         :warning: It failed to parse the result. :warning:
 

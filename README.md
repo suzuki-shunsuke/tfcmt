@@ -66,7 +66,6 @@ The example settings of GitHub and GitHub Enterprise are as follows. Incidentall
 
 Placeholder | Usage
 ---|---
-`{{ .Title }}` | Like `## Plan result`
 `{{ .Result }}` | Matched result by parsing like `Plan: 1 to add` or `No changes`
 `{{ .Body }}` | The entire of Terraform execution result
 `{{ .Link }}` | The link of the build page on CI
@@ -102,7 +101,7 @@ notifier:
 terraform:
   plan:
     template: |
-      {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+      ## Plan Result <sup>[CI link]( {{ .Link }} )</sup>
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>
@@ -113,7 +112,7 @@ terraform:
       </pre></code></details>
   apply:
     template: |
-      {{ .Title }}
+      ## Apply Result
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>
@@ -133,7 +132,7 @@ terraform:
   # ...
   plan:
     template: |
-      {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+      ## Plan Result <sup>[CI link]( {{ .Link }} )</sup>
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>
@@ -159,7 +158,7 @@ terraform:
   # ...
   plan:
     template: |
-      {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+      ## Plan Result <sup>[CI link]( {{ .Link }} )</sup>
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>
@@ -196,7 +195,7 @@ terraform:
   # ...
   plan:
     template: |
-      {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+      ## Plan Result <sup>[CI link]( {{ .Link }} )</sup>
       {{if .Result}}
       ```
       {{ .Result }}
@@ -228,7 +227,7 @@ notifier:
 terraform:
   plan:
     template: |
-      {{ .Title }} <sup>[CI link]( {{ .Link }} )</sup>
+      ## Plan Result <sup>[CI link]( {{ .Link }} )</sup>
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>
@@ -239,7 +238,7 @@ terraform:
       </pre></code></details>
   apply:
     template: |
-      {{ .Title }}
+      ## Apply Result
       {{if .Result}}
       <pre><code>{{ .Result }}
       </pre></code>
