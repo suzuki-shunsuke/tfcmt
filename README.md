@@ -30,13 +30,14 @@ You can do this by using this command.
 
 ## Installation
 
-Grab the binary from GitHub Releases (Recommended)
+Grab the binary from [GitHub Releases](https://github.com/suzuki-shunsuke/tfcmt/releases)
 
 ### What tfcmt does
 
 1. Parse the execution result of Terraform
 2. Bind parsed results to Go templates
-3. Notify it to any platform (e.g. GitHub) as you like
+3. Update pull request labels
+4. Post a comment to GitHub
 
 Detailed specifications such as templates and notification destinations can be customized from the configuration files (described later).
 
@@ -59,6 +60,7 @@ $ tfcmt apply -- terraform apply -auto-approve
 ### Configurations
 
 When running tfcmt, you can specify the configuration path via `--config` option (if it's omitted, the configuration file `{.,}tfcmt.y{,a}ml` is searched from the current directory to the root directory).
+Configuration file is optional. If `--config` option isn't used and the configuration file isn't found, tfcmt works with the default configuration.
 
 The example settings of GitHub and GitHub Enterprise are as follows. Incidentally, there is no need to replace TOKEN string such as `$GITHUB_TOKEN` with the actual token. Instead, it must be defined as environment variables in CI settings.
 
@@ -79,8 +81,6 @@ Placeholder | Usage
 `{{ .UpdatedResources }}` | a list of updated resource paths. This variable can be used at only plan
 `{{ .DeletedResources }}` | a list of deleted resource paths. This variable can be used at only plan
 `{{ .ReplaecedResources }}` | a list of deleted resource paths. This variable can be used at only plan
-
-On GitHub, tfcmt can also put a warning message if the plan result contains resource deletion (optional).
 
 In the template, the [sprig template functions](http://masterminds.github.io/sprig/) can be used.
 
@@ -123,7 +123,7 @@ terraform:
       </pre></code></details>
 ```
 
-If you would like to let tfcmt warn the resource deletion, add `when_destroy` configuration as below.
+If the plan contains resource deletion, the template of `when_destroy` is used.
 
 ```yaml
 ---
@@ -143,13 +143,23 @@ terraform:
       </pre></code></details>
     when_destroy:
       template: |
+        ## Plan Result <sup>[CI link]( {{ .Link }} )</sup>
         ## :warning: WARNING: Resource Deletion will happen :warning:
 
         This plan contains **resource deletion**. Please check the plan result very carefully!
+
+        {{if .Result}}
+        <pre><code>{{ .Result }}
+        </pre></code>
+        {{end}}
+        <details><summary>Details (Click me)</summary>
+
+        <pre><code>{{ .Body }}
+        </pre></code></details>
   # ...
 ```
 
-You can also let tfcmt add a label to PRs depending on the `terraform plan` output result. Currently, this feature is for Github labels only.
+tfcmt adds a label to PRs depending on the `terraform plan` output result.
 
 ```yaml
 ---
@@ -179,6 +189,14 @@ terraform:
     when_plan_error:
       label: "error"
   # ...
+```
+
+If you don't want to update labels, please set `terraform.plan.disable_label: true`.
+
+```yaml
+terraform:
+  plan:
+    disable_label: true
 ```
 
 Sometimes you may want not to HTML-escape Terraform command outputs.
