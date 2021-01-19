@@ -126,6 +126,7 @@ type CommonTemplate struct {
 	Link              string
 	UseRawOutput      bool
 	Vars              map[string]string
+	Templates         map[string]string
 	Stdout            string
 	Stderr            string
 	CombinedOutput    string
@@ -250,7 +251,7 @@ func (t *Template) Execute() (string, error) {
 		"ReplacedResources": t.ReplacedResources,
 	}
 
-	resp, err := generateOutput("default", t.Template, data, t.UseRawOutput)
+	resp, err := generateOutput("default", addTemplates(t.Template, t.Templates), data, t.UseRawOutput)
 	if err != nil {
 		return "", err
 	}
@@ -261,4 +262,11 @@ func (t *Template) Execute() (string, error) {
 // SetValue sets template entities to CommonTemplate
 func (t *Template) SetValue(ct CommonTemplate) {
 	t.CommonTemplate = ct
+}
+
+func addTemplates(tpl string, templates map[string]string) string {
+	for k, v := range templates {
+		tpl += `{{define "` + k + `"}}` + v + "{{end}}"
+	}
+	return tpl
 }

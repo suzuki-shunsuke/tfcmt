@@ -52,6 +52,7 @@ type Config struct {
 	// ResultLabels is a set of labels to apply depending on the plan result
 	ResultLabels ResultLabels
 	Vars         map[string]string
+	Templates    map[string]string
 }
 
 // PullRequest represents GitHub Pull Request metadata
