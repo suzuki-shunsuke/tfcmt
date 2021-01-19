@@ -143,7 +143,6 @@ func TestNotifyNotify(t *testing.T) {
 				Template:               terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				DestroyWarningTemplate: terraform.NewDestroyWarningTemplate(terraform.DefaultDestroyWarningTemplate),
 				ParseErrorTemplate:     terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
-				WarnDestroy:            true,
 			},
 			paramExec: notifier.ParamExec{
 				Stdout:   "Plan: 1 to add, 1 to destroy",
@@ -196,7 +195,6 @@ func TestNotifyNotify(t *testing.T) {
 				Template:               terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				DestroyWarningTemplate: terraform.NewDestroyWarningTemplate(terraform.DefaultDestroyWarningTemplate),
 				ParseErrorTemplate:     terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
-				WarnDestroy:            false,
 			},
 			paramExec: notifier.ParamExec{
 				Stdout:   "Plan: 1 to add, 1 to destroy",
