@@ -21,6 +21,7 @@ tfcmt isn't compatible with tfnotify.
   * Support template functions [sprig](http://masterminds.github.io/sprig/)
   * [Support to pass variables by -var option](#feature-support-to-pass-variables-by--var-option)
   * [Add template variables](#feature-add-template-variables)
+  * [Get GitHub Token from the environment variable "GITHUB_TOKEN" by default](#feature-get-github-token-from-the-environment-variable-github_token-by-default)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
 * Fixes
@@ -281,6 +282,10 @@ We can access the variable in the template by `{{.Vars.<variable name>}}`.
 * ExitCode: exit code of terraform command
 * Vars: variables which are passed by `-var` option
 * ErrorMessages: a list of error messages which occur in tfcmt
+
+## Feature: Get GitHub Token from the environment variable "GITHUB_TOKEN" by default
+
+We can omit the configuration `notifier.github.token`.
 
 ## Feature: Don't recreate labels
 
