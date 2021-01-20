@@ -25,6 +25,7 @@ tfcmt isn't compatible with tfnotify.
   * [Support to pass variables by -var option](#feature-support-to-pass-variables-by--var-option)
   * [Add template variables](#feature-add-template-variables)
   * [Add templates configuration](#feature-add-templates-configuration)
+  * [Add template functions](#feature-add-template-functions)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
 * Fixes
@@ -341,6 +342,18 @@ The following builtin templates are defined. We can override them.
 * result
 * updated_resources
 * deletion_warning
+
+## Feature: Add template functions
+
+[#42](https://github.com/suzuki-shunsuke/tfcmt/pull/42)
+
+* avoidHTMLEscape
+* wrapCode
+
+`avoidHTMLEscape` prevents the text from being HTML escaped.
+
+`wrapCode` wraps a test with <code>\`\`\`</code> or `<pre><code>`.
+If the text includes <code>\`\`\`</code>, the text wraps with `<pre><code>`, otherwise the text wraps with <code>\`\`\`</code> and the text isn't HTML escaped.
 
 ## Feature: Don't recreate labels
 
