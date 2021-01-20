@@ -162,6 +162,7 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 		ParseErrorTemplate:     t.parseErrorTemplate,
 		ResultLabels:           labels,
 		Vars:                   t.config.Vars,
+		Templates:              t.config.Templates,
 	})
 	if err != nil {
 		return nil, err

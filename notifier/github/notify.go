@@ -50,6 +50,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		Link:              cfg.CI,
 		UseRawOutput:      cfg.UseRawOutput,
 		Vars:              cfg.Vars,
+		Templates:         cfg.Templates,
 		Stdout:            param.Stdout,
 		Stderr:            param.Stderr,
 		CombinedOutput:    param.CombinedOutput,

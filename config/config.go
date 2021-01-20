@@ -17,6 +17,7 @@ type Config struct {
 	Notifier  Notifier          `yaml:"notifier"`
 	Terraform Terraform         `yaml:"terraform"`
 	Vars      map[string]string `yaml:"-"`
+	Templates map[string]string
 
 	path string
 }
