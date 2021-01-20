@@ -146,6 +146,10 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 		}
 		labels = a
 	}
+	hideOldComment := github.HideOldComment{
+		Disable: t.config.Terraform.Plan.HideOldComment.Disable,
+	}
+
 	client, err := github.NewClient(ctx, github.Config{
 		Token:   t.config.Notifier.Github.Token,
 		BaseURL: t.config.Notifier.Github.BaseURL,
@@ -164,6 +168,7 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 		ResultLabels:           labels,
 		Vars:                   t.config.Vars,
 		Templates:              t.config.Templates,
+		HideOldComment:         hideOldComment,
 	})
 	if err != nil {
 		return nil, err

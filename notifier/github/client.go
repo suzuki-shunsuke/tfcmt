@@ -35,14 +35,13 @@ type Client struct {
 
 // Config is a configuration for GitHub client
 type Config struct {
-	Token        string
-	BaseURL      string
-	Owner        string
-	Repo         string
-	PR           PullRequest
-	CI           string
-	Parser       terraform.Parser
-	UseRawOutput bool
+	Token   string
+	BaseURL string
+	Owner   string
+	Repo    string
+	PR      PullRequest
+	CI      string
+	Parser  terraform.Parser
 	// Template is used for all Terraform command output
 	Template *terraform.Template
 	// DestroyWarningTemplate is used only for additional warning
@@ -50,9 +49,17 @@ type Config struct {
 	DestroyWarningTemplate *terraform.Template
 	ParseErrorTemplate     *terraform.Template
 	// ResultLabels is a set of labels to apply depending on the plan result
-	ResultLabels ResultLabels
-	Vars         map[string]string
-	Templates    map[string]string
+	ResultLabels   ResultLabels
+	Vars           map[string]string
+	Templates      map[string]string
+	HideOldComment HideOldComment
+	UseRawOutput   bool
+}
+
+type HideOldComment struct {
+	// Condition       string
+	// InjectedComment string
+	Disable bool
 }
 
 // PullRequest represents GitHub Pull Request metadata
