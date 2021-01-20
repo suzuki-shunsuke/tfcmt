@@ -10,7 +10,6 @@ import (
 type API interface {
 	IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
 	IssuesListLabels(ctx context.Context, number int, opt *github.ListOptions) ([]*github.Label, *github.Response, error)
-	IssuesListComments(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error)
 	IssuesAddLabels(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
 	IssuesRemoveLabel(ctx context.Context, number int, label string) (*github.Response, error)
 	IssuesUpdateLabel(ctx context.Context, label, color string) (*github.Label, *github.Response, error)
@@ -28,11 +27,6 @@ type GitHub struct {
 // IssuesCreateComment is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.CreateComment
 func (g *GitHub) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
 	return g.Client.Issues.CreateComment(ctx, g.owner, g.repo, number, comment)
-}
-
-// IssuesListComments is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.ListComments
-func (g *GitHub) IssuesListComments(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error) {
-	return g.Client.Issues.ListComments(ctx, g.owner, g.repo, number, opt)
 }
 
 // IssuesAddLabels is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.AddLabelsToIssue

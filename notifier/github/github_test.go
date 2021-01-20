@@ -10,7 +10,6 @@ import (
 type fakeAPI struct {
 	API
 	FakeIssuesCreateComment       func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
-	FakeIssuesListComments        func(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error)
 	FakeIssuesListLabels          func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error)
 	FakeIssuesAddLabels           func(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
 	FakeIssuesRemoveLabel         func(ctx context.Context, number int, label string) (*github.Response, error)
@@ -21,10 +20,6 @@ type fakeAPI struct {
 
 func (g *fakeAPI) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
 	return g.FakeIssuesCreateComment(ctx, number, comment)
-}
-
-func (g *fakeAPI) IssuesListComments(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error) {
-	return g.FakeIssuesListComments(ctx, number, opt)
 }
 
 func (g *fakeAPI) IssuesListLabels(ctx context.Context, number int, opt *github.ListOptions) ([]*github.Label, *github.Response, error) {
@@ -58,19 +53,6 @@ func newFakeAPI() fakeAPI {
 				ID:   github.Int64(371748792),
 				Body: github.String("comment 1"),
 			}, nil, nil
-		},
-		FakeIssuesListComments: func(ctx context.Context, number int, opt *github.IssueListCommentsOptions) ([]*github.IssueComment, *github.Response, error) {
-			comments := []*github.IssueComment{
-				{
-					ID:   github.Int64(371748792),
-					Body: github.String("comment 1"),
-				},
-				{
-					ID:   github.Int64(371765743),
-					Body: github.String("comment 2"),
-				},
-			}
-			return comments, nil, nil
 		},
 		FakeIssuesListLabels: func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error) {
 			labels := []*github.Label{
