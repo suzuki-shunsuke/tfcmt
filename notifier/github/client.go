@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v33/github"
+	"github.com/shurcooL/githubv4"
 	"github.com/suzuki-shunsuke/tfcmt/terraform"
 	"golang.org/x/oauth2"
 )
@@ -26,9 +27,11 @@ type Client struct {
 
 	common service
 
-	Comment *CommentService
-	Commits *CommitsService
-	Notify  *NotifyService
+	Comment  *CommentService
+	Commits  *CommitsService
+	Notify   *NotifyService
+	User     *UserService
+	v4Client *githubv4.Client
 
 	API API
 }
@@ -105,13 +108,15 @@ func NewClient(ctx context.Context, cfg Config) (*Client, error) {
 	}
 
 	c := &Client{
-		Config: cfg,
-		Client: client,
+		Config:   cfg,
+		Client:   client,
+		v4Client: githubv4.NewClient(tc),
 	}
 	c.common.client = c
 	c.Comment = (*CommentService)(&c.common)
 	c.Commits = (*CommitsService)(&c.common)
 	c.Notify = (*NotifyService)(&c.common)
+	c.User = (*UserService)(&c.common)
 
 	c.API = &GitHub{
 		Client: client,
