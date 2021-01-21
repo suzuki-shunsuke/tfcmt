@@ -2,9 +2,9 @@ package github
 
 import (
 	"context"
-	"log"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/tfcmt/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/terraform"
 )
@@ -110,10 +110,14 @@ func (g *NotifyService) updateLabels(ctx context.Context, result terraform.Parse
 
 	errMsgs := []string{}
 
+	logE := logrus.WithFields(logrus.Fields{
+		"program": "tfcmt",
+	})
+
 	currentLabelColor, err := g.removeResultLabels(ctx, labelToAdd)
 	if err != nil {
 		msg := "remove labels: " + err.Error()
-		log.Printf("[ERROR][tfcmt] " + msg)
+		logE.WithError(err).Error("remove labels")
 		errMsgs = append(errMsgs, msg)
 	}
 
@@ -125,7 +129,9 @@ func (g *NotifyService) updateLabels(ctx context.Context, result terraform.Parse
 		labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
 		if err != nil {
 			msg := "add a label " + labelToAdd + ": " + err.Error()
-			log.Printf("[ERROR][tfcmt] " + msg)
+			logE.WithError(err).WithFields(logrus.Fields{
+				"label": labelToAdd,
+			}).Error("add a label")
 			errMsgs = append(errMsgs, msg)
 		}
 		if labelColor != "" {
@@ -135,7 +141,10 @@ func (g *NotifyService) updateLabels(ctx context.Context, result terraform.Parse
 					if label.GetColor() != labelColor {
 						if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
 							msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
-							log.Printf("[ERROR][tfcmt] " + msg)
+							logE.WithError(err).WithFields(logrus.Fields{
+								"label": labelToAdd,
+								"color": labelColor,
+							}).Error("update a label color")
 							errMsgs = append(errMsgs, msg)
 						}
 					}
@@ -146,7 +155,10 @@ func (g *NotifyService) updateLabels(ctx context.Context, result terraform.Parse
 		// set the color of label
 		if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
 			msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
-			log.Printf("[ERROR][tfcmt] " + msg)
+			logE.WithError(err).WithFields(logrus.Fields{
+				"label": labelToAdd,
+				"color": labelColor,
+			}).Error("update a label color")
 			errMsgs = append(errMsgs, msg)
 		}
 	}
