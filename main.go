@@ -42,7 +42,7 @@ func getCI(ciname string) (CI, error) {
 	case "cloud-build", "cloudbuild":
 		return cloudbuild()
 	case "":
-		return ci, errors.New("CI service: required (e.g. circleci)")
+		return ci, nil
 	default:
 		return ci, fmt.Errorf("CI service %s: not supported yet", ciname)
 	}
@@ -181,6 +181,19 @@ func (t *tfcmt) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	if sha := t.context.String("sha"); sha != "" {
+		ci.PR.Revision = sha
+	}
+	if pr := t.context.Int("pr"); pr != 0 {
+		ci.PR.Number = pr
+	}
+	if buildURL := t.context.String("build-url"); buildURL != "" {
+		ci.URL = buildURL
+	}
+
+	if ci.PR.Revision == "" && ci.PR.Number == 0 {
+		return errors.New("pull request number or SHA (revision) is needed")
+	}
 
 	ntf, err := t.getNotifier(ctx, ci)
 	if err != nil {
@@ -220,6 +233,11 @@ func main() {
 	app.Version = version
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfcmt"},
+		&cli.StringFlag{Name: "owner", Usage: "GitHub Repository owner name"},
+		&cli.StringFlag{Name: "repo", Usage: "GitHub Repository name"},
+		&cli.StringFlag{Name: "sha", Usage: "commit SHA (revision)"},
+		&cli.StringFlag{Name: "build-url", Usage: "build url"},
+		&cli.IntFlag{Name: "pr", Usage: "pull request number"},
 		&cli.StringFlag{Name: "config", Usage: "config path"},
 		&cli.StringSliceFlag{Name: "var", Usage: "template variables. The format of value is '<name>:<value>'"},
 	}
@@ -278,6 +296,13 @@ func newConfig(ctx *cli.Context) (config.Config, error) {
 		return cfg, err
 	}
 	cfg.Vars = vm
+
+	if owner := ctx.String("owner"); owner != "" {
+		cfg.Notifier.Github.Repository.Owner = owner
+	}
+	if repo := ctx.String("repo"); repo != "" {
+		cfg.Notifier.Github.Repository.Name = repo
+	}
 
 	var platform cienv.Platform
 	if cfg.CI == "" {

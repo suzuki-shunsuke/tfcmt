@@ -146,42 +146,22 @@ func TestLoadFile(t *testing.T) {
 func TestValidation(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
+		name     string
 		contents []byte
 		expected string
 	}{
 		{
-			contents: []byte(""),
-			expected: "ci: need to be set",
-		},
-		{
+			name:     "case 0",
 			contents: []byte("ci: rare-ci\n"),
 			expected: "rare-ci: not supported yet",
 		},
 		{
-			contents: []byte("ci: circleci\n"),
-			expected: "notifier is missing",
-		},
-		{
-			contents: []byte("ci: codebuild\n"),
-			expected: "notifier is missing",
-		},
-		{
-			contents: []byte("ci: cloudbuild\n"),
-			expected: "notifier is missing",
-		},
-		{
-			contents: []byte("ci: cloud-build\n"),
-			expected: "notifier is missing",
-		},
-		{
-			contents: []byte("ci: circleci\nnotifier:\n  github:\n"),
-			expected: "notifier is missing",
-		},
-		{
+			name:     "case 1",
 			contents: []byte("ci: circleci\nnotifier:\n  github:\n    token: token\n"),
 			expected: "repository owner is missing",
 		},
 		{
+			name: "case 2",
 			contents: []byte(`
 ci: circleci
 notifier:
@@ -193,6 +173,7 @@ notifier:
 			expected: "repository name is missing",
 		},
 		{
+			name: "case 3",
 			contents: []byte(`
 ci: circleci
 notifier:
@@ -206,43 +187,23 @@ notifier:
 		},
 	}
 	for _, testCase := range testCases {
-		cfg, err := helperLoadConfig(testCase.contents)
-		if err != nil {
-			t.Fatal(err)
-		}
-		err = cfg.Validation()
-		if err == nil {
-			if testCase.expected != "" {
-				t.Errorf("got no error but want %q", testCase.expected)
+		testCase := testCase
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			cfg, err := helperLoadConfig(testCase.contents)
+			if err != nil {
+				t.Fatal(err)
 			}
-		} else {
-			if err.Error() != testCase.expected {
-				t.Errorf("got %q but want %q", err.Error(), testCase.expected)
+			if err := cfg.Validation(); err == nil {
+				if testCase.expected != "" {
+					t.Errorf("got no error but want %q", testCase.expected)
+				}
+			} else {
+				if err.Error() != testCase.expected {
+					t.Errorf("got %q but want %q", err.Error(), testCase.expected)
+				}
 			}
-		}
-	}
-}
-
-func TestGetNotifierType(t *testing.T) {
-	t.Parallel()
-	testCases := []struct {
-		contents []byte
-		expected string
-	}{
-		{
-			contents: []byte("repository:\n  owner: a\n  name: b\nci: circleci\nnotifier:\n  github:\n    token: token\n"),
-			expected: "github",
-		},
-	}
-	for _, testCase := range testCases {
-		cfg, err := helperLoadConfig(testCase.contents)
-		if err != nil {
-			t.Fatal(err)
-		}
-		actual := cfg.GetNotifierType()
-		if actual != testCase.expected {
-			t.Errorf("got %q but want %q", actual, testCase.expected)
-		}
+		})
 	}
 }
 

@@ -115,7 +115,7 @@ func (cfg *Config) LoadFile(path string) error {
 func (cfg *Config) Validation() error {
 	switch strings.ToLower(cfg.CI) {
 	case "":
-		return errors.New("ci: need to be set")
+		break
 	case "circleci":
 		// ok pattern
 	case "codebuild":
@@ -127,32 +127,13 @@ func (cfg *Config) Validation() error {
 	default:
 		return fmt.Errorf("%s: not supported yet", cfg.CI)
 	}
-	if cfg.isDefinedGithub() {
-		if cfg.Notifier.Github.Repository.Owner == "" {
-			return errors.New("repository owner is missing")
-		}
-		if cfg.Notifier.Github.Repository.Name == "" {
-			return errors.New("repository name is missing")
-		}
+	if cfg.Notifier.Github.Repository.Owner == "" {
+		return errors.New("repository owner is missing")
 	}
-	notifier := cfg.GetNotifierType()
-	if notifier == "" {
-		return errors.New("notifier is missing")
+	if cfg.Notifier.Github.Repository.Name == "" {
+		return errors.New("repository name is missing")
 	}
 	return nil
-}
-
-func (cfg *Config) isDefinedGithub() bool {
-	// not empty
-	return cfg.Notifier.Github != (GithubNotifier{})
-}
-
-// GetNotifierType return notifier type described in Config
-func (cfg *Config) GetNotifierType() string {
-	if cfg.isDefinedGithub() {
-		return "github"
-	}
-	return ""
 }
 
 // Find returns config path
