@@ -26,6 +26,7 @@ tfcmt isn't compatible with tfnotify.
   * [Add template variables](#feature-add-template-variables)
   * [Add templates configuration](#feature-add-templates-configuration)
   * [Add template functions](#feature-add-template-functions)
+  * [Add command-line options about CI](#feature-add-command-line-options-about-ci)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
 * Fixes
@@ -354,6 +355,23 @@ The following builtin templates are defined. We can override them.
 
 `wrapCode` wraps a test with <code>\`\`\`</code> or `<pre><code>`.
 If the text includes <code>\`\`\`</code>, the text wraps with `<pre><code>`, otherwise the text wraps with <code>\`\`\`</code> and the text isn't HTML escaped.
+
+## Feature: Add command-line options about CI
+
+* -owner
+* -repo
+* -pr
+* -sha
+* -build-url
+
+mercari/tfnotify gets these parameters from only environment variables, so we don't use mercari/tfnotify on the platform which mercari/tfnotify doesn't support.
+On the other hand, tfcmt supports to specify these parameters by command-line options, so we can use tfcmt anywhere.
+
+ex.
+
+```
+$ tfcmt -owner suzuki-shunsuke -repo tfcmt -pr 3 -- terraform plan
+```
 
 ## Feature: Don't recreate labels
 
