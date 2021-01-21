@@ -344,11 +344,16 @@ func newConfig(ctx *cli.Context) (config.Config, error) {
 }
 
 func cmdPlan(ctx *cli.Context) error {
-	setLogLevel(ctx.String("log-level"))
+	logLevel := ctx.String("log-level")
+	setLogLevel(logLevel)
 
 	cfg, err := newConfig(ctx)
 	if err != nil {
 		return err
+	}
+	if logLevel == "" {
+		logLevel = cfg.Log.Level
+		setLogLevel(logLevel)
 	}
 
 	t := &tfcmt{

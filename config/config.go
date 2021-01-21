@@ -18,8 +18,14 @@ type Config struct {
 	Terraform Terraform         `yaml:"terraform"`
 	Vars      map[string]string `yaml:"-"`
 	Templates map[string]string
+	Log       Log
 
 	path string
+}
+
+type Log struct {
+	Level string
+	// Format string
 }
 
 // Notifier is a notification notifier
