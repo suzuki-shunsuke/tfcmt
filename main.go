@@ -13,6 +13,7 @@ import (
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/mattn/go-colorable"
+	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/go-ci-env/cienv"
 	"github.com/suzuki-shunsuke/tfcmt/config"
 	"github.com/suzuki-shunsuke/tfcmt/notifier"
@@ -237,6 +238,7 @@ func main() {
 		&cli.StringFlag{Name: "repo", Usage: "GitHub Repository name"},
 		&cli.StringFlag{Name: "sha", Usage: "commit SHA (revision)"},
 		&cli.StringFlag{Name: "build-url", Usage: "build url"},
+		&cli.StringFlag{Name: "log-level", Usage: "log level"},
 		&cli.IntFlag{Name: "pr", Usage: "pull request number"},
 		&cli.StringFlag{Name: "config", Usage: "config path"},
 		&cli.StringSliceFlag{Name: "var", Usage: "template variables. The format of value is '<name>:<value>'"},
@@ -266,6 +268,19 @@ func main() {
 	go handleSignal(cancel)
 
 	os.Exit(HandleExit(app.RunContext(ctx, os.Args)))
+}
+
+func setLogLevel(logLevel string) {
+	if logLevel == "" {
+		return
+	}
+	lvl, err := logrus.ParseLevel(logLevel)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"log_level": logLevel,
+		}).WithError(err).Error("the log level is invalid")
+	}
+	logrus.SetLevel(lvl)
 }
 
 func parseVarOpts(vars []string, varsM map[string]string) error {
@@ -329,9 +344,16 @@ func newConfig(ctx *cli.Context) (config.Config, error) {
 }
 
 func cmdPlan(ctx *cli.Context) error {
+	logLevel := ctx.String("log-level")
+	setLogLevel(logLevel)
+
 	cfg, err := newConfig(ctx)
 	if err != nil {
 		return err
+	}
+	if logLevel == "" {
+		logLevel = cfg.Log.Level
+		setLogLevel(logLevel)
 	}
 
 	t := &tfcmt{

@@ -27,6 +27,7 @@ tfcmt isn't compatible with tfnotify.
   * [Add templates configuration](#feature-add-templates-configuration)
   * [Add template functions](#feature-add-template-functions)
   * [Add command-line options about CI](#feature-add-command-line-options-about-ci)
+  * [Add --log-level option and log.level configuration and output structured log with logrus](#feature-add---log-level-option-and-loglevel-configuration-and-output-structured-log-with-logrus)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
 * Fixes
@@ -371,6 +372,22 @@ ex.
 
 ```
 $ tfcmt -owner suzuki-shunsuke -repo tfcmt -pr 3 -- terraform plan
+```
+
+## Feature: Add --log-level option and log.level configuration and output structured log with logrus
+
+[#59](https://github.com/suzuki-shunsuke/tfcmt/pull/59)
+
+ex.
+
+```
+$ tfcmt --log-level debug plan -- terraform plan
+```
+
+```yaml
+---
+log:
+  level: debug
 ```
 
 ## Feature: Don't recreate labels

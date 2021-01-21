@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 // Exit codes are int values for the exit code that shell interpreter can interpret
@@ -60,16 +61,16 @@ func HandleExit(err error) int {
 	if exitErr, ok := err.(ExitCoder); ok { //nolint:errorlint
 		if err.Error() != "" {
 			if _, ok := exitErr.(ErrorFormatter); ok {
-				fmt.Fprintf(os.Stderr, "%+v\n", err)
+				logrus.Errorf("%+v", err)
 			} else {
-				fmt.Fprintln(os.Stderr, err)
+				logrus.Error(err)
 			}
 		}
 		return exitErr.ExitCode()
 	}
 
 	if _, ok := err.(error); ok { //nolint:errorlint
-		fmt.Fprintf(os.Stderr, "%v\n", err)
+		logrus.Error(err)
 		return ExitCodeError
 	}
 
