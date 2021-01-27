@@ -28,6 +28,7 @@ tfcmt isn't compatible with tfnotify.
   * [Add templates configuration](#feature-add-templates-configuration)
   * [Add template functions](#feature-add-template-functions)
   * [Add command-line options about CI](#feature-add-command-line-options-about-ci)
+  * [Get pull request number from CI_INFO_PR_NUMBER](#feature-)
   * [Add --log-level option and log.level configuration and output structured log with logrus](#feature-add---log-level-option-and-loglevel-configuration-and-output-structured-log-with-logrus)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
@@ -403,6 +404,11 @@ ex.
 ```
 $ tfcmt -owner suzuki-shunsuke -repo tfcmt -pr 3 -- terraform plan
 ```
+
+## Feature: Get pull request number from CI_INFO_PR_NUMBER
+
+[ci-info](https://github.com/suzuki-shunsuke/ci-info) is a CLI tool to get CI related information, and the environment variable `CI_INFO_PR_NUMBER` is set via ci-info by default.
+If the pull request number can't bet gotten but `CI_INFO_PR_NUMBER` is being set, `CI_INFO_PR_NUMBER` is used.
 
 ## Feature: Add --log-level option and log.level configuration and output structured log with logrus
 
