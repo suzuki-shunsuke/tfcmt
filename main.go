@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -192,6 +193,16 @@ func (t *tfcmt) Run(ctx context.Context) error {
 	}
 	if pr := t.context.Int("pr"); pr != 0 {
 		ci.PR.Number = pr
+	}
+	if ci.PR.Number == 0 {
+		// support suzuki-shunsuke/ci-info
+		if prS := os.Getenv("CI_INFO_PR_NUMBER"); prS != "" {
+			a, err := strconv.Atoi(prS)
+			if err != nil {
+				return fmt.Errorf("parse CI_INFO_PR_NUMBER %s: %w", prS, err)
+			}
+			ci.PR.Number = a
+		}
 	}
 	if buildURL := t.context.String("build-url"); buildURL != "" {
 		ci.URL = buildURL
