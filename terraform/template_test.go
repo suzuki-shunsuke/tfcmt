@@ -353,7 +353,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 			template: DefaultApplyTemplate,
 			value:    CommonTemplate{},
 			resp: `
-## Apply Result
+## :white_check_mark: Apply Result
 
 [CI link]()
 
@@ -376,7 +376,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 				CombinedOutput: "body",
 			},
 			resp: `
-## Apply Result
+## :white_check_mark: Apply Result
 
 [CI link]()
 
@@ -399,7 +399,7 @@ body
 				CombinedOutput: "body",
 			},
 			resp: `
-## Apply Result
+## :white_check_mark: Apply Result
 
 [CI link]()
 
@@ -422,7 +422,7 @@ body
 				CombinedOutput: "body",
 			},
 			resp: `
-## Apply Result
+## :white_check_mark: Apply Result
 
 [CI link]()
 
@@ -445,7 +445,7 @@ body
 				CombinedOutput: `This is a "body".`,
 			},
 			resp: `
-## Apply Result
+## :white_check_mark: Apply Result
 
 [CI link]()
 
@@ -469,7 +469,7 @@ This is a "body".
 				UseRawOutput:   true,
 			},
 			resp: `
-## Apply Result
+## :white_check_mark: Apply Result
 
 [CI link]()
 
