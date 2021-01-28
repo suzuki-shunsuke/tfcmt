@@ -15,5 +15,5 @@ terraform:
       {{end}}
       <details><summary>Details (Click me)</summary>
 
-      <pre><code>{{ .Body }}
+      <pre><code>{{ .CombinedOutput }}
       </pre></code></details>

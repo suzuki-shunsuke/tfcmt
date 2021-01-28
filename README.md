@@ -69,7 +69,6 @@ The example settings of GitHub and GitHub Enterprise are as follows. Incidentall
 Placeholder | Usage
 ---|---
 `{{ .Result }}` | Matched result by parsing like `Plan: 1 to add` or `No changes`
-`{{ .Body }}` | The entire of Terraform execution result
 `{{ .Link }}` | The link of the build page on CI
 `{{ .Vars }}` | The variables which are passed by `-var` option
 `{{ .Stdout }}` | The standard output of terraform command
@@ -108,7 +107,7 @@ terraform:
       {{end}}
       <details><summary>Details (Click me)</summary>
 
-      <pre><code>{{ .Body }}
+      <pre><code>{{ .CombinedOutput }}
       </pre></code></details>
   apply:
     template: |
@@ -119,7 +118,7 @@ terraform:
       {{end}}
       <details><summary>Details (Click me)</summary>
 
-      <pre><code>{{ .Body }}
+      <pre><code>{{ .CombinedOutput }}
       </pre></code></details>
 ```
 
@@ -139,7 +138,7 @@ terraform:
       {{end}}
       <details><summary>Details (Click me)</summary>
 
-      <pre><code>{{ .Body }}
+      <pre><code>{{ .CombinedOutput }}
       </pre></code></details>
     when_destroy:
       template: |
@@ -154,7 +153,7 @@ terraform:
         {{end}}
         <details><summary>Details (Click me)</summary>
 
-        <pre><code>{{ .Body }}
+        <pre><code>{{ .CombinedOutput }}
         </pre></code></details>
   # ...
 ```
@@ -175,7 +174,7 @@ terraform:
       {{end}}
       <details><summary>Details (Click me)</summary>
 
-      <pre><code>{{ .Body }}
+      <pre><code>{{ .CombinedOutput }}
       </pre></code></details>
     when_add_or_update_only:
       label: "add-or-update"
@@ -222,7 +221,7 @@ terraform:
       <details><summary>Details (Click me)</summary>
 
       ```
-      {{ .Body }}
+      {{ .CombinedOutput }}
       ```
   # ...
 ~~~
@@ -252,7 +251,7 @@ terraform:
       {{end}}
       <details><summary>Details (Click me)</summary>
 
-      <pre><code>{{ .Body }}
+      <pre><code>{{ .CombinedOutput }}
       </pre></code></details>
   apply:
     template: |
@@ -263,7 +262,7 @@ terraform:
       {{end}}
       <details><summary>Details (Click me)</summary>
 
-      <pre><code>{{ .Body }}
+      <pre><code>{{ .CombinedOutput }}
       </pre></code></details>
 ```
 

@@ -15,7 +15,7 @@ terraform:
       {{end}}
       <details><summary>Details (Click me)</summary>
 
-      <pre><code>{{ .Body }}
+      <pre><code>{{ .CombinedOutput }}
       </pre></code></details>
     when_add_or_update_only:
       label: "add-or-update"
