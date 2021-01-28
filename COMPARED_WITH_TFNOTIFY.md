@@ -8,6 +8,7 @@ tfcmt isn't compatible with tfnotify.
   * [Remove `fmt` command](#breaking-change-remove-fmt-command)
   * [Configuration file name is changed](#breaking-change-configuration-file-name-is-changed)
   * [Command usage is changed](#breaking-change-command-usage-is-changed)
+  * [template variable Body is removed](#breaking-change-template-variable-body-is-removed)
   * [Remove --message and --destroy-warning-message option and template variable .Message](#breaking-change-remove---message-and---destroy-warning-message-option-and-template-variable-message)
   * [Remove --title and --destroy-warning-title options and template variable .Title](#breaking-change-remove---title-and---destroy-warning-title-options-and-template-variable-title)
   * [Don't remove duplicate comments](#breaking-change-dont-remove-duplicate-comments)
@@ -101,6 +102,11 @@ tfcmt apply -- terraform apply
 
 By this change, tfcmt can handle the standard error output and exit code of the terraform command.
 
+## Breaking Change: template variable Body is removed
+
+template variable `Body` is removed. Replace `Body` to `CombinedOutput`.
+`CombinedOutput` includes both standard output and standard error output.
+
 ## Breaking Change: Remove --message and --destroy-warning-message option and template variable .Message
 
 [#40](https://github.com/suzuki-shunsuke/tfcmt/pull/40)
@@ -177,7 +183,7 @@ tfcmt posts only one comment whose template is `when_destroy.template`.
         {{end}}
         <details><summary>Details (Click me)</summary>
 
-        <pre><code>{{ .Body }}
+        <pre><code>{{ .CombinedOutput }}
         </pre></code></details>
 ```
 

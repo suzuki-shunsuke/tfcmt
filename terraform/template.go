@@ -19,7 +19,7 @@ const (
 {{template "result" .}}
 {{template "updated_resources" .}}
 <details><summary>Details (Click me)</summary>
-{{wrapCode .Body}}
+{{wrapCode .CombinedOutput}}
 </details>
 {{if .ErrorMessages}}
 ## :warning: Errors
@@ -36,7 +36,7 @@ const (
 {{template "result" .}}
 
 <details><summary>Details (Click me)</summary>
-{{wrapCode .Body}}
+{{wrapCode .CombinedOutput}}
 </details>
 {{if .ErrorMessages}}
 ## :warning: Errors
@@ -55,7 +55,7 @@ const (
 
 {{template "updated_resources" .}}
 <details><summary>Details (Click me)</summary>
-{{wrapCode .Body}}
+{{wrapCode .CombinedOutput}}
 </details>
 `
 
@@ -87,7 +87,6 @@ It failed to parse the result.
 // CommonTemplate represents template entities
 type CommonTemplate struct {
 	Result            string
-	Body              string
 	Link              string
 	UseRawOutput      bool
 	Vars              map[string]string
@@ -202,7 +201,6 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 func (t *Template) Execute() (string, error) {
 	data := map[string]interface{}{
 		"Result":            t.Result,
-		"Body":              t.Body,
 		"Link":              t.Link,
 		"Vars":              t.Vars,
 		"Stdout":            t.Stdout,

@@ -36,8 +36,8 @@ func TestPlanTemplateExecute(t *testing.T) {
 			name:     "case 1",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Result: "result",
-				Body:   "body",
+				Result:         "result",
+				CombinedOutput: "body",
 			},
 			resp: `
 ## Plan Result
@@ -59,8 +59,8 @@ body
 			name:     "case 2",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Result: "",
-				Body:   "body",
+				Result:         "",
+				CombinedOutput: "body",
 			},
 			resp: `
 ## Plan Result
@@ -82,8 +82,8 @@ body
 			name:     "case 3",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Result: "",
-				Body:   `This is a "body".`,
+				Result:         "",
+				CombinedOutput: `This is a "body".`,
 			},
 			resp: `
 ## Plan Result
@@ -105,9 +105,9 @@ This is a "body".
 			name:     "case 4",
 			template: DefaultPlanTemplate,
 			value: CommonTemplate{
-				Result:       "",
-				Body:         `This is a "body".`,
-				UseRawOutput: true,
+				Result:         "",
+				CombinedOutput: `This is a "body".`,
+				UseRawOutput:   true,
 			},
 			resp: `
 ## Plan Result
@@ -129,8 +129,8 @@ This is a "body".
 			name:     "case 5",
 			template: "",
 			value: CommonTemplate{
-				Result: "",
-				Body:   "body",
+				Result:         "",
+				CombinedOutput: "body",
 			},
 			resp: `
 ## Plan Result
@@ -150,10 +150,10 @@ body
 		},
 		{
 			name:     "case 6",
-			template: `{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Result }}-{{ .CombinedOutput }}`,
 			value: CommonTemplate{
-				Result: "c",
-				Body:   "d",
+				Result:         "c",
+				CombinedOutput: "d",
 			},
 			resp: `c-d`,
 		},
@@ -312,10 +312,10 @@ This plan contains resource delete operation. Please check the plan result very 
 		},
 		{
 			name:     "case 5",
-			template: `{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Result }}-{{ .CombinedOutput }}`,
 			value: CommonTemplate{
-				Result: "c",
-				Body:   "d",
+				Result:         "c",
+				CombinedOutput: "d",
 			},
 			resp: `c-d`,
 		},
@@ -372,8 +372,8 @@ func TestApplyTemplateExecute(t *testing.T) {
 			name:     "case 1",
 			template: DefaultApplyTemplate,
 			value: CommonTemplate{
-				Result: "result",
-				Body:   "body",
+				Result:         "result",
+				CombinedOutput: "body",
 			},
 			resp: `
 ## Apply Result
@@ -395,8 +395,8 @@ body
 			name:     "case 2",
 			template: DefaultApplyTemplate,
 			value: CommonTemplate{
-				Result: "",
-				Body:   "body",
+				Result:         "",
+				CombinedOutput: "body",
 			},
 			resp: `
 ## Apply Result
@@ -418,8 +418,8 @@ body
 			name:     "case 3",
 			template: "",
 			value: CommonTemplate{
-				Result: "",
-				Body:   "body",
+				Result:         "",
+				CombinedOutput: "body",
 			},
 			resp: `
 ## Apply Result
@@ -441,8 +441,8 @@ body
 			name:     "case 4",
 			template: "",
 			value: CommonTemplate{
-				Result: "",
-				Body:   `This is a "body".`,
+				Result:         "",
+				CombinedOutput: `This is a "body".`,
 			},
 			resp: `
 ## Apply Result
@@ -464,9 +464,9 @@ This is a "body".
 			name:     "case 5",
 			template: "",
 			value: CommonTemplate{
-				Result:       "",
-				Body:         `This is a "body".`,
-				UseRawOutput: true,
+				Result:         "",
+				CombinedOutput: `This is a "body".`,
+				UseRawOutput:   true,
 			},
 			resp: `
 ## Apply Result
@@ -486,10 +486,10 @@ This is a "body".
 		},
 		{
 			name:     "case 6",
-			template: `{{ .Result }}-{{ .Body }}`,
+			template: `{{ .Result }}-{{ .CombinedOutput }}`,
 			value: CommonTemplate{
-				Result: "c",
-				Body:   "d",
+				Result:         "c",
+				CombinedOutput: "d",
 			},
 			resp: `c-d`,
 		},

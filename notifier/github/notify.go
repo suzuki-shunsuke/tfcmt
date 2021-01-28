@@ -22,8 +22,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	var errMsgs []string
 	target := cfg.Vars["target"]
 
-	body := param.Stdout
-	result := parser.Parse(body)
+	result := parser.Parse(param.CombinedOutput)
 	result.ExitCode = param.ExitCode
 	if result.HasParseError {
 		template = g.client.Config.ParseErrorTemplate
@@ -48,7 +47,6 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 
 	template.SetValue(terraform.CommonTemplate{
 		Result:            result.Result,
-		Body:              body,
 		Link:              cfg.CI,
 		UseRawOutput:      cfg.UseRawOutput,
 		Vars:              cfg.Vars,
