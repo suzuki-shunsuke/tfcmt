@@ -3,9 +3,10 @@ package github
 import (
 	"context"
 	"net/http"
-	"strings"
+	"os"
 
 	"github.com/sirupsen/logrus"
+	"github.com/suzuki-shunsuke/github-comment-metadata/metadata"
 	"github.com/suzuki-shunsuke/tfcmt/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/terraform"
 )
@@ -15,12 +16,11 @@ import (
 type NotifyService service
 
 // Notify posts comment optimized for notifications
-func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (int, error) {
+func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (int, error) { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
 	var errMsgs []string
-	target := cfg.Vars["target"]
 
 	result := parser.Parse(param.CombinedOutput)
 	result.ExitCode = param.ExitCode
@@ -83,102 +83,44 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}
-	if !g.isHideComment() {
-		return result.ExitCode, g.client.Comment.Post(ctx, body, postOpt)
-	}
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
 	})
 
-	embeddedComment := "<!-- tfcmt:plan -->"
-	if target != "" {
-		embeddedComment = "<!-- tfcmt:plan:" + target + " -->"
+	data := map[string]interface{}{
+		"Program":  "tfcmt",
+		"Vars":     cfg.Vars,
+		"SHA1":     cfg.PR.Revision,
+		"PRNumber": cfg.PR.Number,
+	}
+	if target := cfg.Vars["target"]; target != "" {
+		data["Target"] = target
+	}
+	if isPlan {
+		data["Command"] = "plan"
+	} else {
+		data["Command"] = "apply"
+	}
+	if err := metadata.SetCIEnv(param.CIName, os.Getenv, data); err != nil {
+		return result.ExitCode, err
+	}
+	embeddedComment, err := metadata.Convert(data)
+	if err != nil {
+		return result.ExitCode, err
 	}
 	logE.WithFields(logrus.Fields{
 		"comment": embeddedComment,
 	}).Debug("embedded HTML comment")
 	// embed HTML tag to hide old comments
-	body += "\n" + embeddedComment
+	body += embeddedComment
 
-	// get an authenticated user to hide comments only posted by the same user
-	login, err := g.client.User.Get(ctx)
-	if err != nil {
-		logE.WithError(err).Warn("get the authenticated user")
-		login = ""
-	}
-	cmts, err := g.client.Comment.list(ctx, ListOptions{
-		PRNumber: cfg.PR.Number,
-		Owner:    cfg.Owner,
-		Repo:     cfg.Repo,
-	})
-	if err != nil {
-		logE.WithError(err).Error("list pull request comments")
-		return result.ExitCode, g.client.Comment.Post(ctx, body, postOpt)
-	}
-	logE.WithFields(logrus.Fields{
-		"count":     len(cmts),
-		"owner":     cfg.Owner,
-		"repo":      cfg.Repo,
-		"pr_number": cfg.PR.Number,
-	}).Debug("list of pull request comments")
-	extractedComments := []Comment{}
-	for _, cmt := range cmts {
-		if isExcludedComment(cmt, login) {
-			continue
-		}
-		// hide comments which include `embeddedComment`
-		if !strings.Contains(cmt.Body, embeddedComment) {
-			continue
-		}
-		extractedComments = append(extractedComments, cmt)
-	}
-	logE.WithFields(logrus.Fields{
-		"count": len(extractedComments),
-	}).Debug("list of commements which will be hidden")
 	if err := g.client.Comment.Post(ctx, body, postOpt); err != nil {
 		return result.ExitCode, err
-	}
-	// hide comments
-	for _, cmt := range extractedComments {
-		if err := g.client.Comment.hide(ctx, cmt.ID); err != nil {
-			logE.WithError(err).Error("hide a comment")
-		}
-		logE.WithFields(logrus.Fields{
-			"node_id": cmt.ID,
-		}).Debug("hide a comment")
 	}
 	return result.ExitCode, nil
 }
 
-func isExcludedComment(cmt Comment, login string) bool {
-	if !cmt.ViewerCanMinimize {
-		return true
-	}
-	if cmt.IsMinimized {
-		return true
-	}
-	// GitHub Actions's GITHUB_TOKEN secret doesn't have a permission to get an authenticated user.
-	// So if `login` is empty, we give up filtering comments by login.
-	if login != "" && cmt.Author.Login != login {
-		return true
-	}
-	return false
-}
-
-func (g *NotifyService) isHideComment() bool {
-	if g.client.Config.HideOldComment.Disable {
-		return false
-	}
-	if _, isApply := g.client.Config.Parser.(*terraform.ApplyParser); isApply {
-		return false
-	}
-	if g.client.Config.PR.Number == 0 {
-		return false
-	}
-	return true
-}
-
-func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string {
+func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string { //nolint:cyclop
 	cfg := g.client.Config
 	var (
 		labelToAdd string

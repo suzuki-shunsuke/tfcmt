@@ -67,14 +67,7 @@ type Plan struct {
 	WhenNoChanges       WhenNoChanges       `yaml:"when_no_changes,omitempty"`
 	WhenPlanError       WhenPlanError       `yaml:"when_plan_error,omitempty"`
 	WhenParseError      WhenParseError      `yaml:"when_parse_error,omitempty"`
-	HideOldComment      HideOldComment      `yaml:"hide_old_comment,omitempty"`
 	DisableLabel        bool                `yaml:"disable_label,omitempty"`
-}
-
-type HideOldComment struct {
-	//	Condition       string `yaml:"-"`
-	//	InjectedComment string `yaml:"-"`
-	Disable bool
 }
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
@@ -116,8 +109,7 @@ type Apply struct {
 // LoadFile binds the config file to Config structure
 func (cfg *Config) LoadFile(path string) error {
 	cfg.path = path
-	_, err := os.Stat(cfg.path)
-	if err != nil {
+	if _, err := os.Stat(cfg.path); err != nil {
 		return fmt.Errorf("%s: no config file", cfg.path)
 	}
 	raw, _ := ioutil.ReadFile(cfg.path)

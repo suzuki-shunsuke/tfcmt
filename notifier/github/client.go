@@ -52,17 +52,10 @@ type Config struct {
 	DestroyWarningTemplate *terraform.Template
 	ParseErrorTemplate     *terraform.Template
 	// ResultLabels is a set of labels to apply depending on the plan result
-	ResultLabels   ResultLabels
-	Vars           map[string]string
-	Templates      map[string]string
-	HideOldComment HideOldComment
-	UseRawOutput   bool
-}
-
-type HideOldComment struct {
-	// Condition       string
-	// InjectedComment string
-	Disable bool
+	ResultLabels ResultLabels
+	Vars         map[string]string
+	Templates    map[string]string
+	UseRawOutput bool
 }
 
 // PullRequest represents GitHub Pull Request metadata

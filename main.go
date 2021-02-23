@@ -64,7 +64,7 @@ func (t *tfcmt) renderTemplate(tpl string) (string, error) {
 	return buf.String(), nil
 }
 
-func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) {
+func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) { //nolint:cyclop
 	labels := github.ResultLabels{
 		AddOrUpdateLabelColor: t.config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
 		DestroyLabelColor:     t.config.Terraform.Plan.WhenDestroy.Color,
@@ -147,10 +147,6 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 		}
 		labels = a
 	}
-	hideOldComment := github.HideOldComment{
-		Disable: t.config.Terraform.Plan.HideOldComment.Disable,
-	}
-
 	client, err := github.NewClient(ctx, github.Config{
 		Token:   t.config.Notifier.Github.Token,
 		BaseURL: t.config.Notifier.Github.BaseURL,
@@ -169,7 +165,6 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 		ResultLabels:           labels,
 		Vars:                   t.config.Vars,
 		Templates:              t.config.Templates,
-		HideOldComment:         hideOldComment,
 	})
 	if err != nil {
 		return nil, err
@@ -178,7 +173,7 @@ func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, erro
 }
 
 // Run sends the notification with notifier
-func (t *tfcmt) Run(ctx context.Context) error {
+func (t *tfcmt) Run(ctx context.Context) error { //nolint:cyclop
 	ciname := t.config.CI
 	if t.context.String("ci") != "" {
 		ciname = t.context.String("ci")
@@ -239,6 +234,7 @@ func (t *tfcmt) Run(ctx context.Context) error {
 		CombinedOutput: combinedOutput.String(),
 		Cmd:            cmd,
 		Args:           args,
+		CIName:         ciname,
 		ExitCode:       cmd.ProcessState.ExitCode(),
 	}))
 }
@@ -310,7 +306,7 @@ func parseVarOpts(vars []string, varsM map[string]string) error {
 	return nil
 }
 
-func newConfig(ctx *cli.Context) (config.Config, error) {
+func newConfig(ctx *cli.Context) (config.Config, error) { //nolint:cyclop
 	cfg := config.Config{}
 	confPath, err := cfg.Find(ctx.String("config"))
 	if err != nil {
