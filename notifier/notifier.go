@@ -16,6 +16,7 @@ type ParamExec struct {
 	Stdout         string
 	Stderr         string
 	CombinedOutput string
+	CIName         string
 	Args           cli.Args
 	Cmd            *exec.Cmd
 	ExitCode       int

@@ -28,8 +28,7 @@ type ParseResult struct {
 }
 
 // DefaultParser is a parser for terraform commands
-type DefaultParser struct {
-}
+type DefaultParser struct{}
 
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
@@ -94,7 +93,7 @@ func extractResource(pattern *regexp.Regexp, line string) string {
 }
 
 // Parse returns ParseResult related with terraform plan
-func (p *PlanParser) Parse(body string) ParseResult {
+func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	var exitCode int
 	switch {
 	case p.Pass.MatchString(body):

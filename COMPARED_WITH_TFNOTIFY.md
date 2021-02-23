@@ -12,7 +12,7 @@ tfcmt isn't compatible with tfnotify.
   * [Remove --message and --destroy-warning-message option and template variable .Message](#breaking-change-remove---message-and---destroy-warning-message-option-and-template-variable-message)
   * [Remove --title and --destroy-warning-title options and template variable .Title](#breaking-change-remove---title-and---destroy-warning-title-options-and-template-variable-title)
   * [Don't remove duplicate comments](#breaking-change-dont-remove-duplicate-comments)
-  * [Hide old comments by default](#breaking-change-hide-old-comments-by-default)
+  * [Embed metadata into comment](#breaking-change-embed-metadata-into-comment)
   * [Change the behavior of deletion warning](#breaking-change-change-the-behavior-of-deletion-warning)
   * [Update labels by default](#breaking-change-update-pull-request-labels-by-default)
 * Features
@@ -130,34 +130,12 @@ The link to the comment would be broken when the comment would be removed.
 
 So this feature is removed from tfcmt.
 
-## Breaking Change: Hide old comments by default
+## Breaking Change: Embed metadata into comment
 
-[#60](https://github.com/suzuki-shunsuke/tfcmt/pull/14)
+[#67](https://github.com/suzuki-shunsuke/tfcmt/pull/67)
 
-Instead of removing duplicate comments, tfcmt hides old comments of `terraform plan` by default.
-Comments of `terraform apply` aren't hidden.
-
-When tfcmt posts a comment, tfcmt injects a HTML comment `\n<!-- tfcmt:plan{{if .Vars.target}}:{{.Vars.target}}{{end}} -->` to the suffix.
-And before posting the comment, tfcmt gets a list of pull request comments and selects comments which will be hidden.
-
-Comments which match all of the following conditions are hidden.
-
-* comment author is same as tfcmt's authenticated user. When it failed to get the authenticated user login, this condition is ignored
-* tfcmt's authenticated user has a permission to hide the comment
-* comment includes `<!-- tfcmt:plan{{if .Vars.target}}:{{.Vars.target}}{{end}} -->`
-
-After it succeeds to post a comment, tfcmt hides them.
-If it failed to post a comment, comments aren't hidden.
-
-We can disable this feature by setting `terraform.plan.hide_old_comment.disable: true`.
-
-```yaml
----
-terraform:
-  plan:
-    hide_old_comment:
-      disable: true
-```
+Instead of removing duplicate comments, tfcmt embeds metadata into comment with [githuub-comment-metadata](https://github.com/suzuki-shunsuke/github-comment-metadata).
+tfcmt itself doesn't support to hide old comments, but we can hide comments with [github-comment's hide command](https://github.com/suzuki-shunsuke/github-comment#hide).
 
 ## Breaking Change: Change the behavior of deletion warning
 
