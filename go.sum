@@ -59,8 +59,8 @@ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.5.1 h1:nOGnQDM7FYENwehXlg/kFVnos3rEvtKTjRvOWSzb6H4=
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
-github.com/suzuki-shunsuke/github-comment-metadata v0.1.0-0 h1:CYlVhFjRld+oYZWuTgajRwhV4LaTUMrTpJScr29EBMc=
-github.com/suzuki-shunsuke/github-comment-metadata v0.1.0-0/go.mod h1:GNDhEmWAJ6Bbk9rIds0mAMF4noyPV3EqwqLetnEoNLg=
+github.com/suzuki-shunsuke/github-comment-metadata v0.1.0 h1:89uGvBINoWZ4p2dGj7S695bm/L1H175eMp/D47ltSPs=
+github.com/suzuki-shunsuke/github-comment-metadata v0.1.0/go.mod h1:GNDhEmWAJ6Bbk9rIds0mAMF4noyPV3EqwqLetnEoNLg=
 github.com/suzuki-shunsuke/go-ci-env v1.1.0 h1:eGpItM2bEDtHFXYYEm8zz+kDGxWlhOtwNK58cREa1QU=
 github.com/suzuki-shunsuke/go-ci-env v1.1.0/go.mod h1:kO9UgcQIAH4Pu4ESkUJHPuQEtesxHPKkpQqeJHJzzdk=
 github.com/suzuki-shunsuke/go-findconfig v1.0.0 h1:RSETNCdYurpepqz/z9iM8DzJKK6TbvtV63ZVCIXaxkI=
