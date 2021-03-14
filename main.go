@@ -16,10 +16,10 @@ import (
 	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/go-ci-env/cienv"
-	"github.com/suzuki-shunsuke/tfcmt/config"
-	"github.com/suzuki-shunsuke/tfcmt/notifier"
-	"github.com/suzuki-shunsuke/tfcmt/notifier/github"
-	"github.com/suzuki-shunsuke/tfcmt/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 	"github.com/urfave/cli/v2"
 )
 
