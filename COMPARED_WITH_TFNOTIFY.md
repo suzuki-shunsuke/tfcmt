@@ -22,6 +22,7 @@ tfcmt isn't compatible with tfnotify.
   * [Make a configuration file optional](#feature-make-a-configuration-file-optional)
     * [Complement CI and GitHub Repository owner and name from environment variables](#feature-complement-ci-and-github-repository-owner-and-name-from-environment-variables)
     * [Get GitHub Token from the environment variable "GITHUB_TOKEN" by default](#feature-get-github-token-from-the-environment-variable-github_token-by-default)
+  * [Support Custom Environment Variable Definition](#feature-custom-environment-variable-definition)
   * [Support to configure label colors](#feature-support-to-configure-label-colors)
   * Support template functions [sprig](http://masterminds.github.io/sprig/)
   * [Support to pass variables by -var option](#feature-support-to-pass-variables-by--var-option)
@@ -306,6 +307,12 @@ notifier:
 ### Feature: Get GitHub Token from the environment variable "GITHUB_TOKEN" by default
 
 We can omit the configuration `notifier.github.token`.
+
+## Feature: Custom Environment Variable Definition
+
+We can complement the parameters like `pr` and `repo` on the other platform like Travis CI and Jenkins with Custom Environment Variable Definition.
+
+Please see [here](docs/ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).
 
 ## Feature: Support to configure label colors
 

@@ -12,23 +12,23 @@ import (
 
 // Config is for tfcmt config structure
 type Config struct {
-	CI          CI
+	CI          CI `yaml:"-"`
 	Terraform   Terraform
 	Vars        map[string]string `yaml:"-"`
 	Templates   map[string]string
 	Log         Log
-	GHEBaseURL  string `yaml:"ghe_base_url"`
-	GitHubToken string `yaml:"-"`
-	Complement  Complement
+	GHEBaseURL  string     `yaml:"ghe_base_url"`
+	GitHubToken string     `yaml:"-"`
+	Complement  Complement `yaml:"ci"`
 }
 
 type CI struct {
 	Name     string
 	Owner    string
 	Repo     string
-	SHA      string `yaml:"-"`
-	Link     string `yaml:"-"`
-	PRNumber int    `yaml:"-"`
+	SHA      string
+	Link     string
+	PRNumber int
 }
 
 type Log struct {

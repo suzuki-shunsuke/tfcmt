@@ -48,24 +48,6 @@ Please see [Command Usage](docs/USAGE.md).
 
 Please see [Configuration](docs/CONFIGURATION.md).
 
-## Supported CI
-
-Currently, supported CI are here:
-
-- CircleCI
-- Drone
-- AWS CodeBuild
-- GitHub Actions
-
-On the supported CI platform, the following parameters are complemented by the built-in environment variables.
-
-- `-owner`
-- `-repo`
-- `-pr`
-- `-sha`
-
-This feature is implemented by [go-ci-env](https://github.com/suzuki-shunsuke/go-ci-env).
-
 ## Release Notes
 
 Please see [GitHub Releases](https://github.com/suzuki-shunsuke/tfcmt/releases)
