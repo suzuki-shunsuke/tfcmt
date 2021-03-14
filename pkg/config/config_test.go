@@ -23,7 +23,7 @@ func TestLoadFile(t *testing.T) {
 		ok   bool
 	}{
 		{
-			file: "../example.tfcmt.yaml",
+			file: "../../example.tfcmt.yaml",
 			cfg: Config{
 				CI: "circleci",
 				Notifier: Notifier{
@@ -48,12 +48,12 @@ func TestLoadFile(t *testing.T) {
 					},
 					UseRawOutput: false,
 				},
-				path: "../example.tfcmt.yaml",
+				path: "../../example.tfcmt.yaml",
 			},
 			ok: true,
 		},
 		{
-			file: "../example-with-destroy-and-result-labels.tfcmt.yaml",
+			file: "../../example-with-destroy-and-result-labels.tfcmt.yaml",
 			cfg: Config{
 				CI: "circleci",
 				Notifier: Notifier{
@@ -90,7 +90,7 @@ func TestLoadFile(t *testing.T) {
 					},
 					UseRawOutput: false,
 				},
-				path: "../example-with-destroy-and-result-labels.tfcmt.yaml",
+				path: "../../example-with-destroy-and-result-labels.tfcmt.yaml",
 			},
 			ok: true,
 		},

@@ -17,6 +17,5 @@
 
 # End of https://www.gitignore.io/api/go
 
-tfcmt
 vendor
 dist

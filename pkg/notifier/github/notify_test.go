@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/suzuki-shunsuke/tfcmt/notifier"
-	"github.com/suzuki-shunsuke/tfcmt/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
 func TestNotifyNotify(t *testing.T) {

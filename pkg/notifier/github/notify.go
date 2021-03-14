@@ -7,8 +7,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/github-comment-metadata/metadata"
-	"github.com/suzuki-shunsuke/tfcmt/notifier"
-	"github.com/suzuki-shunsuke/tfcmt/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
 // NotifyService handles communication with the notification related
