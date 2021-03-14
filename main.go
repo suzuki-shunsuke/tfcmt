@@ -22,6 +22,7 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/signal"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 	"github.com/urfave/cli/v2"
 )
@@ -262,7 +263,7 @@ func main() {
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-	go handleSignal(cancel)
+	go signal.Handle(cancel)
 
 	os.Exit(apperr.HandleExit(app.RunContext(ctx, os.Args)))
 }
