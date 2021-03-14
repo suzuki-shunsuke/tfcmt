@@ -1,0 +1,31 @@
+---
+# cmdx - task runner
+# https://github.com/suzuki-shunsuke/cmdx
+tasks:
+  - name: test
+    short: t
+    description: test
+    usage: test
+    script: go test ./... -race -covermode=atomic
+  - name: vet
+    short: v
+    description: go vet
+    usage: go vet
+    script: go vet ./...
+  - name: lint
+    short: l
+    description: lint the go code
+    usage: lint the go code
+    script: golangci-lint run
+  - name: release
+    short: r
+    description: release the new version
+    usage: release the new version
+    script: "bash scripts/release.sh {{.version}}"
+    args:
+      - name: version
+        required: true
+  - name: install
+    description: go install
+    usage: go install
+    script: go install ./cmd/tfcmt
