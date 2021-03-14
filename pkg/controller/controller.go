@@ -38,6 +38,24 @@ type Command struct {
 // Run sends the notification with notifier
 func (ctrl *Controller) Run(ctx context.Context, command Command) error {
 	ci := ctrl.CI
+
+	ciname := ""
+	if platform := cienv.Get(); platform != nil {
+		ciname = platform.CI()
+
+		if ci.PR.Revision == "" {
+			ci.PR.Revision = platform.SHA()
+		}
+
+		if ci.PR.Number == 0 {
+			n, err := platform.PRNumber()
+			if err != nil {
+				return err
+			}
+			ci.PR.Number = n
+		}
+	}
+
 	if ci.PR.Revision == "" && ci.PR.Number == 0 {
 		return errors.New("pull request number or SHA (revision) is needed")
 	}
@@ -61,11 +79,6 @@ func (ctrl *Controller) Run(ctx context.Context, command Command) error {
 	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
 	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
 	_ = cmd.Run()
-
-	ciname := ""
-	if platform := cienv.Get(); platform != nil {
-		ciname = platform.CI()
-	}
 
 	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
 		Stdout:         stdout.String(),
