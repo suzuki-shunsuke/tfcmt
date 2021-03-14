@@ -5,7 +5,7 @@ before:
   hooks:
     - go mod tidy
 builds:
-  - main: .
+  - main: ./cmd/tfcmt
     binary: tfcmt
     ldflags: 
       - -s -w
