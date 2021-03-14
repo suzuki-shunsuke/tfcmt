@@ -19,8 +19,6 @@ type Config struct {
 	Vars      map[string]string `yaml:"-"`
 	Templates map[string]string
 	Log       Log
-
-	path string
 }
 
 type Log struct {
@@ -108,11 +106,10 @@ type Apply struct {
 
 // LoadFile binds the config file to Config structure
 func (cfg *Config) LoadFile(path string) error {
-	cfg.path = path
-	if _, err := os.Stat(cfg.path); err != nil {
-		return fmt.Errorf("%s: no config file", cfg.path)
+	if _, err := os.Stat(path); err != nil {
+		return fmt.Errorf("%s: no config file", path)
 	}
-	raw, _ := ioutil.ReadFile(cfg.path)
+	raw, _ := ioutil.ReadFile(path)
 	return yaml.Unmarshal(raw, cfg)
 }
 
