@@ -130,10 +130,10 @@ func (ctrl *Controller) getNotifier(ctx context.Context, ci platform.CI) (notifi
 		labels = a
 	}
 	client, err := github.NewClient(ctx, github.Config{
-		Token:   ctrl.Config.Notifier.Github.Token,
-		BaseURL: ctrl.Config.Notifier.Github.BaseURL,
-		Owner:   ctrl.Config.Notifier.Github.Repository.Owner,
-		Repo:    ctrl.Config.Notifier.Github.Repository.Name,
+		Token:   ctrl.Config.GitHubToken,
+		BaseURL: ctrl.Config.GHEBaseURL,
+		Owner:   ctrl.Config.CI.Owner,
+		Repo:    ctrl.Config.CI.Repo,
 		PR: github.PullRequest{
 			Revision: ci.PR.Revision,
 			Number:   ci.PR.Number,
@@ -156,7 +156,7 @@ func (ctrl *Controller) getNotifier(ctx context.Context, ci platform.CI) (notifi
 
 // Run sends the notification with notifier
 func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
-	ciname := ctrl.Config.CI
+	ciname := ""
 	if ctrl.Context.String("ci") != "" {
 		ciname = ctrl.Context.String("ci")
 	}

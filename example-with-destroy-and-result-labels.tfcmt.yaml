@@ -1,10 +1,6 @@
-ci: circleci
-notifier:
-  github:
-    token: $GITHUB_TOKEN
-    repository:
-      owner: "suzuki-shunsuke"
-      name: "tfcmt"
+ci:
+  owner: "suzuki-shunsuke"
+  repo: "tfcmt"
 terraform:
   plan:
     template: |
