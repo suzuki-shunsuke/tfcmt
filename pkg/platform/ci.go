@@ -1,4 +1,4 @@
-package main
+package platform
 
 import (
 	"fmt"
@@ -7,6 +7,24 @@ import (
 	"strconv"
 	"strings"
 )
+
+func Get(ciname string) (CI, error) {
+	var ci CI
+	switch ciname {
+	case "circleci", "circle-ci":
+		return circleci()
+	case "codebuild":
+		return codebuild()
+	case "github-actions":
+		return githubActions(), nil
+	case "cloud-build", "cloudbuild":
+		return cloudbuild()
+	case "":
+		return ci, nil
+	default:
+		return ci, fmt.Errorf("CI service %s: not supported yet", ciname)
+	}
+}
 
 // CI represents a common information obtained from all CI platforms
 type CI struct {

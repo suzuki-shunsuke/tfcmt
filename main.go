@@ -19,6 +19,7 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 	"github.com/urfave/cli/v2"
 )
@@ -30,24 +31,6 @@ type tfcmt struct {
 	template               *terraform.Template
 	destroyWarningTemplate *terraform.Template
 	parseErrorTemplate     *terraform.Template
-}
-
-func getCI(ciname string) (CI, error) {
-	var ci CI
-	switch ciname {
-	case "circleci", "circle-ci":
-		return circleci()
-	case "codebuild":
-		return codebuild()
-	case "github-actions":
-		return githubActions(), nil
-	case "cloud-build", "cloudbuild":
-		return cloudbuild()
-	case "":
-		return ci, nil
-	default:
-		return ci, fmt.Errorf("CI service %s: not supported yet", ciname)
-	}
 }
 
 func (t *tfcmt) renderTemplate(tpl string) (string, error) {
@@ -138,7 +121,7 @@ func (t *tfcmt) renderGitHubLabels() (github.ResultLabels, error) { //nolint:cyc
 	return labels, nil
 }
 
-func (t *tfcmt) getNotifier(ctx context.Context, ci CI) (notifier.Notifier, error) {
+func (t *tfcmt) getNotifier(ctx context.Context, ci platform.CI) (notifier.Notifier, error) {
 	labels := github.ResultLabels{}
 	if !t.config.Terraform.Plan.DisableLabel {
 		a, err := t.renderGitHubLabels()
@@ -179,7 +162,7 @@ func (t *tfcmt) Run(ctx context.Context) error { //nolint:cyclop
 		ciname = t.context.String("ci")
 	}
 	ciname = strings.ToLower(ciname)
-	ci, err := getCI(ciname)
+	ci, err := platform.Get(ciname)
 	if err != nil {
 		return err
 	}
