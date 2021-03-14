@@ -1,6 +1,10 @@
 ci:
-  owner: "suzuki-shunsuke"
-  repo: "tfcmt"
+  owner:
+  - type: envsubst
+    value: suzuki-shunsuke
+  repo:
+  - type: envsubst
+    value: tfcmt
 terraform:
   plan:
     template: |

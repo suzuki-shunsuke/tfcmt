@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+
+	"github.com/suzuki-shunsuke/tfcmt/pkg/domain"
 )
 
 func TestLoadFile(t *testing.T) {
@@ -17,10 +19,6 @@ func TestLoadFile(t *testing.T) {
 		{
 			file: "../../example.tfcmt.yaml",
 			cfg: Config{
-				CI: CI{
-					Owner: "suzuki-shunsuke",
-					Repo:  "tfcmt",
-				},
 				Terraform: Terraform{
 					Default: Default{
 						Template: "",
@@ -34,16 +32,27 @@ func TestLoadFile(t *testing.T) {
 					},
 					UseRawOutput: false,
 				},
+				Complement: Complement{
+					PR:   []domain.ComplementEntry{},
+					Link: []domain.ComplementEntry{},
+					SHA:  []domain.ComplementEntry{},
+					Owner: []domain.ComplementEntry{
+						&ComplementEnvsubstEntry{
+							Value: "suzuki-shunsuke",
+						},
+					},
+					Repo: []domain.ComplementEntry{
+						&ComplementEnvsubstEntry{
+							Value: "tfcmt",
+						},
+					},
+				},
 			},
 			ok: true,
 		},
 		{
 			file: "../../example-with-destroy-and-result-labels.tfcmt.yaml",
 			cfg: Config{
-				CI: CI{
-					Owner: "suzuki-shunsuke",
-					Repo:  "tfcmt",
-				},
 				Terraform: Terraform{
 					Default: Default{
 						Template: "",
@@ -75,10 +84,6 @@ func TestLoadFile(t *testing.T) {
 		{
 			file: "no-such-config.yaml",
 			cfg: Config{
-				CI: CI{
-					Owner: "suzuki-shunsuke",
-					Repo:  "tfcmt",
-				},
 				Terraform: Terraform{
 					Default: Default{
 						Template: "",
@@ -97,20 +102,23 @@ func TestLoadFile(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		var cfg Config
+		testCase := testCase
+		t.Run(testCase.file, func(t *testing.T) {
+			t.Parallel()
+			var cfg Config
 
-		err := cfg.LoadFile(testCase.file)
-		if err == nil {
-			if !testCase.ok {
-				t.Error("got no error but want error")
-			} else if !reflect.DeepEqual(cfg, testCase.cfg) {
-				t.Errorf("got %#v but want: %#v", cfg, testCase.cfg)
+			if err := cfg.LoadFile(testCase.file); err == nil {
+				if !testCase.ok {
+					t.Error("got no error but want error")
+				} else if !reflect.DeepEqual(cfg, testCase.cfg) {
+					t.Errorf("got %#v but want: %#v", cfg, testCase.cfg)
+				}
+			} else {
+				if testCase.ok {
+					t.Errorf("got error %v but want no error", err)
+				}
 			}
-		} else {
-			if testCase.ok {
-				t.Errorf("got error %q but want no error", err)
-			}
-		}
+		})
 	}
 }
 
