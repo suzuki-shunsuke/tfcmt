@@ -17,6 +17,7 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
@@ -36,27 +37,31 @@ type Command struct {
 // Run sends the notification with notifier
 func (ctrl *Controller) Run(ctx context.Context, command Command) error { //nolint:cyclop
 	ciname := ""
-	if platform := cienv.Get(); platform != nil {
-		ciname = platform.CI()
+	if ci := cienv.Get(); ci != nil {
+		ciname = ci.CI()
 
 		if ctrl.Config.CI.Owner == "" {
-			ctrl.Config.CI.Owner = platform.RepoOwner()
+			ctrl.Config.CI.Owner = ci.RepoOwner()
 		}
 
 		if ctrl.Config.CI.Repo == "" {
-			ctrl.Config.CI.Repo = platform.RepoName()
+			ctrl.Config.CI.Repo = ci.RepoName()
 		}
 
 		if ctrl.Config.CI.SHA == "" {
-			ctrl.Config.CI.SHA = platform.SHA()
+			ctrl.Config.CI.SHA = ci.SHA()
 		}
 
 		if ctrl.Config.CI.PRNumber == 0 {
-			n, err := platform.PRNumber()
+			n, err := ci.PRNumber()
 			if err != nil {
 				return err
 			}
 			ctrl.Config.CI.PRNumber = n
+		}
+
+		if ctrl.Config.CI.Link == "" {
+			ctrl.Config.CI.Link = platform.GetLink(ciname)
 		}
 	}
 
