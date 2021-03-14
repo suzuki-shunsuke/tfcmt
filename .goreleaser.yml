@@ -24,4 +24,4 @@ archives:
       - goos: 'windows'
         format: 'zip'
 release:
-  prerelease: auto
+  prerelease: true # we update release note manually before releasing
