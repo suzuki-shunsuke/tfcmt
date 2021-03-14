@@ -32,6 +32,73 @@ type Controller struct {
 	ParseErrorTemplate     *terraform.Template
 }
 
+// Run sends the notification with notifier
+func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
+	ciname := ""
+	if ctrl.Context.String("ci") != "" {
+		ciname = ctrl.Context.String("ci")
+	}
+	ciname = strings.ToLower(ciname)
+	ci, err := platform.Get(ciname)
+	if err != nil {
+		return err
+	}
+	if sha := ctrl.Context.String("sha"); sha != "" {
+		ci.PR.Revision = sha
+	}
+	if pr := ctrl.Context.Int("pr"); pr != 0 {
+		ci.PR.Number = pr
+	}
+	if ci.PR.Number == 0 {
+		// support suzuki-shunsuke/ci-info
+		if prS := os.Getenv("CI_INFO_PR_NUMBER"); prS != "" {
+			a, err := strconv.Atoi(prS)
+			if err != nil {
+				return fmt.Errorf("parse CI_INFO_PR_NUMBER %s: %w", prS, err)
+			}
+			ci.PR.Number = a
+		}
+	}
+	if buildURL := ctrl.Context.String("build-url"); buildURL != "" {
+		ci.URL = buildURL
+	}
+
+	if ci.PR.Revision == "" && ci.PR.Number == 0 {
+		return errors.New("pull request number or SHA (revision) is needed")
+	}
+
+	ntf, err := ctrl.getNotifier(ctx, ci)
+	if err != nil {
+		return err
+	}
+
+	if ntf == nil {
+		return errors.New("no notifier specified at all")
+	}
+
+	args := ctrl.Context.Args()
+	cmd := exec.CommandContext(ctx, args.First(), args.Tail()...) //nolint:gosec
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	combinedOutput := &bytes.Buffer{}
+	uncolorizedStdout := colorable.NewNonColorable(stdout)
+	uncolorizedStderr := colorable.NewNonColorable(stderr)
+	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
+	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
+	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
+	_ = cmd.Run()
+
+	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
+		Stdout:         stdout.String(),
+		Stderr:         stderr.String(),
+		CombinedOutput: combinedOutput.String(),
+		Cmd:            cmd,
+		Args:           args,
+		CIName:         ciname,
+		ExitCode:       cmd.ProcessState.ExitCode(),
+	}))
+}
+
 func (ctrl *Controller) renderTemplate(tpl string) (string, error) {
 	tmpl, err := template.New("_").Funcs(sprig.TxtFuncMap()).Parse(tpl)
 	if err != nil {
@@ -152,71 +219,4 @@ func (ctrl *Controller) getNotifier(ctx context.Context, ci platform.CI) (notifi
 		return nil, err
 	}
 	return client.Notify, nil
-}
-
-// Run sends the notification with notifier
-func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
-	ciname := ""
-	if ctrl.Context.String("ci") != "" {
-		ciname = ctrl.Context.String("ci")
-	}
-	ciname = strings.ToLower(ciname)
-	ci, err := platform.Get(ciname)
-	if err != nil {
-		return err
-	}
-	if sha := ctrl.Context.String("sha"); sha != "" {
-		ci.PR.Revision = sha
-	}
-	if pr := ctrl.Context.Int("pr"); pr != 0 {
-		ci.PR.Number = pr
-	}
-	if ci.PR.Number == 0 {
-		// support suzuki-shunsuke/ci-info
-		if prS := os.Getenv("CI_INFO_PR_NUMBER"); prS != "" {
-			a, err := strconv.Atoi(prS)
-			if err != nil {
-				return fmt.Errorf("parse CI_INFO_PR_NUMBER %s: %w", prS, err)
-			}
-			ci.PR.Number = a
-		}
-	}
-	if buildURL := ctrl.Context.String("build-url"); buildURL != "" {
-		ci.URL = buildURL
-	}
-
-	if ci.PR.Revision == "" && ci.PR.Number == 0 {
-		return errors.New("pull request number or SHA (revision) is needed")
-	}
-
-	ntf, err := ctrl.getNotifier(ctx, ci)
-	if err != nil {
-		return err
-	}
-
-	if ntf == nil {
-		return errors.New("no notifier specified at all")
-	}
-
-	args := ctrl.Context.Args()
-	cmd := exec.CommandContext(ctx, args.First(), args.Tail()...) //nolint:gosec
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
-	combinedOutput := &bytes.Buffer{}
-	uncolorizedStdout := colorable.NewNonColorable(stdout)
-	uncolorizedStderr := colorable.NewNonColorable(stderr)
-	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
-	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
-	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
-	_ = cmd.Run()
-
-	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
-		Stdout:         stdout.String(),
-		Stderr:         stderr.String(),
-		CombinedOutput: combinedOutput.String(),
-		Cmd:            cmd,
-		Args:           args,
-		CIName:         ciname,
-		ExitCode:       cmd.ProcessState.ExitCode(),
-	}))
 }
