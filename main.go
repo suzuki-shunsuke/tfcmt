@@ -18,6 +18,7 @@ import (
 	"github.com/suzuki-shunsuke/go-ci-env/cienv"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/apperr"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/constant"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
@@ -227,7 +228,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "tfcmt"
 	app.Usage = "Notify the execution result of terraform command"
-	app.Version = version
+	app.Version = constant.Version
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfcmt"},
 		&cli.StringFlag{Name: "owner", Usage: "GitHub Repository owner name"},
