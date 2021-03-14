@@ -7,6 +7,7 @@ tfcmt isn't compatible with tfnotify.
     * Remove `notifier` option
   * [Remove `fmt` command](#breaking-change-remove-fmt-command)
   * [Configuration file name is changed](#breaking-change-configuration-file-name-is-changed)
+  * [Configuration file structure is change](#breaking-change-configuration-file-structure-is-changed)
   * [Command usage is changed](#breaking-change-command-usage-is-changed)
   * [template variable Body is removed](#breaking-change-template-variable-body-is-removed)
   * [Remove --message and --destroy-warning-message option and template variable .Message](#breaking-change-remove---message-and---destroy-warning-message-option-and-template-variable-message)
@@ -82,6 +83,15 @@ We notify the result of `terraform fmt` with [github-comment](https://github.com
 [#6](https://github.com/suzuki-shunsuke/tfcmt/pull/6)
 
 Not `{.,}tfnotify.y{,a}ml` but `{.,}tfcmt.y{,a}ml`.
+
+## Breaking Change: Configuration file structure is changed
+
+[#79](https://github.com/suzuki-shunsuke/tfcmt/pull/79) [#80](https://github.com/suzuki-shunsuke/tfcmt/pull/80)
+
+* `notifier` was removed
+* structure of `ci` was changed
+
+Please see [Configuration](CONFIGURATION.md) too.
 
 ## Breaking Change: Command usage is changed
 
