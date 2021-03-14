@@ -8,8 +8,6 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"strconv"
-	"strings"
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
@@ -20,16 +18,61 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
-	"github.com/urfave/cli/v2"
 )
 
 type Controller struct {
 	Config                 config.Config
-	Context                *cli.Context
 	Parser                 terraform.Parser
 	Template               *terraform.Template
 	DestroyWarningTemplate *terraform.Template
 	ParseErrorTemplate     *terraform.Template
+}
+
+type Command struct {
+	Cmd  string
+	Args []string
+}
+
+// Run sends the notification with notifier
+func (ctrl *Controller) Run(ctx context.Context, command Command) error {
+	ci := ctrl.Config.CI
+	if err := platform.Complement(&ci); err != nil {
+		return err
+	}
+	ctrl.Config.CI = ci
+
+	if ctrl.Config.CI.SHA == "" && ctrl.Config.CI.PRNumber == 0 {
+		return errors.New("pull request number or SHA (revision) is needed")
+	}
+
+	ntf, err := ctrl.getNotifier(ctx)
+	if err != nil {
+		return err
+	}
+
+	if ntf == nil {
+		return errors.New("no notifier specified at all")
+	}
+
+	cmd := exec.CommandContext(ctx, command.Cmd, command.Args...) //nolint:gosec
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	combinedOutput := &bytes.Buffer{}
+	uncolorizedStdout := colorable.NewNonColorable(stdout)
+	uncolorizedStderr := colorable.NewNonColorable(stderr)
+	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
+	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
+	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
+	_ = cmd.Run()
+
+	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
+		Stdout:         stdout.String(),
+		Stderr:         stderr.String(),
+		CombinedOutput: combinedOutput.String(),
+		Cmd:            cmd,
+		CIName:         ci.Name,
+		ExitCode:       cmd.ProcessState.ExitCode(),
+	}))
 }
 
 func (ctrl *Controller) renderTemplate(tpl string) (string, error) {
@@ -120,7 +163,7 @@ func (ctrl *Controller) renderGitHubLabels() (github.ResultLabels, error) { //no
 	return labels, nil
 }
 
-func (ctrl *Controller) getNotifier(ctx context.Context, ci platform.CI) (notifier.Notifier, error) {
+func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, error) {
 	labels := github.ResultLabels{}
 	if !ctrl.Config.Terraform.Plan.DisableLabel {
 		a, err := ctrl.renderGitHubLabels()
@@ -130,15 +173,15 @@ func (ctrl *Controller) getNotifier(ctx context.Context, ci platform.CI) (notifi
 		labels = a
 	}
 	client, err := github.NewClient(ctx, github.Config{
-		Token:   ctrl.Config.Notifier.Github.Token,
-		BaseURL: ctrl.Config.Notifier.Github.BaseURL,
-		Owner:   ctrl.Config.Notifier.Github.Repository.Owner,
-		Repo:    ctrl.Config.Notifier.Github.Repository.Name,
+		Token:   ctrl.Config.GitHubToken,
+		BaseURL: ctrl.Config.GHEBaseURL,
+		Owner:   ctrl.Config.CI.Owner,
+		Repo:    ctrl.Config.CI.Repo,
 		PR: github.PullRequest{
-			Revision: ci.PR.Revision,
-			Number:   ci.PR.Number,
+			Revision: ctrl.Config.CI.SHA,
+			Number:   ctrl.Config.CI.PRNumber,
 		},
-		CI:                     ci.URL,
+		CI:                     ctrl.Config.CI.Link,
 		Parser:                 ctrl.Parser,
 		UseRawOutput:           ctrl.Config.Terraform.UseRawOutput,
 		Template:               ctrl.Template,
@@ -152,71 +195,4 @@ func (ctrl *Controller) getNotifier(ctx context.Context, ci platform.CI) (notifi
 		return nil, err
 	}
 	return client.Notify, nil
-}
-
-// Run sends the notification with notifier
-func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
-	ciname := ctrl.Config.CI
-	if ctrl.Context.String("ci") != "" {
-		ciname = ctrl.Context.String("ci")
-	}
-	ciname = strings.ToLower(ciname)
-	ci, err := platform.Get(ciname)
-	if err != nil {
-		return err
-	}
-	if sha := ctrl.Context.String("sha"); sha != "" {
-		ci.PR.Revision = sha
-	}
-	if pr := ctrl.Context.Int("pr"); pr != 0 {
-		ci.PR.Number = pr
-	}
-	if ci.PR.Number == 0 {
-		// support suzuki-shunsuke/ci-info
-		if prS := os.Getenv("CI_INFO_PR_NUMBER"); prS != "" {
-			a, err := strconv.Atoi(prS)
-			if err != nil {
-				return fmt.Errorf("parse CI_INFO_PR_NUMBER %s: %w", prS, err)
-			}
-			ci.PR.Number = a
-		}
-	}
-	if buildURL := ctrl.Context.String("build-url"); buildURL != "" {
-		ci.URL = buildURL
-	}
-
-	if ci.PR.Revision == "" && ci.PR.Number == 0 {
-		return errors.New("pull request number or SHA (revision) is needed")
-	}
-
-	ntf, err := ctrl.getNotifier(ctx, ci)
-	if err != nil {
-		return err
-	}
-
-	if ntf == nil {
-		return errors.New("no notifier specified at all")
-	}
-
-	args := ctrl.Context.Args()
-	cmd := exec.CommandContext(ctx, args.First(), args.Tail()...) //nolint:gosec
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
-	combinedOutput := &bytes.Buffer{}
-	uncolorizedStdout := colorable.NewNonColorable(stdout)
-	uncolorizedStderr := colorable.NewNonColorable(stderr)
-	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
-	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
-	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
-	_ = cmd.Run()
-
-	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
-		Stdout:         stdout.String(),
-		Stderr:         stderr.String(),
-		CombinedOutput: combinedOutput.String(),
-		Cmd:            cmd,
-		Args:           args,
-		CIName:         ciname,
-		ExitCode:       cmd.ProcessState.ExitCode(),
-	}))
 }

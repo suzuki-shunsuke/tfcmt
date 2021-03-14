@@ -3,104 +3,60 @@ package platform
 import (
 	"fmt"
 	"os"
-	"regexp"
-	"strconv"
-	"strings"
+
+	"github.com/suzuki-shunsuke/go-ci-env/cienv"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 )
 
-func Get(ciname string) (CI, error) {
-	var ci CI
+func getLink(ciname string) string {
 	switch ciname {
 	case "circleci", "circle-ci":
-		return circleci()
+		return os.Getenv("CIRCLE_BUILD_URL")
 	case "codebuild":
-		return codebuild()
+		return os.Getenv("CODEBUILD_BUILD_URL")
 	case "github-actions":
-		return githubActions(), nil
+		return fmt.Sprintf(
+			"https://github.com/%s/actions/runs/%s",
+			os.Getenv("GITHUB_REPOSITORY"),
+			os.Getenv("GITHUB_RUN_ID"),
+		)
 	case "cloud-build", "cloudbuild":
-		return cloudbuild()
-	case "":
-		return ci, nil
-	default:
-		return ci, fmt.Errorf("CI service %s: not supported yet", ciname)
+		return fmt.Sprintf(
+			"https://console.cloud.google.com/cloud-build/builds/%s?project=%s",
+			os.Getenv("BUILD_ID"),
+			os.Getenv("PROJECT_ID"),
+		)
 	}
+	return ""
 }
 
-// CI represents a common information obtained from all CI platforms
-type CI struct {
-	PR  PullRequest
-	URL string
-}
+func Complement(ci *config.CI) error {
+	if pt := cienv.Get(); pt != nil {
+		ci.Name = pt.CI()
 
-// PullRequest represents a GitHub pull request
-type PullRequest struct {
-	Revision string
-	Number   int
-}
+		if ci.Owner == "" {
+			ci.Owner = pt.RepoOwner()
+		}
 
-func circleci() (ci CI, err error) {
-	ci.PR.Number = 0
-	ci.PR.Revision = os.Getenv("CIRCLE_SHA1")
-	ci.URL = os.Getenv("CIRCLE_BUILD_URL")
-	pr := os.Getenv("CIRCLE_PULL_REQUEST")
-	if pr == "" {
-		pr = os.Getenv("CI_PULL_REQUEST")
-	}
-	if pr == "" {
-		pr = os.Getenv("CIRCLE_PR_NUMBER")
-	}
-	if pr == "" {
-		return ci, nil
-	}
-	re := regexp.MustCompile(`[1-9]\d*$`)
-	ci.PR.Number, err = strconv.Atoi(re.FindString(pr))
-	if err != nil {
-		return ci, fmt.Errorf("%v: cannot get env", pr)
-	}
-	return ci, nil
-}
+		if ci.Repo == "" {
+			ci.Repo = pt.RepoName()
+		}
 
-func codebuild() (ci CI, err error) {
-	ci.PR.Number = 0
-	ci.PR.Revision = os.Getenv("CODEBUILD_RESOLVED_SOURCE_VERSION")
-	ci.URL = os.Getenv("CODEBUILD_BUILD_URL")
-	sourceVersion := os.Getenv("CODEBUILD_SOURCE_VERSION")
-	if sourceVersion == "" {
-		return ci, nil
-	}
-	if !strings.HasPrefix(sourceVersion, "pr/") {
-		return ci, nil
-	}
-	pr := strings.Replace(sourceVersion, "pr/", "", 1)
-	if pr == "" {
-		return ci, nil
-	}
-	ci.PR.Number, err = strconv.Atoi(pr)
-	return ci, err
-}
+		if ci.SHA == "" {
+			ci.SHA = pt.SHA()
+		}
 
-func githubActions() (ci CI) {
-	ci.URL = fmt.Sprintf(
-		"https://github.com/%s/actions/runs/%s",
-		os.Getenv("GITHUB_REPOSITORY"),
-		os.Getenv("GITHUB_RUN_ID"),
-	)
-	ci.PR.Revision = os.Getenv("GITHUB_SHA")
-	return ci
-}
+		if ci.PRNumber == 0 {
+			n, err := pt.PRNumber()
+			if err != nil {
+				return err
+			}
+			ci.PRNumber = n
+		}
 
-func cloudbuild() (ci CI, err error) {
-	ci.PR.Number = 0
-	ci.PR.Revision = os.Getenv("COMMIT_SHA")
-	ci.URL = fmt.Sprintf(
-		"https://console.cloud.google.com/cloud-build/builds/%s?project=%s",
-		os.Getenv("BUILD_ID"),
-		os.Getenv("PROJECT_ID"),
-	)
-	pr := os.Getenv("_PR_NUMBER")
-	if pr == "" {
-		return ci, nil
+		if ci.Link == "" {
+			ci.Link = getLink(ci.Name)
+		}
 	}
-	ci.PR.Number, err = strconv.Atoi(pr)
-	return ci, err
+	return nil
 }

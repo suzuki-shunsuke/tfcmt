@@ -11,7 +11,6 @@ func New() *cli.App {
 	app.Usage = "Notify the execution result of terraform command"
 	app.Version = constant.Version
 	app.Flags = []cli.Flag{
-		&cli.StringFlag{Name: "ci", Usage: "name of CI to run tfcmt"},
 		&cli.StringFlag{Name: "owner", Usage: "GitHub Repository owner name"},
 		&cli.StringFlag{Name: "repo", Usage: "GitHub Repository name"},
 		&cli.StringFlag{Name: "sha", Usage: "commit SHA (revision)"},

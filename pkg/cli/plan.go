@@ -19,13 +19,21 @@ func cmdPlan(ctx *cli.Context) error {
 		setLogLevel(logLevel)
 	}
 
+	if err := parseOpts(ctx, &cfg); err != nil {
+		return err
+	}
+
 	t := &controller.Controller{
 		Config:                 cfg,
-		Context:                ctx,
 		Parser:                 terraform.NewPlanParser(),
 		Template:               terraform.NewPlanTemplate(cfg.Terraform.Plan.Template),
 		DestroyWarningTemplate: terraform.NewDestroyWarningTemplate(cfg.Terraform.Plan.WhenDestroy.Template),
 		ParseErrorTemplate:     terraform.NewPlanParseErrorTemplate(cfg.Terraform.Plan.WhenParseError.Template),
 	}
-	return t.Run(ctx.Context)
+	args := ctx.Args()
+
+	return t.Run(ctx.Context, controller.Command{
+		Cmd:  args.First(),
+		Args: args.Tail(),
+	})
 }

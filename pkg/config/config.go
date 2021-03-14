@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"strings"
 
 	"github.com/suzuki-shunsuke/go-findconfig/findconfig"
 	"gopkg.in/yaml.v2"
@@ -13,37 +12,27 @@ import (
 
 // Config is for tfcmt config structure
 type Config struct {
-	CI        string
-	Notifier  Notifier
-	Terraform Terraform
-	Vars      map[string]string `yaml:"-"`
-	Templates map[string]string
-	Log       Log
+	CI          CI
+	Terraform   Terraform
+	Vars        map[string]string `yaml:"-"`
+	Templates   map[string]string
+	Log         Log
+	GHEBaseURL  string `yaml:"ghe_base_url"`
+	GitHubToken string `yaml:"-"`
+}
 
-	path string
+type CI struct {
+	Name     string
+	Owner    string
+	Repo     string
+	SHA      string `yaml:"-"`
+	Link     string `yaml:"-"`
+	PRNumber int    `yaml:"-"`
 }
 
 type Log struct {
 	Level string
 	// Format string
-}
-
-// Notifier is a notification notifier
-type Notifier struct {
-	Github GithubNotifier
-}
-
-// GithubNotifier is a notifier for GitHub
-type GithubNotifier struct {
-	Token      string
-	BaseURL    string `yaml:"base_url"`
-	Repository Repository
-}
-
-// Repository represents a GitHub repository
-type Repository struct {
-	Owner string
-	Name  string
 }
 
 // Terraform represents terraform configurations
@@ -108,34 +97,19 @@ type Apply struct {
 
 // LoadFile binds the config file to Config structure
 func (cfg *Config) LoadFile(path string) error {
-	cfg.path = path
-	if _, err := os.Stat(cfg.path); err != nil {
-		return fmt.Errorf("%s: no config file", cfg.path)
+	if _, err := os.Stat(path); err != nil {
+		return fmt.Errorf("%s: no config file", path)
 	}
-	raw, _ := ioutil.ReadFile(cfg.path)
+	raw, _ := ioutil.ReadFile(path)
 	return yaml.Unmarshal(raw, cfg)
 }
 
 // Validation validates config file
 func (cfg *Config) Validation() error {
-	switch strings.ToLower(cfg.CI) {
-	case "":
-		break
-	case "circleci":
-		// ok pattern
-	case "codebuild":
-		// ok pattern
-	case "github-actions":
-		// ok pattern
-	case "cloud-build", "cloudbuild":
-		// ok pattern
-	default:
-		return fmt.Errorf("%s: not supported yet", cfg.CI)
-	}
-	if cfg.Notifier.Github.Repository.Owner == "" {
+	if cfg.CI.Owner == "" {
 		return errors.New("repository owner is missing")
 	}
-	if cfg.Notifier.Github.Repository.Name == "" {
+	if cfg.CI.Repo == "" {
 		return errors.New("repository name is missing")
 	}
 	return nil
