@@ -21,7 +21,7 @@ https://github.com/suzuki-shunsuke/tfcmt/pull/70#issuecomment-797854184
 - [Usage](docs/USAGE.md)
 - [Configuration](docs/CONFIGURATION.md)
 - [Environment Variable](docs/ENVIRONMENT_VARIABLE.md)
-- [Compared with tfnotify](COMPARED_WITH_TFNOTIFY.md)
+- [Compared with tfnotify](docs/COMPARED_WITH_TFNOTIFY.md)
 - [Release Notes](https://github.com/suzuki-shunsuke/tfcmt/releases)
 
 ## Forked version
@@ -30,9 +30,9 @@ We forked [suzuki-shunsuke/tfnotify v1.3.3](https://github.com/suzuki-shunsuke/t
 
 ## Compared with tfnotify
 
-Please see [Compared with tfnotify](COMPARED_WITH_TFNOTIFY.md).
+Please see [Compared with tfnotify](docs/COMPARED_WITH_TFNOTIFY.md).
 
-**We recommend to read [Compared with tfnotify](COMPARED_WITH_TFNOTIFY.md) because there are some features which aren't described at README.**
+**We recommend to read this because there are some features which aren't described at README.**
 
 ## Install
 

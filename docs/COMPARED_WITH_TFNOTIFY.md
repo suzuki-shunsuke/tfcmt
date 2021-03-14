@@ -312,7 +312,7 @@ We can omit the configuration `notifier.github.token`.
 
 We can complement the parameters like `pr` and `repo` on the other platform like Travis CI and Jenkins with Custom Environment Variable Definition.
 
-Please see [here](docs/ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).
+Please see [here](ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).
 
 ## Feature: Support to configure label colors
 
