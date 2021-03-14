@@ -92,10 +92,10 @@ terraform:
       {{- end}}{{end}}
     when_add_or_update_only:
       label: "{{if .Vars.target}}{{.Vars.target}}/{{end}}add-or-update"
-      color: 1d76db # blue
+      label_color: 1d76db # blue
     when_destroy:
       label: "{{if .Vars.target}}{{.Vars.target}}/{{end}}destroy"
-      color: d93f0b # red
+      label_color: d93f0b # red
       template: |
         {{template "plan_title" .}}
 
@@ -110,13 +110,13 @@ terraform:
         </details>
     when_no_changes:
       label: "{{if .Vars.target}}{{.Vars.target}}/{{end}}no-changes"
-      color: 0e8a16 # green
+      label_color: 0e8a16 # green
     when_plan_error:
       label:
-      color:
+      label_color:
     when_parse_error:
       label:
-      color:
+      label_color:
   apply:
     template: |
       {{template "apply_title" .}}
