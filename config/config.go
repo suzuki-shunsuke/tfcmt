@@ -13,9 +13,9 @@ import (
 
 // Config is for tfcmt config structure
 type Config struct {
-	CI        string            `yaml:"ci"`
-	Notifier  Notifier          `yaml:"notifier"`
-	Terraform Terraform         `yaml:"terraform"`
+	CI        string
+	Notifier  Notifier
+	Terraform Terraform
 	Vars      map[string]string `yaml:"-"`
 	Templates map[string]string
 	Log       Log
@@ -30,80 +30,80 @@ type Log struct {
 
 // Notifier is a notification notifier
 type Notifier struct {
-	Github GithubNotifier `yaml:"github"`
+	Github GithubNotifier
 }
 
 // GithubNotifier is a notifier for GitHub
 type GithubNotifier struct {
-	Token      string     `yaml:"token"`
-	BaseURL    string     `yaml:"base_url"`
-	Repository Repository `yaml:"repository"`
+	Token      string
+	BaseURL    string `yaml:"base_url"`
+	Repository Repository
 }
 
 // Repository represents a GitHub repository
 type Repository struct {
-	Owner string `yaml:"owner"`
-	Name  string `yaml:"name"`
+	Owner string
+	Name  string
 }
 
 // Terraform represents terraform configurations
 type Terraform struct {
-	Default      Default `yaml:"default"`
-	Plan         Plan    `yaml:"plan"`
-	Apply        Apply   `yaml:"apply"`
-	UseRawOutput bool    `yaml:"use_raw_output,omitempty"`
+	Default      Default
+	Plan         Plan
+	Apply        Apply
+	UseRawOutput bool `yaml:"use_raw_output"`
 }
 
 // Default is a default setting for terraform commands
 type Default struct {
-	Template string `yaml:"template"`
+	Template string
 }
 
 // Plan is a terraform plan config
 type Plan struct {
-	Template            string              `yaml:"template"`
-	WhenAddOrUpdateOnly WhenAddOrUpdateOnly `yaml:"when_add_or_update_only,omitempty"`
-	WhenDestroy         WhenDestroy         `yaml:"when_destroy,omitempty"`
-	WhenNoChanges       WhenNoChanges       `yaml:"when_no_changes,omitempty"`
-	WhenPlanError       WhenPlanError       `yaml:"when_plan_error,omitempty"`
-	WhenParseError      WhenParseError      `yaml:"when_parse_error,omitempty"`
-	DisableLabel        bool                `yaml:"disable_label,omitempty"`
+	Template            string
+	WhenAddOrUpdateOnly WhenAddOrUpdateOnly `yaml:"when_add_or_update_only"`
+	WhenDestroy         WhenDestroy         `yaml:"when_destroy"`
+	WhenNoChanges       WhenNoChanges       `yaml:"when_no_changes"`
+	WhenPlanError       WhenPlanError       `yaml:"when_plan_error"`
+	WhenParseError      WhenParseError      `yaml:"when_parse_error"`
+	DisableLabel        bool                `yaml:"disable_label"`
 }
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
 type WhenAddOrUpdateOnly struct {
-	Label string `yaml:"label,omitempty"`
-	Color string `yaml:"label_color,omitempty"`
+	Label string
+	Color string `yaml:"label_color"`
 }
 
 // WhenDestroy is a configuration to notify the plan result contains destroy operation
 type WhenDestroy struct {
-	Label    string `yaml:"label,omitempty"`
-	Template string `yaml:"template,omitempty"`
-	Color    string `yaml:"label_color,omitempty"`
+	Label    string
+	Template string
+	Color    string `yaml:"label_color"`
 }
 
 // WhenNoChange is a configuration to add a label when the plan result contains no change
 type WhenNoChanges struct {
-	Label string `yaml:"label,omitempty"`
-	Color string `yaml:"label_color,omitempty"`
+	Label string
+	Color string `yaml:"label_color"`
 }
 
 // WhenPlanError is a configuration to notify the plan result returns an error
 type WhenPlanError struct {
-	Label string `yaml:"label,omitempty"`
-	Color string `yaml:"label_color,omitempty"`
+	Label string
+	Color string `yaml:"label_color"`
 }
 
 // WhenParseError is a configuration to notify the plan result returns an error
 type WhenParseError struct {
-	Template string `yaml:"template"`
+	Template string
 }
 
 // Apply is a terraform apply config
 type Apply struct {
-	Template       string         `yaml:"template"`
-	WhenParseError WhenParseError `yaml:"when_parse_error,omitempty"`
+	Template       string
+	WhenParseError WhenParseError `yaml:"when_parse_error"`
 }
 
 // LoadFile binds the config file to Config structure
