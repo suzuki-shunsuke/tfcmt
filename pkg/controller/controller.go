@@ -12,7 +12,6 @@ import (
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/mattn/go-colorable"
-	"github.com/suzuki-shunsuke/go-ci-env/cienv"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/apperr"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
@@ -35,35 +34,12 @@ type Command struct {
 }
 
 // Run sends the notification with notifier
-func (ctrl *Controller) Run(ctx context.Context, command Command) error { //nolint:cyclop
-	ciname := ""
-	if ci := cienv.Get(); ci != nil {
-		ciname = ci.CI()
-
-		if ctrl.Config.CI.Owner == "" {
-			ctrl.Config.CI.Owner = ci.RepoOwner()
-		}
-
-		if ctrl.Config.CI.Repo == "" {
-			ctrl.Config.CI.Repo = ci.RepoName()
-		}
-
-		if ctrl.Config.CI.SHA == "" {
-			ctrl.Config.CI.SHA = ci.SHA()
-		}
-
-		if ctrl.Config.CI.PRNumber == 0 {
-			n, err := ci.PRNumber()
-			if err != nil {
-				return err
-			}
-			ctrl.Config.CI.PRNumber = n
-		}
-
-		if ctrl.Config.CI.Link == "" {
-			ctrl.Config.CI.Link = platform.GetLink(ciname)
-		}
+func (ctrl *Controller) Run(ctx context.Context, command Command) error {
+	ci := ctrl.Config.CI
+	if err := platform.Complement(&ci); err != nil {
+		return err
 	}
+	ctrl.Config.CI = ci
 
 	if ctrl.Config.CI.SHA == "" && ctrl.Config.CI.PRNumber == 0 {
 		return errors.New("pull request number or SHA (revision) is needed")
@@ -94,7 +70,7 @@ func (ctrl *Controller) Run(ctx context.Context, command Command) error { //noli
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
 		Cmd:            cmd,
-		CIName:         ciname,
+		CIName:         ci.Name,
 		ExitCode:       cmd.ProcessState.ExitCode(),
 	}))
 }

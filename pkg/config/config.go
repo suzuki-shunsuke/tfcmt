@@ -22,6 +22,7 @@ type Config struct {
 }
 
 type CI struct {
+	Name     string
 	Owner    string
 	Repo     string
 	SHA      string `yaml:"-"`

@@ -3,9 +3,12 @@ package platform
 import (
 	"fmt"
 	"os"
+
+	"github.com/suzuki-shunsuke/go-ci-env/cienv"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 )
 
-func GetLink(ciname string) string {
+func getLink(ciname string) string {
 	switch ciname {
 	case "circleci", "circle-ci":
 		return os.Getenv("CIRCLE_BUILD_URL")
@@ -25,4 +28,35 @@ func GetLink(ciname string) string {
 		)
 	}
 	return ""
+}
+
+func Complement(ci *config.CI) error {
+	if pt := cienv.Get(); pt != nil {
+		ci.Name = pt.CI()
+
+		if ci.Owner == "" {
+			ci.Owner = pt.RepoOwner()
+		}
+
+		if ci.Repo == "" {
+			ci.Repo = pt.RepoName()
+		}
+
+		if ci.SHA == "" {
+			ci.SHA = pt.SHA()
+		}
+
+		if ci.PRNumber == 0 {
+			n, err := pt.PRNumber()
+			if err != nil {
+				return err
+			}
+			ci.PRNumber = n
+		}
+
+		if ci.Link == "" {
+			ci.Link = getLink(ci.Name)
+		}
+	}
+	return nil
 }
