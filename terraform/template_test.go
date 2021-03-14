@@ -19,7 +19,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 
 
@@ -42,7 +42,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 <pre><code>result</code></pre>
 
@@ -65,7 +65,7 @@ body
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 
 
@@ -88,7 +88,7 @@ body
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 
 
@@ -112,7 +112,7 @@ This is a "body".
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 
 
@@ -135,7 +135,7 @@ This is a "body".
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 
 
@@ -193,7 +193,7 @@ func TestDestroyWarningTemplateExecute(t *testing.T) {
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 ### :warning: Resource Deletion will happen :warning:
 This plan contains resource delete operation. Please check the plan result very carefully!
@@ -218,7 +218,7 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 ### :warning: Resource Deletion will happen :warning:
 This plan contains resource delete operation. Please check the plan result very carefully!
@@ -244,7 +244,7 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 ### :warning: Resource Deletion will happen :warning:
 This plan contains resource delete operation. Please check the plan result very carefully!
@@ -269,7 +269,7 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 ### :warning: Resource Deletion will happen :warning:
 This plan contains resource delete operation. Please check the plan result very carefully!
@@ -294,7 +294,7 @@ This plan contains resource delete operation. Please check the plan result very 
 			resp: `
 ## Plan Result
 
-[CI link]()
+
 
 ### :warning: Resource Deletion will happen :warning:
 This plan contains resource delete operation. Please check the plan result very carefully!
@@ -355,7 +355,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 			resp: `
 ## :white_check_mark: Apply Result
 
-[CI link]()
+
 
 
 
@@ -378,7 +378,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 			resp: `
 ## :white_check_mark: Apply Result
 
-[CI link]()
+
 
 <pre><code>result</code></pre>
 
@@ -401,7 +401,7 @@ body
 			resp: `
 ## :white_check_mark: Apply Result
 
-[CI link]()
+
 
 
 
@@ -424,7 +424,7 @@ body
 			resp: `
 ## :white_check_mark: Apply Result
 
-[CI link]()
+
 
 
 
@@ -447,7 +447,7 @@ body
 			resp: `
 ## :white_check_mark: Apply Result
 
-[CI link]()
+
 
 
 
@@ -471,7 +471,7 @@ This is a "body".
 			resp: `
 ## :white_check_mark: Apply Result
 
-[CI link]()
+
 
 
 
