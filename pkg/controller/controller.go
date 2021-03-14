@@ -9,11 +9,11 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
-	"strings"
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/mattn/go-colorable"
+	"github.com/suzuki-shunsuke/go-ci-env/cienv"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/apperr"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
@@ -34,15 +34,7 @@ type Controller struct {
 
 // Run sends the notification with notifier
 func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
-	ciname := ""
-	if ctrl.Context.String("ci") != "" {
-		ciname = ctrl.Context.String("ci")
-	}
-	ciname = strings.ToLower(ciname)
-	ci, err := platform.Get(ciname)
-	if err != nil {
-		return err
-	}
+	var ci platform.CI
 	if sha := ctrl.Context.String("sha"); sha != "" {
 		ci.PR.Revision = sha
 	}
@@ -87,6 +79,11 @@ func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
 	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
 	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
 	_ = cmd.Run()
+
+	ciname := ""
+	if platform := cienv.Get(); platform != nil {
+		ciname = platform.CI()
+	}
 
 	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
 		Stdout:         stdout.String(),
