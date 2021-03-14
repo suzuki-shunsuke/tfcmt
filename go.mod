@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
+	github.com/drone/envsubst v1.0.2
 	github.com/google/go-github/v33 v33.0.0
 	github.com/google/uuid v1.1.3 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect

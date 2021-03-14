@@ -36,13 +36,13 @@ type Command struct {
 // Run sends the notification with notifier
 func (ctrl *Controller) Run(ctx context.Context, command Command) error {
 	ci := ctrl.Config.CI
-	if err := platform.Complement(&ci); err != nil {
+	if err := platform.Complement(&ci, ctrl.Config.Complement); err != nil {
 		return err
 	}
 	ctrl.Config.CI = ci
 
-	if ctrl.Config.CI.SHA == "" && ctrl.Config.CI.PRNumber == 0 {
-		return errors.New("pull request number or SHA (revision) is needed")
+	if err := ctrl.Config.Validate(); err != nil {
+		return err
 	}
 
 	ntf, err := ctrl.getNotifier(ctx)

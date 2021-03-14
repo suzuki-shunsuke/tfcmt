@@ -19,6 +19,7 @@ type Config struct {
 	Log         Log
 	GHEBaseURL  string `yaml:"ghe_base_url"`
 	GitHubToken string `yaml:"-"`
+	Complement  Complement
 }
 
 type CI struct {
@@ -104,13 +105,18 @@ func (cfg *Config) LoadFile(path string) error {
 	return yaml.Unmarshal(raw, cfg)
 }
 
-// Validation validates config file
-func (cfg *Config) Validation() error {
+// Validate validates config file
+func (cfg *Config) Validate() error {
 	if cfg.CI.Owner == "" {
 		return errors.New("repository owner is missing")
 	}
+
 	if cfg.CI.Repo == "" {
 		return errors.New("repository name is missing")
+	}
+
+	if cfg.CI.SHA == "" && cfg.CI.PRNumber <= 0 {
+		return errors.New("pull request number or SHA (revision) is needed")
 	}
 	return nil
 }
