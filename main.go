@@ -16,6 +16,7 @@ import (
 	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/go-ci-env/cienv"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/apperr"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
@@ -211,7 +212,7 @@ func (t *tfcmt) Run(ctx context.Context) error { //nolint:cyclop
 	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
 	_ = cmd.Run()
 
-	return NewExitError(ntf.Notify(ctx, notifier.ParamExec{
+	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
@@ -262,7 +263,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	go handleSignal(cancel)
 
-	os.Exit(HandleExit(app.RunContext(ctx, os.Args)))
+	os.Exit(apperr.HandleExit(app.RunContext(ctx, os.Args)))
 }
 
 func setLogLevel(logLevel string) {
