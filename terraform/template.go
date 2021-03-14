@@ -14,7 +14,7 @@ const (
 	DefaultPlanTemplate = `
 {{template "plan_title" .}}
 
-[CI link]({{ .Link }})
+{{if .Link}}[CI link]({{.Link}}){{end}}
 
 {{template "result" .}}
 {{template "updated_resources" .}}
@@ -31,7 +31,7 @@ const (
 	DefaultApplyTemplate = `
 {{template "apply_title" .}}
 
-[CI link]({{ .Link }})
+{{if .Link}}[CI link]({{.Link}}){{end}}
 
 {{template "result" .}}
 
@@ -48,7 +48,7 @@ const (
 	DefaultDestroyWarningTemplate = `
 {{template "plan_title" .}}
 
-[CI link]({{ .Link }})
+{{if .Link}}[CI link]({{.Link}}){{end}}
 
 {{template "deletion_warning" .}}
 {{template "result" .}}
@@ -62,7 +62,7 @@ const (
 	DefaultPlanParseErrorTemplate = `
 {{template "plan_title" .}}
 
-[CI link]({{ .Link }})
+{{if .Link}}[CI link]({{.Link}}){{end}}
 
 It failed to parse the result.
 
@@ -74,7 +74,7 @@ It failed to parse the result.
 	DefaultApplyParseErrorTemplate = `
 ## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 
-[CI link]({{ .Link }})
+{{if .Link}}[CI link]({{.Link}}){{end}}
 
 It failed to parse the result.
 

@@ -78,7 +78,7 @@ terraform:
     template: |
       {{template "plan_title" .}}
 
-      [CI link]({{ .Link }})
+      {{if .Link}}[CI link]({{.Link}}){{end}}
 
       {{template "result" .}}
       {{template "updated_resources" .}}
@@ -99,7 +99,7 @@ terraform:
       template: |
         {{template "plan_title" .}}
 
-        [CI link]({{ .Link }})
+        {{if .Link}}[CI link]({{.Link}}){{end}}
 
         {{template "deletion_warning" .}}
         {{template "result" .}}
@@ -121,7 +121,7 @@ terraform:
     template: |
       {{template "apply_title" .}}
 
-      [CI link]({{ .Link }})
+      {{if .Link}}[CI link]({{.Link}}){{end}}
 
       {{template "result" .}}
 
@@ -137,7 +137,7 @@ terraform:
       template: |
         ## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 
-        [CI link]({{ .Link }})
+        {{if .Link}}[CI link]({{.Link}}){{end}}
 
         It failed to parse the result.
 
