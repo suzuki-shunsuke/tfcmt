@@ -17,7 +17,6 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
@@ -27,7 +26,6 @@ type Controller struct {
 	Template               *terraform.Template
 	DestroyWarningTemplate *terraform.Template
 	ParseErrorTemplate     *terraform.Template
-	CI                     platform.CI
 }
 
 type Command struct {
@@ -36,31 +34,37 @@ type Command struct {
 }
 
 // Run sends the notification with notifier
-func (ctrl *Controller) Run(ctx context.Context, command Command) error {
-	ci := ctrl.CI
-
+func (ctrl *Controller) Run(ctx context.Context, command Command) error { //nolint:cyclop
 	ciname := ""
 	if platform := cienv.Get(); platform != nil {
 		ciname = platform.CI()
 
-		if ci.PR.Revision == "" {
-			ci.PR.Revision = platform.SHA()
+		if ctrl.Config.CI.Owner == "" {
+			ctrl.Config.CI.Owner = platform.RepoOwner()
 		}
 
-		if ci.PR.Number == 0 {
+		if ctrl.Config.CI.Repo == "" {
+			ctrl.Config.CI.Repo = platform.RepoName()
+		}
+
+		if ctrl.Config.CI.SHA == "" {
+			ctrl.Config.CI.SHA = platform.SHA()
+		}
+
+		if ctrl.Config.CI.PRNumber == 0 {
 			n, err := platform.PRNumber()
 			if err != nil {
 				return err
 			}
-			ci.PR.Number = n
+			ctrl.Config.CI.PRNumber = n
 		}
 	}
 
-	if ci.PR.Revision == "" && ci.PR.Number == 0 {
+	if ctrl.Config.CI.SHA == "" && ctrl.Config.CI.PRNumber == 0 {
 		return errors.New("pull request number or SHA (revision) is needed")
 	}
 
-	ntf, err := ctrl.getNotifier(ctx, ci)
+	ntf, err := ctrl.getNotifier(ctx)
 	if err != nil {
 		return err
 	}
@@ -178,7 +182,7 @@ func (ctrl *Controller) renderGitHubLabels() (github.ResultLabels, error) { //no
 	return labels, nil
 }
 
-func (ctrl *Controller) getNotifier(ctx context.Context, ci platform.CI) (notifier.Notifier, error) {
+func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, error) {
 	labels := github.ResultLabels{}
 	if !ctrl.Config.Terraform.Plan.DisableLabel {
 		a, err := ctrl.renderGitHubLabels()
@@ -193,10 +197,10 @@ func (ctrl *Controller) getNotifier(ctx context.Context, ci platform.CI) (notifi
 		Owner:   ctrl.Config.CI.Owner,
 		Repo:    ctrl.Config.CI.Repo,
 		PR: github.PullRequest{
-			Revision: ci.PR.Revision,
-			Number:   ci.PR.Number,
+			Revision: ctrl.Config.CI.SHA,
+			Number:   ctrl.Config.CI.PRNumber,
 		},
-		CI:                     ci.URL,
+		CI:                     ctrl.Config.CI.Link,
 		Parser:                 ctrl.Parser,
 		UseRawOutput:           ctrl.Config.Terraform.UseRawOutput,
 		Template:               ctrl.Template,

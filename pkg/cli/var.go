@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/urfave/cli/v2"
 )
 
@@ -22,25 +22,43 @@ func parseVarOpts(vars []string, varsM map[string]string) error {
 	return nil
 }
 
-func parseOpts(ctx *cli.Context, ci *platform.CI) error {
+func parseOpts(ctx *cli.Context, cfg *config.Config) error {
+	if owner := ctx.String("owner"); owner != "" {
+		cfg.CI.Owner = owner
+	}
+
+	if repo := ctx.String("repo"); repo != "" {
+		cfg.CI.Repo = repo
+	}
+
 	if sha := ctx.String("sha"); sha != "" {
-		ci.PR.Revision = sha
+		cfg.CI.SHA = sha
 	}
+
 	if pr := ctx.Int("pr"); pr != 0 {
-		ci.PR.Number = pr
+		cfg.CI.PRNumber = pr
 	}
-	if ci.PR.Number == 0 {
+	if cfg.CI.PRNumber == 0 {
 		// support suzuki-shunsuke/ci-info
 		if prS := os.Getenv("CI_INFO_PR_NUMBER"); prS != "" {
 			a, err := strconv.Atoi(prS)
 			if err != nil {
 				return fmt.Errorf("parse CI_INFO_PR_NUMBER %s: %w", prS, err)
 			}
-			ci.PR.Number = a
+			cfg.CI.PRNumber = a
 		}
 	}
+
 	if buildURL := ctx.String("build-url"); buildURL != "" {
-		ci.URL = buildURL
+		cfg.CI.Link = buildURL
 	}
+
+	vars := ctx.StringSlice("var")
+	vm := make(map[string]string, len(vars))
+	if err := parseVarOpts(vars, vm); err != nil {
+		return err
+	}
+	cfg.Vars = vm
+
 	return nil
 }

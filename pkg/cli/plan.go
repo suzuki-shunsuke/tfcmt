@@ -2,7 +2,6 @@ package cli
 
 import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/controller"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 	"github.com/urfave/cli/v2"
 )
@@ -20,8 +19,7 @@ func cmdPlan(ctx *cli.Context) error {
 		setLogLevel(logLevel)
 	}
 
-	var ci platform.CI
-	if err := parseOpts(ctx, &ci); err != nil {
+	if err := parseOpts(ctx, &cfg); err != nil {
 		return err
 	}
 
@@ -31,7 +29,6 @@ func cmdPlan(ctx *cli.Context) error {
 		Template:               terraform.NewPlanTemplate(cfg.Terraform.Plan.Template),
 		DestroyWarningTemplate: terraform.NewDestroyWarningTemplate(cfg.Terraform.Plan.WhenDestroy.Template),
 		ParseErrorTemplate:     terraform.NewPlanParseErrorTemplate(cfg.Terraform.Plan.WhenParseError.Template),
-		CI:                     ci,
 	}
 	args := ctx.Args()
 
