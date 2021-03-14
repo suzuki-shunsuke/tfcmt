@@ -8,7 +8,6 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"strconv"
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
@@ -20,41 +19,25 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
-	"github.com/urfave/cli/v2"
 )
 
 type Controller struct {
 	Config                 config.Config
-	Context                *cli.Context
 	Parser                 terraform.Parser
 	Template               *terraform.Template
 	DestroyWarningTemplate *terraform.Template
 	ParseErrorTemplate     *terraform.Template
+	CI                     platform.CI
+}
+
+type Command struct {
+	Cmd  string
+	Args []string
 }
 
 // Run sends the notification with notifier
-func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
-	var ci platform.CI
-	if sha := ctrl.Context.String("sha"); sha != "" {
-		ci.PR.Revision = sha
-	}
-	if pr := ctrl.Context.Int("pr"); pr != 0 {
-		ci.PR.Number = pr
-	}
-	if ci.PR.Number == 0 {
-		// support suzuki-shunsuke/ci-info
-		if prS := os.Getenv("CI_INFO_PR_NUMBER"); prS != "" {
-			a, err := strconv.Atoi(prS)
-			if err != nil {
-				return fmt.Errorf("parse CI_INFO_PR_NUMBER %s: %w", prS, err)
-			}
-			ci.PR.Number = a
-		}
-	}
-	if buildURL := ctrl.Context.String("build-url"); buildURL != "" {
-		ci.URL = buildURL
-	}
-
+func (ctrl *Controller) Run(ctx context.Context, command Command) error {
+	ci := ctrl.CI
 	if ci.PR.Revision == "" && ci.PR.Number == 0 {
 		return errors.New("pull request number or SHA (revision) is needed")
 	}
@@ -68,8 +51,7 @@ func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
 		return errors.New("no notifier specified at all")
 	}
 
-	args := ctrl.Context.Args()
-	cmd := exec.CommandContext(ctx, args.First(), args.Tail()...) //nolint:gosec
+	cmd := exec.CommandContext(ctx, command.Cmd, command.Args...) //nolint:gosec
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
 	combinedOutput := &bytes.Buffer{}
@@ -90,7 +72,6 @@ func (ctrl *Controller) Run(ctx context.Context) error { //nolint:cyclop
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
 		Cmd:            cmd,
-		Args:           args,
 		CIName:         ciname,
 		ExitCode:       cmd.ProcessState.ExitCode(),
 	}))
