@@ -12,22 +12,23 @@ import (
 
 // Config is for tfcmt config structure
 type Config struct {
-	CI          CI
+	CI          CI `yaml:"-"`
 	Terraform   Terraform
 	Vars        map[string]string `yaml:"-"`
 	Templates   map[string]string
 	Log         Log
-	GHEBaseURL  string `yaml:"ghe_base_url"`
-	GitHubToken string `yaml:"-"`
+	GHEBaseURL  string     `yaml:"ghe_base_url"`
+	GitHubToken string     `yaml:"-"`
+	Complement  Complement `yaml:"ci"`
 }
 
 type CI struct {
 	Name     string
 	Owner    string
 	Repo     string
-	SHA      string `yaml:"-"`
-	Link     string `yaml:"-"`
-	PRNumber int    `yaml:"-"`
+	SHA      string
+	Link     string
+	PRNumber int
 }
 
 type Log struct {
@@ -104,13 +105,18 @@ func (cfg *Config) LoadFile(path string) error {
 	return yaml.Unmarshal(raw, cfg)
 }
 
-// Validation validates config file
-func (cfg *Config) Validation() error {
+// Validate validates config file
+func (cfg *Config) Validate() error {
 	if cfg.CI.Owner == "" {
 		return errors.New("repository owner is missing")
 	}
+
 	if cfg.CI.Repo == "" {
 		return errors.New("repository name is missing")
+	}
+
+	if cfg.CI.SHA == "" && cfg.CI.PRNumber <= 0 {
+		return errors.New("pull request number or SHA (revision) is needed")
 	}
 	return nil
 }

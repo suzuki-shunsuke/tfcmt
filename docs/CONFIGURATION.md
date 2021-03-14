@@ -46,6 +46,7 @@ If the text includes <code>\`\`\`</code>, the text wraps with `<pre><code>`, oth
 
 ```yaml
 vars: {}
+ci: {}
 templates:
   plan_title: "## {{if eq .ExitCode 1}}:x: {{end}}Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}"
   apply_title: "## :{{if eq .ExitCode 0}}white_check_mark{{else}}x{{end}}: Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}"
@@ -155,3 +156,7 @@ terraform:
   plan:
     disable_label: true
 ```
+
+## Custom Environment Variable Definition
+
+Please see [Custom Environment Variable Definition](ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).

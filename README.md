@@ -15,6 +15,15 @@ we can know the result quickly without browsing the CI web page.
 
 https://github.com/suzuki-shunsuke/tfcmt/pull/70#issuecomment-797854184
 
+## Index
+
+- [Getting Started](examples/getting-started)
+- [Usage](docs/USAGE.md)
+- [Configuration](docs/CONFIGURATION.md)
+- [Environment Variable](docs/ENVIRONMENT_VARIABLE.md)
+- [Compared with tfnotify](COMPARED_WITH_TFNOTIFY.md)
+- [Release Notes](https://github.com/suzuki-shunsuke/tfcmt/releases)
+
 ## Forked version
 
 We forked [suzuki-shunsuke/tfnotify v1.3.3](https://github.com/suzuki-shunsuke/tfnotify/releases/tag/v1.3.3).
@@ -47,24 +56,6 @@ Please see [Command Usage](docs/USAGE.md).
 ## Configuration
 
 Please see [Configuration](docs/CONFIGURATION.md).
-
-## Supported CI
-
-Currently, supported CI are here:
-
-- CircleCI
-- Drone
-- AWS CodeBuild
-- GitHub Actions
-
-On the supported CI platform, the following parameters are complemented by the built-in environment variables.
-
-- `-owner`
-- `-repo`
-- `-pr`
-- `-sha`
-
-This feature is implemented by [go-ci-env](https://github.com/suzuki-shunsuke/go-ci-env).
 
 ## Release Notes
 

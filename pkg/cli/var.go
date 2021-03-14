@@ -2,9 +2,6 @@ package cli
 
 import (
 	"errors"
-	"fmt"
-	"os"
-	"strconv"
 	"strings"
 
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
@@ -37,16 +34,6 @@ func parseOpts(ctx *cli.Context, cfg *config.Config) error {
 
 	if pr := ctx.Int("pr"); pr != 0 {
 		cfg.CI.PRNumber = pr
-	}
-	if cfg.CI.PRNumber == 0 {
-		// support suzuki-shunsuke/ci-info
-		if prS := os.Getenv("CI_INFO_PR_NUMBER"); prS != "" {
-			a, err := strconv.Atoi(prS)
-			if err != nil {
-				return fmt.Errorf("parse CI_INFO_PR_NUMBER %s: %w", prS, err)
-			}
-			cfg.CI.PRNumber = a
-		}
 	}
 
 	if buildURL := ctx.String("build-url"); buildURL != "" {

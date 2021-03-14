@@ -1,12 +1,7 @@
 # Getting Started
 
 In this getting started, we can understand tfcmt's primary feature.
-For the detail, please see other documents too.
-
-* [Configuration](../../docs/CONFIGURATION.md)
-* [Command Usage](../../docs/USAGE.md)
-* [Compared with tfnotify](../../COMPARED_WITH_TFNOTIFY.md)
-* [Release Notes](https://github.com/suzuki-shunsuke/tfcmt/releases)
+For the detail, please see [other documents](../../README.md#index) too.
 
 ## Requirements
 
