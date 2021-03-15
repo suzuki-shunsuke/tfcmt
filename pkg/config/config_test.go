@@ -46,6 +46,7 @@ func TestLoadFile(t *testing.T) {
 							Value: "tfcmt",
 						},
 					},
+					Vars: map[string][]domain.ComplementEntry{},
 				},
 			},
 			ok: true,

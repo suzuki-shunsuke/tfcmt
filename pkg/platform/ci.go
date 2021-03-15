@@ -9,16 +9,16 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 )
 
-func Complement(ci *config.CI, complement config.Complement) error {
-	if err := complementWithCIEnv(ci); err != nil {
+func Complement(cfg *config.Config) error {
+	if err := complementWithCIEnv(&cfg.CI); err != nil {
 		return err
 	}
 
-	if err := complementCIInfo(ci); err != nil {
+	if err := complementCIInfo(&cfg.CI); err != nil {
 		return err
 	}
 
-	return complementWithGeneric(ci, complement)
+	return complementWithGeneric(cfg)
 }
 
 func complementCIInfo(ci *config.CI) error {
@@ -88,40 +88,47 @@ func complementWithCIEnv(ci *config.CI) error {
 	return nil
 }
 
-func complementWithGeneric(ci *config.CI, complement config.Complement) error {
+func complementWithGeneric(cfg *config.Config) error {
 	gen := generic{
 		param: Param{
-			RepoOwner: complement.Owner,
-			RepoName:  complement.Repo,
-			SHA:       complement.SHA,
-			PRNumber:  complement.PR,
-			Link:      complement.Link,
+			RepoOwner: cfg.Complement.Owner,
+			RepoName:  cfg.Complement.Repo,
+			SHA:       cfg.Complement.SHA,
+			PRNumber:  cfg.Complement.PR,
+			Link:      cfg.Complement.Link,
+			Vars:      cfg.Complement.Vars,
 		},
 	}
 
-	if ci.Owner == "" {
-		ci.Owner = gen.RepoOwner()
+	if cfg.CI.Owner == "" {
+		cfg.CI.Owner = gen.RepoOwner()
 	}
 
-	if ci.Repo == "" {
-		ci.Repo = gen.RepoName()
+	if cfg.CI.Repo == "" {
+		cfg.CI.Repo = gen.RepoName()
 	}
 
-	if ci.SHA == "" {
-		ci.SHA = gen.SHA()
+	if cfg.CI.SHA == "" {
+		cfg.CI.SHA = gen.SHA()
 	}
 
-	if ci.PRNumber <= 0 {
+	if cfg.CI.PRNumber <= 0 {
 		n, err := gen.PRNumber()
 		if err != nil {
 			return err
 		}
-		ci.PRNumber = n
+		cfg.CI.PRNumber = n
 	}
 
-	if ci.Link == "" {
-		ci.Link = gen.Link()
+	if cfg.CI.Link == "" {
+		cfg.CI.Link = gen.Link()
 	}
+
+	vars := gen.Vars()
+	for k, v := range cfg.Vars {
+		vars[k] = v
+	}
+	cfg.Vars = vars
 
 	return nil
 }

@@ -35,11 +35,9 @@ type Command struct {
 
 // Run sends the notification with notifier
 func (ctrl *Controller) Run(ctx context.Context, command Command) error {
-	ci := ctrl.Config.CI
-	if err := platform.Complement(&ci, ctrl.Config.Complement); err != nil {
+	if err := platform.Complement(&ctrl.Config); err != nil {
 		return err
 	}
-	ctrl.Config.CI = ci
 
 	if err := ctrl.Config.Validate(); err != nil {
 		return err
@@ -70,7 +68,7 @@ func (ctrl *Controller) Run(ctx context.Context, command Command) error {
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
 		Cmd:            cmd,
-		CIName:         ci.Name,
+		CIName:         ctrl.Config.CI.Name,
 		ExitCode:       cmd.ProcessState.ExitCode(),
 	}))
 }

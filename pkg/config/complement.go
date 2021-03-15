@@ -12,6 +12,7 @@ type Complement struct {
 	Repo  []domain.ComplementEntry
 	SHA   []domain.ComplementEntry
 	Link  []domain.ComplementEntry
+	Vars  map[string][]domain.ComplementEntry
 }
 
 type rawComplement struct {
@@ -20,6 +21,7 @@ type rawComplement struct {
 	Repo  []map[string]interface{}
 	SHA   []map[string]interface{}
 	Link  []map[string]interface{}
+	Vars  map[string][]map[string]interface{}
 }
 
 func convComplementEntries(maps []map[string]interface{}) ([]domain.ComplementEntry, error) {
@@ -96,6 +98,16 @@ func (cpl *Complement) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return err
 	}
 	cpl.Link = link
+
+	vars := make(map[string][]domain.ComplementEntry, len(val.Vars))
+	for k, v := range val.Vars {
+		a, err := convComplementEntries(v)
+		if err != nil {
+			return err
+		}
+		vars[k] = a
+	}
+	cpl.Vars = vars
 
 	return nil
 }

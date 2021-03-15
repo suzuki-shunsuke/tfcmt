@@ -13,6 +13,7 @@ type Param struct {
 	SHA       []domain.ComplementEntry
 	PRNumber  []domain.ComplementEntry
 	Link      []domain.ComplementEntry
+	Vars      map[string][]domain.ComplementEntry
 }
 
 type generic struct {
@@ -75,4 +76,13 @@ func (gen *generic) PRNumber() (int, error) {
 		return b, nil
 	}
 	return 0, fmt.Errorf("parse pull request number as int: %w", err)
+}
+
+func (gen *generic) Vars() map[string]string {
+	vars := make(map[string]string, len(gen.param.Vars))
+	for k, v := range gen.param.Vars {
+		a := gen.returnString(v)
+		vars[k] = a
+	}
+	return vars
 }
