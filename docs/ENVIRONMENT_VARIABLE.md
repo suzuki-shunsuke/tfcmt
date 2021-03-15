@@ -46,6 +46,10 @@ ci:
   repo:
   - type: envsubst
     value: "${REPO_NAME}"
+  vars:
+    yoo: # the variable "yoo" is added to ".Vars"
+    - type: template
+      value: '{{env "YOO"}}'
 ```
 
 The following types are supported.
