@@ -46,7 +46,13 @@ If the text includes <code>\`\`\`</code>, the text wraps with `<pre><code>`, oth
 
 ```yaml
 vars: {}
-ci: {}
+ci:
+  pr: []
+  owner: []
+  repo: []
+  sha: []
+  link: []
+  vars: {}
 templates:
   plan_title: "## {{if eq .ExitCode 1}}:x: {{end}}Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}"
   apply_title: "## :{{if eq .ExitCode 0}}white_check_mark{{else}}x{{end}}: Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}"
