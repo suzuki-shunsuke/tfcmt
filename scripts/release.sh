@@ -13,8 +13,8 @@ ee() {
 }
 
 BRANCH="$(git branch | grep "^\* " | sed -e "s/^\* \(.*\)/\1/")"
-if [ "$BRANCH" != "master" ]; then
-  read -r -p "The current branch isn't master but $BRANCH. Are you ok? (y/n)" YN
+if [ "$BRANCH" != "main" ]; then
+  read -r -p "The current branch isn't main but $BRANCH. Are you ok? (y/n)" YN
   if [ "${YN}" != "y" ]; then
     echo "cancel to release"
     exit 0
