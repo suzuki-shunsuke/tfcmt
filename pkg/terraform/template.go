@@ -59,6 +59,7 @@ const (
 </details>
 `
 
+	// DefaultPlanParseErrorTemplate is a default template for terraform plan parse error
 	DefaultPlanParseErrorTemplate = `
 {{template "plan_title" .}}
 
@@ -71,6 +72,7 @@ It failed to parse the result.
 </details>
 `
 
+	// DefaultApplyParseErrorTemplate  is a default template for terraform apply parse error
 	DefaultApplyParseErrorTemplate = `
 ## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 

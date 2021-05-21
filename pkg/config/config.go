@@ -73,7 +73,7 @@ type WhenDestroy struct {
 	Color    string `yaml:"label_color"`
 }
 
-// WhenNoChange is a configuration to add a label when the plan result contains no change
+// WhenNoChanges is a configuration to add a label when the plan result contains no change
 type WhenNoChanges struct {
 	Label string
 	Color string `yaml:"label_color"`
