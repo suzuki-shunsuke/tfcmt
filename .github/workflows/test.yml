@@ -2,9 +2,9 @@ name: test
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
   push:
-    branches: [master]
+    branches: [main]
     paths:
     - '**.go'
     - '.github/workflows/test.yml'
