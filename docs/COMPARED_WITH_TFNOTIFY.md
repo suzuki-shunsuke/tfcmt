@@ -1,4 +1,4 @@
-# Compared with tfnotify
+# Compared with tfnotify v0.7.0
 
 tfcmt isn't compatible with tfnotify.
 
@@ -17,6 +17,7 @@ tfcmt isn't compatible with tfnotify.
   * [Change the behavior of deletion warning](#breaking-change-change-the-behavior-of-deletion-warning)
   * [Update labels by default](#breaking-change-update-pull-request-labels-by-default)
 * Features
+  * [Support Terraform v0.15](#feature-support-terraform-v015)
   * [Add template variables of changed resource paths](#feature-add-template-variables-of-changed-resource-paths)
   * [Post a comment when it failed to parse the result](#feature-post-a-comment-when-it-failed-to-parse-the-result)
   * [Find the configuration file recursively](#feature-find-the-configuration-file-recursively)
@@ -194,7 +195,11 @@ terraform:
     disable_label: true
 ```
 
-### Feature: Add template variables of changed resource paths
+## Feature: Support Terraform v0.15
+
+[#90](https://github.com/suzuki-shunsuke/tfcmt/pull/90) [#91](https://github.com/suzuki-shunsuke/tfcmt/pull/91)
+
+## Feature: Add template variables of changed resource paths
 
 [#39](https://github.com/suzuki-shunsuke/tfcmt/pull/39)
 
@@ -239,7 +244,7 @@ For example,
   * mysql_database.foo
 ```
 
-### Feature: Post a comment when it failed to parse the result
+## Feature: Post a comment when it failed to parse the result
 
 [#21](https://github.com/suzuki-shunsuke/tfcmt/pull/21)
 
@@ -314,7 +319,7 @@ notifier:
     token: $GITHUB_TOKEN
 ```
 
-### Feature: Get GitHub Token from the environment variable "GITHUB_TOKEN" by default
+## Feature: Get GitHub Token from the environment variable "GITHUB_TOKEN" by default
 
 We can omit the configuration `notifier.github.token`.
 
