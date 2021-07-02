@@ -69,10 +69,6 @@ func HandleExit(err error) int {
 		return exitErr.ExitCode()
 	}
 
-	if _, ok := err.(error); ok { //nolint:errorlint
-		logrus.Error(err)
-		return ExitCodeError
-	}
-
-	return ExitCodeOK
+	logrus.Error(err)
+	return ExitCodeError
 }
