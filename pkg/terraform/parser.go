@@ -14,6 +14,9 @@ type Parser interface {
 // ParseResult represents the result of parsed terraform execution
 type ParseResult struct {
 	Result             string
+	OutsideTerraform   string
+	ChangeResult       string
+	Warnings           string
 	HasAddOrUpdateOnly bool
 	HasDestroy         bool
 	HasNoChanges       bool
@@ -112,7 +115,31 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	firstMatchLineIndex := -1
 	var result, firstMatchLine string
 	var createdResources, updatedResources, deletedResources, replacedResources []string
+	startOutsideTerraform := -1
+	endOutsideTerraform := -1
+	startChangeOutput := -1
+	endChangeOutput := -1
+	startWarning := -1
+	endWarning := -1
 	for i, line := range lines {
+		if line == "Note: Objects have changed outside of Terraform" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L403
+			startOutsideTerraform = i + 1
+		}
+		if startOutsideTerraform != -1 && endOutsideTerraform == -1 && strings.HasPrefix(line, "Unless you have made equivalent changes to your configuration") { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L110
+			endOutsideTerraform = i + 1
+		}
+		if line == "Terraform will perform the following actions:" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L252
+			startChangeOutput = i + 1
+		}
+		if startChangeOutput != -1 && endChangeOutput == -1 && strings.HasPrefix(line, "Plan: ") { // https://github.com/hashicorp/terraform/blob/dfc12a6a9e1cff323829026d51873c1b80200757/internal/command/views/plan.go#L306
+			endChangeOutput = i + 1
+		}
+		if strings.HasPrefix(line, "Warning:") && startWarning == -1 {
+			startWarning = i
+		}
+		if strings.HasPrefix(line, "─────") && startWarning != -1 && endWarning == -1 {
+			endWarning = i
+		}
 		if firstMatchLineIndex == -1 {
 			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
 				firstMatchLineIndex = i
@@ -142,8 +169,30 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	hasNoChanges := p.HasNoChanges.MatchString(firstMatchLine)
 	HasAddOrUpdateOnly := !hasNoChanges && !hasDestroy && !hasPlanError
 
+	outsideTerraform := ""
+	if startOutsideTerraform != -1 {
+		outsideTerraform = strings.Join(lines[startOutsideTerraform:endOutsideTerraform], "\n")
+	}
+
+	changeResult := ""
+	if startChangeOutput != -1 {
+		changeResult = strings.Join(lines[startChangeOutput:endChangeOutput], "\n")
+	}
+
+	warnings := ""
+	if startWarning != -1 {
+		if endWarning == -1 {
+			warnings = strings.Join(lines[startWarning:], "\n")
+		} else {
+			warnings = strings.Join(lines[startWarning:endWarning], "\n")
+		}
+	}
+
 	return ParseResult{
 		Result:             result,
+		ChangeResult:       changeResult,
+		OutsideTerraform:   outsideTerraform,
+		Warnings:           warnings,
 		HasAddOrUpdateOnly: HasAddOrUpdateOnly,
 		HasDestroy:         hasDestroy,
 		HasNoChanges:       hasNoChanges,
