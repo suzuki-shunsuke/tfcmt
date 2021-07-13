@@ -338,7 +338,7 @@ func TestPlanParserParse(t *testing.T) {
 				HasPlanError:       false,
 				ExitCode:           0,
 				Error:              nil,
-				ChangeResult: `
+				ChangedResult: `
   + google_compute_global_address.my_another_project
       id:         <computed>
       address:    <computed>
@@ -407,7 +407,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.`,
 				HasPlanError:       false,
 				ExitCode:           0,
 				Error:              nil,
-				ChangeResult: `
+				ChangedResult: `
   - google_project_iam_member.team_platform[2]
 
 
@@ -425,7 +425,7 @@ Plan: 0 to add, 0 to change, 1 to destroy.`,
 				HasPlanError:       false,
 				ExitCode:           0,
 				Error:              nil,
-				ChangeResult: `
+				ChangedResult: `
   + google_compute_global_address.my_another_project
       id:         <computed>
       address:    <computed>
@@ -450,7 +450,7 @@ Plan: 1 to add, 0 to change, 1 to destroy.`,
 				HasPlanError:       false,
 				ExitCode:           0,
 				Error:              nil,
-				ChangeResult: `
+				ChangedResult: `
   + google_compute_global_address.my_another_project
       id:         <computed>
       address:    <computed>
