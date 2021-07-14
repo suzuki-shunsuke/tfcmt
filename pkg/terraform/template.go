@@ -91,7 +91,7 @@ type CommonTemplate struct {
 	Result                 string
 	ChangedResult          string
 	ChangeOutsideTerraform string
-	Warnings               string
+	Warning                string
 	Link                   string
 	UseRawOutput           bool
 	Vars                   map[string]string
@@ -208,7 +208,7 @@ func (t *Template) Execute() (string, error) {
 		"Result":                 t.Result,
 		"ChangedResult":          t.ChangedResult,
 		"ChangeOutsideTerraform": t.ChangeOutsideTerraform,
-		"Warnings":               t.Warnings,
+		"Warning":                t.Warning,
 		"Link":                   t.Link,
 		"Vars":                   t.Vars,
 		"Stdout":                 t.Stdout,

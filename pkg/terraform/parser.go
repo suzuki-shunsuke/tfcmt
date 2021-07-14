@@ -16,7 +16,7 @@ type ParseResult struct {
 	Result             string
 	OutsideTerraform   string
 	ChangedResult      string
-	Warnings           string
+	Warning            string
 	HasAddOrUpdateOnly bool
 	HasDestroy         bool
 	HasNoChanges       bool
@@ -192,7 +192,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		Result:             result,
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
-		Warnings:           warnings,
+		Warning:            warnings,
 		HasAddOrUpdateOnly: HasAddOrUpdateOnly,
 		HasDestroy:         hasDestroy,
 		HasNoChanges:       hasNoChanges,

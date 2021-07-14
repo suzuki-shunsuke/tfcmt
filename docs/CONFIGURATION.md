@@ -17,6 +17,9 @@ The template is rendered with Go's [template](https://golang.org/pkg/html/templa
 Placeholder | Usage
 ---|---
 `{{ .Result }}` | Matched result by parsing like `Plan: 1 to add` or `No changes`
+`{{ .ChangedResult }}` |
+`{{ .ChangeOutsideTerraform }}` |
+`{{ .Warning }}` |
 `{{ .Link }}` | The link of the build page on CI
 `{{ .Vars }}` | The variables which are passed by `-var` option
 `{{ .Stdout }}` | The standard output of terraform command

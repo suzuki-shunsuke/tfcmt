@@ -49,7 +49,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		Result:                 result.Result,
 		ChangedResult:          result.ChangedResult,
 		ChangeOutsideTerraform: result.OutsideTerraform,
-		Warnings:               result.Warnings,
+		Warning:                result.Warning,
 		Link:                   cfg.CI,
 		UseRawOutput:           cfg.UseRawOutput,
 		Vars:                   cfg.Vars,
