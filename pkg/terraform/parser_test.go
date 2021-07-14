@@ -2,8 +2,10 @@ package terraform
 
 import (
 	"errors"
-	"reflect"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 const planSuccessResult = `
@@ -312,8 +314,8 @@ func TestDefaultParserParse(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		result := NewDefaultParser().Parse(testCase.body)
-		if !reflect.DeepEqual(result, testCase.result) {
-			t.Errorf("got %v but want %v", result, testCase.result)
+		if diff := cmp.Diff(result, testCase.result, cmpopts.IgnoreUnexported(ParseResult{}), cmpopts.IgnoreFields(ParseResult{}, "Error")); diff != "" {
+			t.Error(diff)
 		}
 	}
 }
@@ -336,6 +338,17 @@ func TestPlanParserParse(t *testing.T) {
 				HasPlanError:       false,
 				ExitCode:           0,
 				Error:              nil,
+				ChangedResult: `
+  + google_compute_global_address.my_another_project
+      id:         <computed>
+      address:    <computed>
+      ip_version: "IPV4"
+      name:       "my-another-project"
+      project:    "my-project"
+      self_link:  <computed>
+
+
+Plan: 1 to add, 0 to change, 0 to destroy.`,
 			},
 		},
 		{
@@ -394,6 +407,11 @@ func TestPlanParserParse(t *testing.T) {
 				HasPlanError:       false,
 				ExitCode:           0,
 				Error:              nil,
+				ChangedResult: `
+  - google_project_iam_member.team_platform[2]
+
+
+Plan: 0 to add, 0 to change, 1 to destroy.`,
 			},
 		},
 		{
@@ -407,6 +425,18 @@ func TestPlanParserParse(t *testing.T) {
 				HasPlanError:       false,
 				ExitCode:           0,
 				Error:              nil,
+				ChangedResult: `
+  + google_compute_global_address.my_another_project
+      id:         <computed>
+      address:    <computed>
+      ip_version: "IPV4"
+      name:       "my-another-project"
+      project:    "my-project"
+      self_link:  <computed>
+
+  - google_project_iam_member.team_platform[2]
+
+Plan: 1 to add, 0 to change, 1 to destroy.`,
 			},
 		},
 		{
@@ -420,6 +450,18 @@ func TestPlanParserParse(t *testing.T) {
 				HasPlanError:       false,
 				ExitCode:           0,
 				Error:              nil,
+				ChangedResult: `
+  + google_compute_global_address.my_another_project
+      id:         <computed>
+      address:    <computed>
+      ip_version: "IPV4"
+      name:       "my-another-project"
+      project:    "my-project"
+      self_link:  <computed>
+
+  ~ google_project_iam_member.team_platform[2]
+
+Plan: 1 to add, 1 to change, 0 to destroy.`,
 			},
 		},
 	}
@@ -428,8 +470,8 @@ func TestPlanParserParse(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
 			result := NewPlanParser().Parse(testCase.body)
-			if !reflect.DeepEqual(result, testCase.result) {
-				t.Errorf("got %v but want %v", result, testCase.result)
+			if diff := cmp.Diff(result, testCase.result, cmpopts.IgnoreUnexported(ParseResult{}), cmpopts.IgnoreFields(ParseResult{}, "Error")); diff != "" {
+				t.Error(diff)
 			}
 		})
 	}
@@ -481,8 +523,8 @@ func TestApplyParserParse(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
 			result := NewApplyParser().Parse(testCase.body)
-			if !reflect.DeepEqual(result, testCase.result) {
-				t.Errorf("got %v but want %v", result, testCase.result)
+			if diff := cmp.Diff(result, testCase.result, cmpopts.IgnoreUnexported(ParseResult{}), cmpopts.IgnoreFields(ParseResult{}, "Error")); diff != "" {
+				t.Error(diff)
 			}
 		})
 	}
@@ -521,8 +563,8 @@ func TestTrimLastNewline(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		actual := trimLastNewline(testCase.data)
-		if !reflect.DeepEqual(actual, testCase.expected) {
-			t.Errorf("got %v but want %v", actual, testCase.expected)
+		if diff := cmp.Diff(actual, testCase.expected); diff != "" {
+			t.Errorf(diff)
 		}
 	}
 }

@@ -46,20 +46,23 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	}
 
 	template.SetValue(terraform.CommonTemplate{
-		Result:            result.Result,
-		Link:              cfg.CI,
-		UseRawOutput:      cfg.UseRawOutput,
-		Vars:              cfg.Vars,
-		Templates:         cfg.Templates,
-		Stdout:            param.Stdout,
-		Stderr:            param.Stderr,
-		CombinedOutput:    param.CombinedOutput,
-		ExitCode:          param.ExitCode,
-		ErrorMessages:     errMsgs,
-		CreatedResources:  result.CreatedResources,
-		UpdatedResources:  result.UpdatedResources,
-		DeletedResources:  result.DeletedResources,
-		ReplacedResources: result.ReplacedResources,
+		Result:                 result.Result,
+		ChangedResult:          result.ChangedResult,
+		ChangeOutsideTerraform: result.OutsideTerraform,
+		Warning:                result.Warning,
+		Link:                   cfg.CI,
+		UseRawOutput:           cfg.UseRawOutput,
+		Vars:                   cfg.Vars,
+		Templates:              cfg.Templates,
+		Stdout:                 param.Stdout,
+		Stderr:                 param.Stderr,
+		CombinedOutput:         param.CombinedOutput,
+		ExitCode:               param.ExitCode,
+		ErrorMessages:          errMsgs,
+		CreatedResources:       result.CreatedResources,
+		UpdatedResources:       result.UpdatedResources,
+		DeletedResources:       result.DeletedResources,
+		ReplacedResources:      result.ReplacedResources,
 	})
 	body, err := template.Execute()
 	if err != nil {
