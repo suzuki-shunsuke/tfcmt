@@ -44,21 +44,6 @@ const (
 * {{. -}}
 {{- end}}{{end}}`
 
-	// DefaultDestroyWarningTemplate is a default template for terraform plan
-	DefaultDestroyWarningTemplate = `
-{{template "plan_title" .}}
-
-{{if .Link}}[CI link]({{.Link}}){{end}}
-
-{{template "deletion_warning" .}}
-{{template "result" .}}
-
-{{template "updated_resources" .}}
-<details><summary>Details (Click me)</summary>
-{{wrapCode .CombinedOutput}}
-</details>
-`
-
 	// DefaultPlanParseErrorTemplate is a default template for terraform plan parse error
 	DefaultPlanParseErrorTemplate = `
 {{template "plan_title" .}}
