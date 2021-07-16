@@ -124,16 +124,6 @@ func NewPlanTemplate(template string) *Template {
 	}
 }
 
-// NewDestroyWarningTemplate is DestroyWarningTemplate initializer
-func NewDestroyWarningTemplate(template string) *Template {
-	if template == "" {
-		template = DefaultDestroyWarningTemplate
-	}
-	return &Template{
-		Template: template,
-	}
-}
-
 // NewApplyTemplate is ApplyTemplate initializer
 func NewApplyTemplate(template string) *Template {
 	if template == "" {
