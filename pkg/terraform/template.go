@@ -94,6 +94,7 @@ type CommonTemplate struct {
 	Warning                string
 	Link                   string
 	UseRawOutput           bool
+	HasDestroy             bool
 	Vars                   map[string]string
 	Templates              map[string]string
 	Stdout                 string
@@ -220,6 +221,7 @@ func (t *Template) Execute() (string, error) {
 		"UpdatedResources":       t.UpdatedResources,
 		"DeletedResources":       t.DeletedResources,
 		"ReplacedResources":      t.ReplacedResources,
+		"HasDestroy":             t.HasDestroy,
 	}
 
 	templates := map[string]string{

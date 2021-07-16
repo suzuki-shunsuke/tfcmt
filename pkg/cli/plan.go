@@ -24,11 +24,10 @@ func cmdPlan(ctx *cli.Context) error {
 	}
 
 	t := &controller.Controller{
-		Config:                 cfg,
-		Parser:                 terraform.NewPlanParser(),
-		Template:               terraform.NewPlanTemplate(cfg.Terraform.Plan.Template),
-		DestroyWarningTemplate: terraform.NewDestroyWarningTemplate(cfg.Terraform.Plan.WhenDestroy.Template),
-		ParseErrorTemplate:     terraform.NewPlanParseErrorTemplate(cfg.Terraform.Plan.WhenParseError.Template),
+		Config:             cfg,
+		Parser:             terraform.NewPlanParser(),
+		Template:           terraform.NewPlanTemplate(cfg.Terraform.Plan.Template),
+		ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(cfg.Terraform.Plan.WhenParseError.Template),
 	}
 	args := ctx.Args()
 

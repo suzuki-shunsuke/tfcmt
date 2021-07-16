@@ -62,9 +62,8 @@ type WhenAddOrUpdateOnly struct {
 
 // WhenDestroy is a configuration to notify the plan result contains destroy operation
 type WhenDestroy struct {
-	Label    string
-	Template string
-	Color    string `yaml:"label_color"`
+	Label string
+	Color string `yaml:"label_color"`
 }
 
 // WhenNoChanges is a configuration to add a label when the plan result contains no change
