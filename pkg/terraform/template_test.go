@@ -2,6 +2,8 @@ package terraform
 
 import (
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestPlanTemplateExecute(t *testing.T) {
@@ -18,6 +20,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 			value:    CommonTemplate{},
 			resp: `
 ## Plan Result
+
 
 
 
@@ -41,6 +44,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 			},
 			resp: `
 ## Plan Result
+
 
 
 
@@ -69,6 +73,7 @@ body
 
 
 
+
 <details><summary>Details (Click me)</summary>
 
 ` + "```" + `
@@ -87,6 +92,7 @@ body
 			},
 			resp: `
 ## Plan Result
+
 
 
 
@@ -116,6 +122,7 @@ This is a "body".
 
 
 
+
 <details><summary>Details (Click me)</summary>
 
 ` + "```" + `
@@ -134,6 +141,7 @@ This is a "body".
 			},
 			resp: `
 ## Plan Result
+
 
 
 
@@ -171,8 +179,8 @@ body
 			if err != nil {
 				t.Fatal(err)
 			}
-			if resp != testCase.resp {
-				t.Errorf("got %s but want %s", resp, testCase.resp)
+			if diff := cmp.Diff(resp, testCase.resp); diff != "" {
+				t.Errorf(diff)
 			}
 		})
 	}
@@ -345,8 +353,8 @@ This is a "body".
 			if err != nil {
 				t.Error(err)
 			}
-			if resp != testCase.resp {
-				t.Errorf("got %s but want %s", resp, testCase.resp)
+			if diff := cmp.Diff(resp, testCase.resp); diff != "" {
+				t.Errorf(diff)
 			}
 		})
 	}

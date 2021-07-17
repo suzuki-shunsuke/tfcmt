@@ -16,6 +16,7 @@ const (
 
 {{if .Link}}[CI link]({{.Link}}){{end}}
 
+{{if .HasDestroy}}{{template "deletion_warning" .}}{{end}}
 {{template "result" .}}
 {{template "updated_resources" .}}
 <details><summary>Details (Click me)</summary>
