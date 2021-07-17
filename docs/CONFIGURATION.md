@@ -49,7 +49,7 @@ If the text includes <code>\`\`\`</code>, the text wraps with `<pre><code>`, oth
 ## Default Configuration
 
 ```yaml
-vars: {}
+embedded_var_names: []
 ci:
   pr: []
   owner: []
@@ -157,6 +157,10 @@ terraform:
 ## Custom Environment Variable Definition
 
 Please see [Custom Environment Variable Definition](ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).
+
+## Embed metadata in comments
+
+Please see [Embed metadata in comments](EMBED_METADATA.md).
 
 ## Variables `ChangedResult`, `ChangeOutsideTerraform`, and `Warning`
 

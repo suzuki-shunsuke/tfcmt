@@ -146,7 +146,7 @@ So this feature is removed from tfcmt.
 
 [#67](https://github.com/suzuki-shunsuke/tfcmt/pull/67)
 
-Instead of removing duplicate comments, tfcmt embeds metadata into comment with [githuub-comment-metadata](https://github.com/suzuki-shunsuke/github-comment-metadata).
+Instead of removing duplicate comments, tfcmt embeds metadata into comment with [github-comment-metadata](https://github.com/suzuki-shunsuke/github-comment-metadata).
 tfcmt itself doesn't support to hide old comments, but we can hide comments with [github-comment's hide command](https://github.com/suzuki-shunsuke/github-comment#hide).
 
 ## Breaking Change: Change the behavior of deletion warning
