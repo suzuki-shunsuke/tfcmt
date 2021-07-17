@@ -20,9 +20,6 @@ func TestLoadFile(t *testing.T) {
 			file: "../../example.tfcmt.yaml",
 			cfg: Config{
 				Terraform: Terraform{
-					Default: Default{
-						Template: "",
-					},
 					Plan: Plan{
 						Template:    "## Plan Result\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .CombinedOutput }}\n</pre></code></details>\n",
 						WhenDestroy: WhenDestroy{},
@@ -55,9 +52,6 @@ func TestLoadFile(t *testing.T) {
 			file: "../../example-with-destroy-and-result-labels.tfcmt.yaml",
 			cfg: Config{
 				Terraform: Terraform{
-					Default: Default{
-						Template: "",
-					},
 					Plan: Plan{
 						Template: "## Plan Result\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .CombinedOutput }}\n</pre></code></details>\n",
 						WhenAddOrUpdateOnly: WhenAddOrUpdateOnly{
@@ -86,9 +80,6 @@ func TestLoadFile(t *testing.T) {
 			file: "no-such-config.yaml",
 			cfg: Config{
 				Terraform: Terraform{
-					Default: Default{
-						Template: "",
-					},
 					Plan: Plan{
 						Template:    "## Plan Result\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .CombinedOutput }}\n</pre></code></details>\n",
 						WhenDestroy: WhenDestroy{},
