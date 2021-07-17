@@ -26,7 +26,7 @@ https://github.com/suzuki-shunsuke/tfcmt/pull/70#issuecomment-797854184
 
 ## Forked version
 
-We forked [suzuki-shunsuke/tfnotify v1.3.3](https://github.com/suzuki-shunsuke/tfnotify/releases/tag/v1.3.3).
+We forked [suzuki-shunsuke/tfnotify v1.3.3](https://github.com/suzuki-shunsuke/tfnotify/releases/tag/v1.3.3) ([mercari/tfnotify v0.7.0](https://github.com/mercari/tfnotify/releases/tag/v0.7.0)).
 
 ## Compared with tfnotify
 
