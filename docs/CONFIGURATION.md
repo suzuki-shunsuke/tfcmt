@@ -169,3 +169,114 @@ terraform:
 ## Custom Environment Variable Definition
 
 Please see [Custom Environment Variable Definition](ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).
+
+## Variables `ChangedResult`, `ChangeOutsideTerraform`, and `Warning`
+
+[#103](https://github.com/suzuki-shunsuke/tfcmt/issues/103) [#107](https://github.com/suzuki-shunsuke/tfcmt/pull/107)
+
+The following variables are added from tfcmt v1.1.0.
+
+* ChangedResult
+* ChangeOutsideTerraform
+* Warning
+
+Compared with `CombinedOutput`, we can make the result of `terraform plan` clear.
+
+* We can exclude noisy `Refreshing state...` logs
+* Separate `changes made outside of Terraform since the last "terraform apply":`
+* Make the warning easy to see
+
+### Variable: ChangedResult
+
+```
+{{if .ChangedResult}}
+<details><summary>Change Result (Click me)</summary>
+{{wrapCode .ChangedResult}}
+</details>
+{{end}}
+```
+
+![image](https://user-images.githubusercontent.com/13323303/126020688-dc3c64be-bf01-4ee9-9693-39f85bc67442.png)
+
+### Variable: ChangeOutsideTerraform
+
+```
+{{if .ChangeOutsideTerraform}}
+<details><summary>:warning: Note: Objects have changed outside of Terraform</summary>
+{{wrapCode .ChangeOutsideTerraform}}
+</details>
+{{end}}
+```
+
+![image](https://user-images.githubusercontent.com/13323303/126020707-9f898e29-ebfc-454a-b9cd-762a85d567cd.png)
+
+### Variable: Warning
+
+```
+{{if .Warning}}
+## :warning: Warnings :warning:
+{{wrapCode .Warning}}
+{{end}}
+```
+
+![image](https://user-images.githubusercontent.com/13323303/126020762-68f99375-f860-4c66-964e-6dd0c9578cb1.png)
+
+### Example configuration
+
+```yaml
+---
+templates:
+  changed_result: |
+    {{if .ChangedResult}}
+    <details><summary>Change Result (Click me)</summary>
+    {{wrapCode .ChangedResult}}
+    </details>
+    {{end}}
+  change_outside_terraform: |
+    {{if .ChangeOutsideTerraform}}
+    <details><summary>:warning: Note: Objects have changed outside of Terraform</summary>
+    {{wrapCode .ChangeOutsideTerraform}}
+    </details>
+    {{end}}
+  warning: |
+    {{if .Warning}}
+    ## :warning: Warnings :warning:
+    {{wrapCode .Warning}}
+    {{end}}
+  error_message: |
+    {{if .ErrorMessages}}
+    ## :warning: Errors
+    {{range .ErrorMessages}}
+    * {{. -}}
+    {{- end}}{{end}}
+
+terraform:
+  plan:
+    template: |
+      {{template "plan_title" .}}
+
+      {{if .Link}}[CI link]({{.Link}}){{end}}
+
+      {{template "result" .}}
+      {{template "updated_resources" .}}
+
+      {{template "changed_result" .}}
+      {{template "change_outside_terraform" .}}
+      {{template "warning" .}}
+      {{template "error_message" .}}
+    when_destroy:
+      template: |
+        {{template "plan_title" .}}
+
+        {{if .Link}}[CI link]({{.Link}}){{end}}
+
+        {{template "deletion_warning" .}}
+
+        {{template "result" .}}
+        {{template "updated_resources" .}}
+
+        {{template "changed_result" .}}
+        {{template "change_outside_terraform" .}}
+        {{template "warning" .}}
+        {{template "error_message" .}}
+```
