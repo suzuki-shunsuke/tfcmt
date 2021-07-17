@@ -146,8 +146,6 @@ terraform:
         </details>
 ```
 
-If the plan contains resource deletion, the template of `when_destroy` is used.
-
 If you don't want to update labels, please set `terraform.plan.disable_label: true`.
 
 ```yaml
