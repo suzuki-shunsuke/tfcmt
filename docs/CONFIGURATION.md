@@ -158,6 +158,10 @@ terraform:
 
 Please see [Custom Environment Variable Definition](ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).
 
+## Embed metadata in comments
+
+Please see [Embed metadata in comments](EMBED_METADATA.md).
+
 ## Variables `ChangedResult`, `ChangeOutsideTerraform`, and `Warning`
 
 [#103](https://github.com/suzuki-shunsuke/tfcmt/issues/103) [#107](https://github.com/suzuki-shunsuke/tfcmt/pull/107)
