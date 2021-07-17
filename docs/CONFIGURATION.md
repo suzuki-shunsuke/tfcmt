@@ -49,7 +49,7 @@ If the text includes <code>\`\`\`</code>, the text wraps with `<pre><code>`, oth
 ## Default Configuration
 
 ```yaml
-vars: {}
+embedded_var_names: []
 ci:
   pr: []
   owner: []
