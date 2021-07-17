@@ -208,7 +208,7 @@ Compared with `CombinedOutput`, we can make the result of `terraform plan` clear
 {{end}}
 ```
 
-![image](https://user-images.githubusercontent.com/13323303/126020707-9f898e29-ebfc-454a-b9cd-762a85d567cd.png)
+![image](https://user-images.githubusercontent.com/13323303/126021350-be037a55-2d83-48a3-a76d-7f9da23fde29.png)
 
 ### Variable: Warning
 
