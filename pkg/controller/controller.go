@@ -185,6 +185,7 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		ParseErrorTemplate: ctrl.ParseErrorTemplate,
 		ResultLabels:       labels,
 		Vars:               ctrl.Config.Vars,
+		EmbeddedVarNames:   ctrl.Config.EmbeddedVarNames,
 		Templates:          ctrl.Config.Templates,
 	})
 	if err != nil {
