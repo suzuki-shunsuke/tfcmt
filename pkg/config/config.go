@@ -38,15 +38,9 @@ type Log struct {
 
 // Terraform represents terraform configurations
 type Terraform struct {
-	Default      Default
 	Plan         Plan
 	Apply        Apply
 	UseRawOutput bool `yaml:"use_raw_output"`
-}
-
-// Default is a default setting for terraform commands
-type Default struct {
-	Template string
 }
 
 // Plan is a terraform plan config
