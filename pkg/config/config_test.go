@@ -3,9 +3,9 @@ package config
 import (
 	"os"
 	"path/filepath"
-	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/domain"
 )
 
@@ -53,13 +53,27 @@ func TestLoadFile(t *testing.T) {
 			cfg: Config{
 				Terraform: Terraform{
 					Plan: Plan{
-						Template: "## Plan Result\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .CombinedOutput }}\n</pre></code></details>\n",
+						Template: `{{if .HasDestroy}}
+## :warning: WARNING: Resource Deletion will happen :warning:
+
+This plan contains **resource deletion**. Please check the plan result very carefully!
+{{else}}
+## Plan Result
+{{if .Result}}
+<pre><code>{{ .Result }}
+</pre></code>
+{{end}}
+<details><summary>Details (Click me)</summary>
+
+<pre><code>{{ .CombinedOutput }}
+</pre></code></details>
+{{end}}
+`,
 						WhenAddOrUpdateOnly: WhenAddOrUpdateOnly{
 							Label: "add-or-update",
 						},
 						WhenDestroy: WhenDestroy{
-							Label:    "destroy",
-							Template: "## :warning: WARNING: Resource Deletion will happen :warning:\n\nThis plan contains **resource deletion**. Please check the plan result very carefully!\n",
+							Label: "destroy",
 						},
 						WhenPlanError: WhenPlanError{
 							Label: "error",
@@ -102,8 +116,8 @@ func TestLoadFile(t *testing.T) {
 			if err := cfg.LoadFile(testCase.file); err == nil {
 				if !testCase.ok {
 					t.Error("got no error but want error")
-				} else if !reflect.DeepEqual(cfg, testCase.cfg) {
-					t.Errorf("got %#v but want: %#v", cfg, testCase.cfg)
+				} else if diff := cmp.Diff(cfg, testCase.cfg); diff != "" {
+					t.Errorf(diff)
 				}
 			} else {
 				if testCase.ok {

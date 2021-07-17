@@ -2,6 +2,8 @@ package terraform
 
 import (
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestPlanTemplateExecute(t *testing.T) {
@@ -18,6 +20,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 			value:    CommonTemplate{},
 			resp: `
 ## Plan Result
+
 
 
 
@@ -41,6 +44,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 			},
 			resp: `
 ## Plan Result
+
 
 
 
@@ -69,6 +73,7 @@ body
 
 
 
+
 <details><summary>Details (Click me)</summary>
 
 ` + "```" + `
@@ -87,6 +92,7 @@ body
 			},
 			resp: `
 ## Plan Result
+
 
 
 
@@ -116,6 +122,7 @@ This is a "body".
 
 
 
+
 <details><summary>Details (Click me)</summary>
 
 ` + "```" + `
@@ -134,6 +141,7 @@ This is a "body".
 			},
 			resp: `
 ## Plan Result
+
 
 
 
@@ -171,170 +179,8 @@ body
 			if err != nil {
 				t.Fatal(err)
 			}
-			if resp != testCase.resp {
-				t.Errorf("got %s but want %s", resp, testCase.resp)
-			}
-		})
-	}
-}
-
-func TestDestroyWarningTemplateExecute(t *testing.T) {
-	t.Parallel()
-	testCases := []struct {
-		name     string
-		template string
-		value    CommonTemplate
-		resp     string
-	}{
-		{
-			name:     "case 0",
-			template: DefaultDestroyWarningTemplate,
-			value:    CommonTemplate{},
-			resp: `
-## Plan Result
-
-
-
-### :warning: Resource Deletion will happen :warning:
-This plan contains resource delete operation. Please check the plan result very carefully!
-
-
-
-<details><summary>Details (Click me)</summary>
-
-` + "```" + `
-
-` + "```" + `
-
-</details>
-`,
-		},
-		{
-			name:     "case 1",
-			template: DefaultDestroyWarningTemplate,
-			value: CommonTemplate{
-				Result: `This is a "result".`,
-			},
-			resp: `
-## Plan Result
-
-
-
-### :warning: Resource Deletion will happen :warning:
-This plan contains resource delete operation. Please check the plan result very carefully!
-<pre><code>This is a &#34;result&#34;.</code></pre>
-
-
-<details><summary>Details (Click me)</summary>
-
-` + "```" + `
-
-` + "```" + `
-
-</details>
-`,
-		},
-		{
-			name:     "case 2",
-			template: DefaultDestroyWarningTemplate,
-			value: CommonTemplate{
-				Result:       `This is a "result".`,
-				UseRawOutput: true,
-			},
-			resp: `
-## Plan Result
-
-
-
-### :warning: Resource Deletion will happen :warning:
-This plan contains resource delete operation. Please check the plan result very carefully!
-<pre><code>This is a "result".</code></pre>
-
-
-<details><summary>Details (Click me)</summary>
-
-` + "```" + `
-
-` + "```" + `
-
-</details>
-`,
-		},
-		{
-			name:     "case 3",
-			template: DefaultDestroyWarningTemplate,
-			value: CommonTemplate{
-				Result: "",
-			},
-			resp: `
-## Plan Result
-
-
-
-### :warning: Resource Deletion will happen :warning:
-This plan contains resource delete operation. Please check the plan result very carefully!
-
-
-
-<details><summary>Details (Click me)</summary>
-
-` + "```" + `
-
-` + "```" + `
-
-</details>
-`,
-		},
-		{
-			name:     "case 4",
-			template: "",
-			value: CommonTemplate{
-				Result: "",
-			},
-			resp: `
-## Plan Result
-
-
-
-### :warning: Resource Deletion will happen :warning:
-This plan contains resource delete operation. Please check the plan result very carefully!
-
-
-
-<details><summary>Details (Click me)</summary>
-
-` + "```" + `
-
-` + "```" + `
-
-</details>
-`,
-		},
-		{
-			name:     "case 5",
-			template: `{{ .Result }}-{{ .CombinedOutput }}`,
-			value: CommonTemplate{
-				Result:         "c",
-				CombinedOutput: "d",
-			},
-			resp: `c-d`,
-		},
-	}
-	for i, testCase := range testCases {
-		testCase := testCase
-		if testCase.name == "" {
-			t.Fatalf("testCase.name is required: index %d", i)
-		}
-		t.Run(testCase.name, func(t *testing.T) {
-			t.Parallel()
-			template := NewDestroyWarningTemplate(testCase.template)
-			template.SetValue(testCase.value)
-			resp, err := template.Execute()
-			if err != nil {
-				t.Fatal(err)
-			}
-			if resp != testCase.resp {
-				t.Errorf("got %s but want %s", resp, testCase.resp)
+			if diff := cmp.Diff(resp, testCase.resp); diff != "" {
+				t.Errorf(diff)
 			}
 		})
 	}
@@ -507,8 +353,8 @@ This is a "body".
 			if err != nil {
 				t.Error(err)
 			}
-			if resp != testCase.resp {
-				t.Errorf("got %s but want %s", resp, testCase.resp)
+			if diff := cmp.Diff(resp, testCase.resp); diff != "" {
+				t.Errorf(diff)
 			}
 		})
 	}

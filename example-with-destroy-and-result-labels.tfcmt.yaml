@@ -1,6 +1,11 @@
 terraform:
   plan:
     template: |
+      {{if .HasDestroy}}
+      ## :warning: WARNING: Resource Deletion will happen :warning:
+
+      This plan contains **resource deletion**. Please check the plan result very carefully!
+      {{else}}
       ## Plan Result
       {{if .Result}}
       <pre><code>{{ .Result }}
@@ -10,14 +15,11 @@ terraform:
 
       <pre><code>{{ .CombinedOutput }}
       </pre></code></details>
+      {{end}}
     when_add_or_update_only:
       label: "add-or-update"
     when_destroy:
       label: "destroy"
-      template: |
-        ## :warning: WARNING: Resource Deletion will happen :warning:
-
-        This plan contains **resource deletion**. Please check the plan result very carefully!
     when_no_changes:
       label: "no-changes"
     when_plan_error:

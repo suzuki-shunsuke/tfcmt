@@ -21,11 +21,10 @@ import (
 )
 
 type Controller struct {
-	Config                 config.Config
-	Parser                 terraform.Parser
-	Template               *terraform.Template
-	DestroyWarningTemplate *terraform.Template
-	ParseErrorTemplate     *terraform.Template
+	Config             config.Config
+	Parser             terraform.Parser
+	Template           *terraform.Template
+	ParseErrorTemplate *terraform.Template
 }
 
 type Command struct {
@@ -179,15 +178,14 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 			Revision: ctrl.Config.CI.SHA,
 			Number:   ctrl.Config.CI.PRNumber,
 		},
-		CI:                     ctrl.Config.CI.Link,
-		Parser:                 ctrl.Parser,
-		UseRawOutput:           ctrl.Config.Terraform.UseRawOutput,
-		Template:               ctrl.Template,
-		DestroyWarningTemplate: ctrl.DestroyWarningTemplate,
-		ParseErrorTemplate:     ctrl.ParseErrorTemplate,
-		ResultLabels:           labels,
-		Vars:                   ctrl.Config.Vars,
-		Templates:              ctrl.Config.Templates,
+		CI:                 ctrl.Config.CI.Link,
+		Parser:             ctrl.Parser,
+		UseRawOutput:       ctrl.Config.Terraform.UseRawOutput,
+		Template:           ctrl.Template,
+		ParseErrorTemplate: ctrl.ParseErrorTemplate,
+		ResultLabels:       labels,
+		Vars:               ctrl.Config.Vars,
+		Templates:          ctrl.Config.Templates,
 	})
 	if err != nil {
 		return nil, err

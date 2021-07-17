@@ -26,6 +26,7 @@ Placeholder | Usage
 `{{ .Stderr }}` | The standard error output of terraform command
 `{{ .CombinedOutput }}` | The output of terraform command
 `{{ .ExitCode }}` | The exit code of terraform command
+`{{ .HasDestroy }}` | Whether there are destroyed resources
 `{{ .ErrorMessages }}` | a list of error messages which occur in tfcmt
 `{{ .CreatedResources }}` | a list of created resource paths. This variable can be used at only plan
 `{{ .UpdatedResources }}` | a list of updated resource paths. This variable can be used at only plan
@@ -90,6 +91,7 @@ terraform:
 
       {{if .Link}}[CI link]({{.Link}}){{end}}
 
+      {{if .HasDestroy}}{{template "deletion_warning" .}}{{end}}
       {{template "result" .}}
       {{template "updated_resources" .}}
       <details><summary>Details (Click me)</summary>
@@ -106,18 +108,6 @@ terraform:
     when_destroy:
       label: "{{if .Vars.target}}{{.Vars.target}}/{{end}}destroy"
       label_color: d93f0b # red
-      template: |
-        {{template "plan_title" .}}
-
-        {{if .Link}}[CI link]({{.Link}}){{end}}
-
-        {{template "deletion_warning" .}}
-        {{template "result" .}}
-
-        {{template "updated_resources" .}}
-        <details><summary>Details (Click me)</summary>
-        {{wrapCode .CombinedOutput}}
-        </details>
     when_no_changes:
       label: "{{if .Vars.target}}{{.Vars.target}}/{{end}}no-changes"
       label_color: 0e8a16 # green
@@ -155,8 +145,6 @@ terraform:
         {{wrapCode .CombinedOutput}}
         </details>
 ```
-
-If the plan contains resource deletion, the template of `when_destroy` is used.
 
 If you don't want to update labels, please set `terraform.plan.disable_label: true`.
 

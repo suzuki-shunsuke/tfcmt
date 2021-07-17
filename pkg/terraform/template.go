@@ -16,6 +16,7 @@ const (
 
 {{if .Link}}[CI link]({{.Link}}){{end}}
 
+{{if .HasDestroy}}{{template "deletion_warning" .}}{{end}}
 {{template "result" .}}
 {{template "updated_resources" .}}
 <details><summary>Details (Click me)</summary>
@@ -43,21 +44,6 @@ const (
 {{range .ErrorMessages}}
 * {{. -}}
 {{- end}}{{end}}`
-
-	// DefaultDestroyWarningTemplate is a default template for terraform plan
-	DefaultDestroyWarningTemplate = `
-{{template "plan_title" .}}
-
-{{if .Link}}[CI link]({{.Link}}){{end}}
-
-{{template "deletion_warning" .}}
-{{template "result" .}}
-
-{{template "updated_resources" .}}
-<details><summary>Details (Click me)</summary>
-{{wrapCode .CombinedOutput}}
-</details>
-`
 
 	// DefaultPlanParseErrorTemplate is a default template for terraform plan parse error
 	DefaultPlanParseErrorTemplate = `
@@ -94,6 +80,7 @@ type CommonTemplate struct {
 	Warning                string
 	Link                   string
 	UseRawOutput           bool
+	HasDestroy             bool
 	Vars                   map[string]string
 	Templates              map[string]string
 	Stdout                 string
@@ -117,16 +104,6 @@ type Template struct {
 func NewPlanTemplate(template string) *Template {
 	if template == "" {
 		template = DefaultPlanTemplate
-	}
-	return &Template{
-		Template: template,
-	}
-}
-
-// NewDestroyWarningTemplate is DestroyWarningTemplate initializer
-func NewDestroyWarningTemplate(template string) *Template {
-	if template == "" {
-		template = DefaultDestroyWarningTemplate
 	}
 	return &Template{
 		Template: template,
@@ -220,6 +197,7 @@ func (t *Template) Execute() (string, error) {
 		"UpdatedResources":       t.UpdatedResources,
 		"DeletedResources":       t.DeletedResources,
 		"ReplacedResources":      t.ReplacedResources,
+		"HasDestroy":             t.HasDestroy,
 	}
 
 	templates := map[string]string{
