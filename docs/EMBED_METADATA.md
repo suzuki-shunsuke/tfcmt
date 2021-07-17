@@ -2,7 +2,7 @@
 
 [#67](https://github.com/suzuki-shunsuke/tfcmt/pull/67)
 
-tfcmt embeds metadata into comment with [githuub-comment-metadata](https://github.com/suzuki-shunsuke/github-comment-metadata).
+tfcmt embeds metadata into comment with [github-comment-metadata](https://github.com/suzuki-shunsuke/github-comment-metadata).
 tfcmt itself doesn't support hiding old comments, but we can hide comments with [github-comment's hide command](https://github.com/suzuki-shunsuke/github-comment#hide).
 
 ## embedded_var_names
