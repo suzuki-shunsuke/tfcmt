@@ -80,17 +80,38 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		}
 	}
 
-	postOpt := PostOptions{
-		Number:   cfg.PR.Number,
-		Revision: cfg.PR.Revision,
-	}
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
 	})
 
+	embeddedComment, err := getEmbeddedComment(&cfg, param.CIName, isPlan)
+	if err != nil {
+		return result.ExitCode, err
+	}
+	logE.WithFields(logrus.Fields{
+		"comment": embeddedComment,
+	}).Debug("embedded HTML comment")
+	// embed HTML tag to hide old comments
+	body += embeddedComment
+
+	if err := g.client.Comment.Post(ctx, body, PostOptions{
+		Number:   cfg.PR.Number,
+		Revision: cfg.PR.Revision,
+	}); err != nil {
+		return result.ExitCode, err
+	}
+	return result.ExitCode, nil
+}
+
+func getEmbeddedComment(cfg *Config, ciName string, isPlan bool) (string, error) {
+	vars := make(map[string]interface{}, len(cfg.EmbeddedVarNames))
+	for _, name := range cfg.EmbeddedVarNames {
+		vars[name] = cfg.Vars[name]
+	}
+
 	data := map[string]interface{}{
 		"Program":  "tfcmt",
-		"Vars":     cfg.Vars,
+		"Vars":     vars,
 		"SHA1":     cfg.PR.Revision,
 		"PRNumber": cfg.PR.Number,
 	}
@@ -102,23 +123,14 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	} else {
 		data["Command"] = "apply"
 	}
-	if err := metadata.SetCIEnv(param.CIName, os.Getenv, data); err != nil {
-		return result.ExitCode, err
+	if err := metadata.SetCIEnv(ciName, os.Getenv, data); err != nil {
+		return "", err
 	}
 	embeddedComment, err := metadata.Convert(data)
 	if err != nil {
-		return result.ExitCode, err
+		return "", err
 	}
-	logE.WithFields(logrus.Fields{
-		"comment": embeddedComment,
-	}).Debug("embedded HTML comment")
-	// embed HTML tag to hide old comments
-	body += embeddedComment
-
-	if err := g.client.Comment.Post(ctx, body, postOpt); err != nil {
-		return result.ExitCode, err
-	}
-	return result.ExitCode, nil
+	return embeddedComment, nil
 }
 
 func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string { //nolint:cyclop
