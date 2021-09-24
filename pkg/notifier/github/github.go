@@ -63,5 +63,5 @@ func (g *GitHub) RepositoriesListCommits(ctx context.Context, opt *github.Commit
 
 // RepositoriesGetCommit is a wrapper of https://godoc.org/github.com/google/go-github/github#RepositoriesService.GetCommit
 func (g *GitHub) RepositoriesGetCommit(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error) {
-	return g.Client.Repositories.GetCommit(ctx, g.owner, g.repo, sha)
+	return g.Client.Repositories.GetCommit(ctx, g.owner, g.repo, sha, nil)
 }
