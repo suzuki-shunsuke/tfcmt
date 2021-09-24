@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 
-	"github.com/google/go-github/v37/github"
+	"github.com/google/go-github/v39/github"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
