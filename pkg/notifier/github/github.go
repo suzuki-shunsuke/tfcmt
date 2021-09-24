@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 
-	"github.com/google/go-github/v37/github"
+	"github.com/google/go-github/v39/github"
 )
 
 // API is GitHub API interface
@@ -63,5 +63,5 @@ func (g *GitHub) RepositoriesListCommits(ctx context.Context, opt *github.Commit
 
 // RepositoriesGetCommit is a wrapper of https://godoc.org/github.com/google/go-github/github#RepositoriesService.GetCommit
 func (g *GitHub) RepositoriesGetCommit(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error) {
-	return g.Client.Repositories.GetCommit(ctx, g.owner, g.repo, sha)
+	return g.Client.Repositories.GetCommit(ctx, g.owner, g.repo, sha, nil)
 }

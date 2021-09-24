@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/google/go-github/v37/github"
+	"github.com/google/go-github/v39/github"
 )
 
 // CommitsService handles communication with the commits related

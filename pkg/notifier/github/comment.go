@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/google/go-github/v37/github"
+	"github.com/google/go-github/v39/github"
 )
 
 // CommentService handles communication with the comment related
