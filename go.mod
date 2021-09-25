@@ -11,7 +11,7 @@ require (
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.10
-	github.com/shurcooL/githubv4 v0.0.0-20201206200315-234843c633fa
+	github.com/shurcooL/githubv4 v0.0.0-20210922025249-6831e00d857f
 	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/suzuki-shunsuke/github-comment-metadata v0.1.0
