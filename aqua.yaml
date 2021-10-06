@@ -1,4 +1,4 @@
-# aqua - CLI Version Manager
+# aqua - Declarative CLI Version Manager
 # https://github.com/aquaproj/aqua
 registries:
 - type: standard
@@ -8,3 +8,6 @@ packages:
 - name: suzuki-shunsuke/cmdx@v1.6.1
 - name: reviewdog/reviewdog@v0.13.0
 - name: golangci/golangci-lint@v1.43.0
+- name: hashicorp/terraform@v1.0.8
+- name: suzuki-shunsuke/github-comment@v4.0.1
+- name: suzuki-shunsuke/tfcmt@v3.0.0
