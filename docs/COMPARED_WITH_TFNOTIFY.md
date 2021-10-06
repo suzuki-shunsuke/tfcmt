@@ -46,7 +46,7 @@ tfcmt isn't compatible with tfnotify.
 
 [#4](https://github.com/suzuki-shunsuke/tfcmt/pull/4)
 
-We support only the following platforms.
+tfcmt supports only the following platforms.
 
 * CI
   * CircleCI
@@ -56,7 +56,7 @@ We support only the following platforms.
 * Notifier
   * GitHub
 
-We don't support the following platforms.
+tfcmt doesn't support the following platforms.
 
 * CI
   * Jenkins
@@ -147,7 +147,7 @@ So this feature is removed from tfcmt.
 [#67](https://github.com/suzuki-shunsuke/tfcmt/pull/67)
 
 Instead of removing duplicate comments, tfcmt embeds metadata into comment with [github-comment-metadata](https://github.com/suzuki-shunsuke/github-comment-metadata).
-tfcmt itself doesn't support to hide old comments, but we can hide comments with [github-comment's hide command](https://github.com/suzuki-shunsuke/github-comment#hide).
+tfcmt itself doesn't support to hide old comments, but you can hide comments with [github-comment's hide command](https://github.com/suzuki-shunsuke/github-comment#hide).
 
 ## Breaking Change: Change the behavior of deletion warning
 
@@ -311,7 +311,7 @@ notifier:
       name: tfcmt
 ```
 
-We can omit `ci` and `repository`.
+You can omit `ci` and `repository`.
 
 ```yaml
 notifier:
@@ -321,11 +321,11 @@ notifier:
 
 ## Feature: Get GitHub Token from the environment variable "GITHUB_TOKEN" by default
 
-We can omit the configuration `notifier.github.token`.
+You can omit the configuration `notifier.github.token`.
 
 ## Feature: Custom Environment Variable Definition
 
-We can complement the parameters like `pr` and `repo` on the other platform like Travis CI and Jenkins with Custom Environment Variable Definition.
+You can complement the parameters like `pr` and `repo` on the other platform like Travis CI and Jenkins with Custom Environment Variable Definition.
 
 Please see [here](ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).
 
@@ -335,7 +335,7 @@ Please see [here](ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition
 [49ea5c3a8c01e53cac6d3b529bd5d9907c41e9d3](https://github.com/suzuki-shunsuke/tfnotify/commit/49ea5c3a8c01e53cac6d3b529bd5d9907c41e9d3)
 
 tfcmt supports to configure label colors.
-So we don't have to configure label colors manually.
+So you don't have to configure label colors manually.
 This feature is useful especially for Monorepo.
 
 ## Feature: Support to pass variables by -var option
@@ -343,11 +343,11 @@ This feature is useful especially for Monorepo.
 [suzuki-shunsuke/tfnotify#29](https://github.com/suzuki-shunsuke/tfnotify/pull/29)
 
 tfcmt supports to pass variables to template by `-var <name>:<value>` options.
-We can access the variable in the template by `{{.Vars.<variable name>}}`.
+You can access the variable in the template by `{{.Vars.<variable name>}}`.
 
 The variable `target` has a special meaning.
 This variable is used at the default template and default label name.
-This is useful for Monorepo. By setting `target`, we can distinguish the comment and label of each service.
+This is useful for Monorepo. By setting `target`, you can distinguish the comment and label of each service.
 When this variable isn't set, this is just ignored.
 
 ## Feature: Add template variables
@@ -374,7 +374,7 @@ terraform:
       {{template "title" .}}
 ```
 
-The following builtin templates are defined. We can override them.
+The following builtin templates are defined. You can override them.
 
 * plan_title
 * apply_title
@@ -402,8 +402,8 @@ If the text includes <code>\`\`\`</code>, the text wraps with `<pre><code>`, oth
 * -sha
 * -build-url
 
-mercari/tfnotify gets these parameters from only environment variables, so we don't use mercari/tfnotify on the platform which mercari/tfnotify doesn't support.
-On the other hand, tfcmt supports to specify these parameters by command-line options, so we can use tfcmt anywhere.
+mercari/tfnotify gets these parameters from only environment variables, so you can't use mercari/tfnotify on the platform which mercari/tfnotify doesn't support.
+On the other hand, tfcmt supports to specify these parameters by command-line options, so you can use tfcmt anywhere.
 
 ex.
 

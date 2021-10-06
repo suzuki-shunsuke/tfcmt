@@ -1,6 +1,6 @@
 # Getting Started
 
-In this getting started, we can understand tfcmt's primary feature.
+In this getting started, you can understand tfcmt's primary feature.
 For the detail, please see [other documents](../../README.md#index) too.
 
 ## Requirements
@@ -63,13 +63,13 @@ https://github.com/suzuki-shunsuke/tfcmt/pull/70#issuecomment-797854184
 
 ![image](https://user-images.githubusercontent.com/13323303/111016701-b6f89200-83f2-11eb-9fed-35d8249c9ba0.png)
 
-1. By the following message, we can know the number of added, changed, and destroyed resources.
+1. By the following message, you can know the number of added, changed, and destroyed resources.
 
 ```
 Plan: 1 to add, 0 to change, 0 to destroy.
 ```
 
-2. By the following message, we can know which resources are added, changed, and destroyed, and recreated.
+2. By the following message, you can know which resources are added, changed, and destroyed, and recreated.
 
 ```markdown
 * Create
@@ -78,7 +78,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 
 Please see [List of changed resources](#list-of-changed-resources) too.
 
-3. By opening `Details`, we can confirm the full output of `terraform plan`.
+3. By opening `Details`, you can confirm the full output of `terraform plan`.
 
 ![image](https://user-images.githubusercontent.com/13323303/111022026-7fe6a880-8413-11eb-84db-3159402d42f3.png)
 
@@ -201,13 +201,13 @@ It is helpful to prevent unexpected resource deletion.
 
 ## Support of CI platforms
 
-In the above commands, we specify the repository owner, name, and pull request number as the command line arguments.
+In the above commands, you specify the repository owner, name, and pull request number as the command line arguments.
 
 ```console
 $ tfcmt -owner "$OWNER" -repo "$REPO" -pr "$PR_NUMBER"
 ```
 
-But on the following CI platform, tfcmt gets these parameters from the built in environment variables so we don't have to specify these arguments.
+But on the following CI platform, tfcmt gets these parameters from the built in environment variables so you don't have to specify these arguments.
 
 * AWS CodeBuild
 * CircleCI
@@ -233,7 +233,7 @@ Note that if tfcmt can't get the pull request number from environment variables 
 When running CI of the same pull request at many times,
 it is convenient to hide old comments posted by tfcmt.
 
-tfcmt itself doesn't support to hide old comments, but we can hide old comments with [github-comment](https://github.com/suzuki-shunsuke/github-comment).
+tfcmt itself doesn't support to hide old comments, but you can hide old comments with [github-comment](https://github.com/suzuki-shunsuke/github-comment).
 tfcmt embeds metadata in a comment as HTML comment.
 Please check comments posted by tfcmt.
 
@@ -245,7 +245,7 @@ Please check comments posted by tfcmt.
 <!-- github-comment: {"Command":"plan","PRNumber":70,"Program":"tfcmt","SHA1":"","Vars":{}} -->
 ```
 
-So we can hide comments with [github-comment hide](https://github.com/suzuki-shunsuke/github-comment#hide) command.
+So you can hide comments with [github-comment hide](https://github.com/suzuki-shunsuke/github-comment#hide) command.
 
 ## Monorepo support: target variable
 
@@ -262,8 +262,8 @@ bar/
   ...
 ```
 
-In the above case, we have to distinguish comments for the state `foo` and `bar`.
-By specifying the special variable `target` by `-var` argument, we can do it.
+In the above case, you have to distinguish comments for the state `foo` and `bar`.
+By specifying the special variable `target` by `-var` argument, you can do it.
 
 ```console
 $ vi main.tf
