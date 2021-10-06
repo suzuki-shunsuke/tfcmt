@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io/api/go
 
+.terraform
+*.backup
+
 ### Go ###
 # Binaries for programs and plugins
 *.exe
