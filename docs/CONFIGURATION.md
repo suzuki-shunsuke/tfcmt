@@ -1,7 +1,7 @@
 # Configuration
 
 tfcmt provides the good default configuration and the configuration file is optional,
-but we can customize the configuration with a configuration file.
+but you can customize the configuration with a configuration file.
 
 ## Configuration File Path
 
@@ -172,9 +172,9 @@ The following variables are added from tfcmt v1.1.0.
 * ChangeOutsideTerraform
 * Warning
 
-Compared with `CombinedOutput`, we can make the result of `terraform plan` clear.
+Compared with `CombinedOutput`, you can make the result of `terraform plan` clear.
 
-* We can exclude noisy `Refreshing state...` logs
+* You can exclude noisy `Refreshing state...` logs
 * Separate `changes made outside of Terraform since the last "terraform apply":`
 * Make the warning easy to see
 

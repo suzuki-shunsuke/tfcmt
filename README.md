@@ -9,7 +9,7 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify)
 
 tfcmt is a CLI tool to improve the experience of CI of Terraform.
 By posting the result of `terraform plan` and `terraform apply` to GitHub Pull Requests as a comment,
-we can know the result quickly without browsing the CI web page.
+you can know the result quickly without browsing the CI web page.
 
 ![image](https://user-images.githubusercontent.com/13323303/111016701-b6f89200-83f2-11eb-9fed-35d8249c9ba0.png)
 
