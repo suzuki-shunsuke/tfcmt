@@ -1,0 +1,8 @@
+registries:
+- type: standard
+  ref: v0.8.9 # renovate: depName=suzuki-shunsuke/aqua-registry
+
+packages:
+- name: hashicorp/terraform@v1.0.8
+- name: suzuki-shunsuke/github-comment@v4.0.0-0
+- name: suzuki-shunsuke/tfcmt@v2.0.0-0
