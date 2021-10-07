@@ -71,6 +71,8 @@ tfcmt doesn't support the following platforms.
 Because we don't use these platforms and it is hard to maintain them.
 By removing them, the code makes simple.
 
+By [Custom Environment Variable Definition](https://github.com/suzuki-shunsuke/tfcmt/blob/main/docs/ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition), you can support CI platform which tfcmt doesn't support natively.
+
 ## Breaking Change: Remove `fmt` command
 
 [#5](https://github.com/suzuki-shunsuke/tfcmt/pull/5)
