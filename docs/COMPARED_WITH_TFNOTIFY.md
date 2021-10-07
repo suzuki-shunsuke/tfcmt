@@ -17,8 +17,8 @@ tfcmt isn't compatible with tfnotify.
   * [Change the behavior of deletion warning](#breaking-change-change-the-behavior-of-deletion-warning)
   * [Update labels by default](#breaking-change-update-pull-request-labels-by-default)
 * Features
-  * [Support Terraform v0.15](#feature-support-terraform-v015)
-  * [Add template variables of changed resource paths](#feature-add-template-variables-of-changed-resource-paths)
+  * [Support Terraform >= v0.15](#feature-support-terraform--v015)
+  * [Add template variables](#feature-add-template-variables)
   * [Post a comment when it failed to parse the result](#feature-post-a-comment-when-it-failed-to-parse-the-result)
   * [Find the configuration file recursively](#feature-find-the-configuration-file-recursively)
   * [Make a configuration file optional](#feature-make-a-configuration-file-optional)
@@ -28,7 +28,6 @@ tfcmt isn't compatible with tfnotify.
   * [Support to configure label colors](#feature-support-to-configure-label-colors)
   * Support template functions [sprig](http://masterminds.github.io/sprig/)
   * [Support to pass variables by -var option](#feature-support-to-pass-variables-by--var-option)
-  * [Add template variables](#feature-add-template-variables)
   * [Add templates configuration](#feature-add-templates-configuration)
   * [Add template functions](#feature-add-template-functions)
   * [Add command-line options about CI](#feature-add-command-line-options-about-ci)
@@ -195,21 +194,53 @@ terraform:
     disable_label: true
 ```
 
-## Feature: Support Terraform v0.15
+## Feature: Support Terraform >= v0.15
 
 [#90](https://github.com/suzuki-shunsuke/tfcmt/pull/90) [#91](https://github.com/suzuki-shunsuke/tfcmt/pull/91)
 
-## Feature: Add template variables of changed resource paths
+From Terraform v0.15, the message which terraform plan has no change was changed.
+
+AS IS
+
+```
+No changes. Infrastructure is up-to-date.
+```
+
+TO BE
+
+```
+No changes. Your infrastructure matches the configuration.
+```
+
+tfcmt supports both messages.
+
+## Feature: Add template variables
+
+* `Stdout`: standard output of terraform command
+* `Stderr`: standard error output of terraform command
+* `CombinedOutput`: output of terraform command
+* `ExitCode`: exit code of terraform command
+* `Vars`: variables which are passed by `-var` option
+* `ErrorMessages`: a list of error messages which occur in tfcmt
+* [#39](https://github.com/suzuki-shunsuke/tfcmt/pull/39) `CreatedResources`: a list of created resource paths ([]string)
+* [#39](https://github.com/suzuki-shunsuke/tfcmt/pull/39) `UpdatedResources`: a list of updated resource paths ([]string)
+* [#39](https://github.com/suzuki-shunsuke/tfcmt/pull/39) `DeletedResources`: a list of deleted resource paths ([]string)
+* [#39](https://github.com/suzuki-shunsuke/tfcmt/pull/39) `ReplacedResources`: a list of replaced resource paths ([]string)
+* [#103](https://github.com/suzuki-shunsuke/tfcmt/pull/103) [#107](https://github.com/suzuki-shunsuke/tfcmt/pull/107) `ChangedResult`
+* [#103](https://github.com/suzuki-shunsuke/tfcmt/pull/103) [#107](https://github.com/suzuki-shunsuke/tfcmt/pull/107) `ChangeOutsideTerraform`
+* [#103](https://github.com/suzuki-shunsuke/tfcmt/pull/103) [#107](https://github.com/suzuki-shunsuke/tfcmt/pull/107) `Warning`
+
+### Feature: Add template variables of changed resource paths
 
 [#39](https://github.com/suzuki-shunsuke/tfcmt/pull/39)
 
 As a summary of the result of `terraform plan`, it is convenient to show a list of resource paths.
 So the following template variables are added.
 
-* `.CreatedResources`: a list of created resource paths ([]string)
-* `.UpdatedResources`: a list of updated resource paths ([]string)
-* `.DeletedResources`: a list of deleted resource paths ([]string)
-* `.ReplacedResources`: a list of replaced resource paths ([]string)
+* `CreatedResources`: a list of created resource paths ([]string)
+* `UpdatedResources`: a list of updated resource paths ([]string)
+* `DeletedResources`: a list of deleted resource paths ([]string)
+* `ReplacedResources`: a list of replaced resource paths ([]string)
 
 For example,
 
@@ -349,15 +380,6 @@ The variable `target` has a special meaning.
 This variable is used at the default template and default label name.
 This is useful for Monorepo. By setting `target`, you can distinguish the comment and label of each service.
 When this variable isn't set, this is just ignored.
-
-## Feature: Add template variables
-
-* Stdout: standard output of terraform command
-* Stderr: standard error output of terraform command
-* CombinedOutput: output of terraform command
-* ExitCode: exit code of terraform command
-* Vars: variables which are passed by `-var` option
-* ErrorMessages: a list of error messages which occur in tfcmt
 
 ## Feature: Add templates configuration and builtin templates
 
