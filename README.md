@@ -11,9 +11,25 @@ tfcmt is a CLI tool to improve the experience of CI of Terraform.
 By posting the result of `terraform plan` and `terraform apply` to GitHub Pull Requests as a comment,
 you can know the result quickly without browsing the CI web page.
 
-![image](https://user-images.githubusercontent.com/13323303/111016701-b6f89200-83f2-11eb-9fed-35d8249c9ba0.png)
+tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and advanced formatting options.
 
-https://github.com/suzuki-shunsuke/tfcmt/pull/70#issuecomment-797854184
+[![image](https://user-images.githubusercontent.com/13323303/136236949-bac1a28d-4db2-4a08-900a-708a0a02311c.png)](https://github.com/suzuki-shunsuke/tfcmt/pull/132#issuecomment-936490121)
+
+You can separate the changes outside of Terraform.
+
+![image](https://user-images.githubusercontent.com/13323303/136237505-fb4cbd05-1d73-4fb0-903b-1ca7e8173e7b.png)
+
+You can exclude the log of refreshing state from the plan result.
+
+![image](https://user-images.githubusercontent.com/13323303/136238225-1569f762-0087-4aae-a513-a63eb9701e05.png)
+
+You can clarify the warning of Terraform.
+
+![image](https://user-images.githubusercontent.com/13323303/136238685-be0bab01-f6cb-4b61-89fa-d94225e50ddb.png)
+
+Combined with [github-comment](https://github.com/suzuki-shunsuke/github-comment), you can hide stale comments.
+
+![image](https://user-images.githubusercontent.com/13323303/136240241-2f2e7455-8a2e-4fce-a91a-c8bab4d73510.png)
 
 ## Index
 
