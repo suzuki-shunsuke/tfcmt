@@ -1,15 +1,24 @@
 package cli
 
 import (
-	"github.com/suzuki-shunsuke/tfcmt/pkg/constant"
 	"github.com/urfave/cli/v2"
 )
 
-func New() *cli.App {
+type LDFlags struct {
+	Version string
+	Commit  string
+	Date    string
+}
+
+func (flags *LDFlags) AppVersion() string {
+	return flags.Version + " (" + flags.Commit + ")"
+}
+
+func New(flags *LDFlags) *cli.App {
 	app := cli.NewApp()
 	app.Name = "tfcmt"
 	app.Usage = "Notify the execution result of terraform command"
-	app.Version = constant.Version
+	app.Version = flags.AppVersion()
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{Name: "owner", Usage: "GitHub Repository owner name"},
 		&cli.StringFlag{Name: "repo", Usage: "GitHub Repository name"},
