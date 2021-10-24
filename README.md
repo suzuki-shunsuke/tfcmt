@@ -54,6 +54,12 @@ Please see [Compared with tfnotify](docs/COMPARED_WITH_TFNOTIFY.md).
 
 Grab the binary from [GitHub Releases](https://github.com/suzuki-shunsuke/tfcmt/releases)
 
+You can install tfcmt with [Homebrew](https://brew.sh/) too.
+
+```
+$ brew install suzuki-shunsuke/tfcmt/tfcmt
+```
+
 ## What tfcmt does
 
 1. Parse the execution result of Terraform
