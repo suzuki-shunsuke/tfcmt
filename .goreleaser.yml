@@ -7,9 +7,6 @@ before:
 builds:
   - main: ./cmd/tfcmt
     binary: tfcmt
-    ldflags: 
-      - -s -w
-      - -X main.version={{.Version}}
     env:
       - CGO_ENABLED=0
 archives:
