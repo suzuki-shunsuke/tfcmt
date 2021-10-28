@@ -70,6 +70,7 @@ github.com/suzuki-shunsuke/github-comment-metadata v0.1.0 h1:89uGvBINoWZ4p2dGj7S
 github.com/suzuki-shunsuke/github-comment-metadata v0.1.0/go.mod h1:GNDhEmWAJ6Bbk9rIds0mAMF4noyPV3EqwqLetnEoNLg=
 github.com/suzuki-shunsuke/go-ci-env v1.1.0 h1:eGpItM2bEDtHFXYYEm8zz+kDGxWlhOtwNK58cREa1QU=
 github.com/suzuki-shunsuke/go-ci-env v1.1.0/go.mod h1:kO9UgcQIAH4Pu4ESkUJHPuQEtesxHPKkpQqeJHJzzdk=
+github.com/suzuki-shunsuke/go-ci-env/v2 v2.0.1/go.mod h1:/C2DMGRQdbN8GoIbptoRkUjOzn1KCM/uw1ckjhFB8cA=
 github.com/suzuki-shunsuke/go-findconfig v1.1.0 h1:kWZHF93LPZPLrvA/GToPZPKEFzgky3tNTrYEfMpr7f8=
 github.com/suzuki-shunsuke/go-findconfig v1.1.0/go.mod h1:u/0Zz6/GDE6G0gofzVhR9UPOIKLSUoDMjUoFWqOoVlg=
 github.com/urfave/cli/v2 v2.3.0 h1:qph92Y649prgesehzOrQjdWyxFOp/QVM+6imKHad91M=
