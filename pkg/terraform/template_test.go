@@ -28,7 +28,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 
 ` + "```" + `
 
@@ -76,7 +76,7 @@ body
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 body
 ` + "```" + `
 
@@ -100,7 +100,7 @@ body
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 This is a "body".
 ` + "```" + `
 
@@ -125,7 +125,7 @@ This is a "body".
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 This is a "body".
 ` + "```" + `
 
@@ -149,7 +149,7 @@ This is a "body".
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 body
 ` + "```" + `
 
@@ -207,7 +207,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 
 ` + "```" + `
 
@@ -253,7 +253,7 @@ body
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 body
 ` + "```" + `
 
@@ -276,7 +276,7 @@ body
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 body
 ` + "```" + `
 
@@ -299,7 +299,7 @@ body
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 This is a "body".
 ` + "```" + `
 
@@ -323,7 +323,7 @@ This is a "body".
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 This is a "body".
 ` + "```" + `
 

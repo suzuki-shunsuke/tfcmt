@@ -146,7 +146,7 @@ func wrapCode(text string) interface{} {
 	if strings.Contains(text, "```") {
 		return `<pre><code>` + text + `</code></pre>`
 	}
-	return htmltemplate.HTML("\n```\n" + text + "\n```\n") //nolint:gosec
+	return htmltemplate.HTML("\n```hcl\n" + text + "\n```\n") //nolint:gosec
 }
 
 func generateOutput(kind, template string, data map[string]interface{}, useRawOutput bool) (string, error) {
