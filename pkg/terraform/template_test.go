@@ -52,7 +52,7 @@ func TestPlanTemplateExecute(t *testing.T) {
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 body
 ` + "```" + `
 
@@ -230,7 +230,7 @@ func TestApplyTemplateExecute(t *testing.T) {
 
 <details><summary>Details (Click me)</summary>
 
-` + "```" + `
+` + "```hcl" + `
 body
 ` + "```" + `
 
