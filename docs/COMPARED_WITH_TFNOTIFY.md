@@ -25,13 +25,14 @@ tfcmt isn't compatible with tfnotify.
     * [Complement CI and GitHub Repository owner and name from environment variables](#feature-complement-ci-and-github-repository-owner-and-name-from-environment-variables)
     * [Get GitHub Token from the environment variable "GITHUB_TOKEN" by default](#feature-get-github-token-from-the-environment-variable-github_token-by-default)
   * [Support Custom Environment Variable Definition](#feature-custom-environment-variable-definition)
+  * [Syntax Highlight](#feature-syntax-highlight)
   * [Support to configure label colors](#feature-support-to-configure-label-colors)
   * Support template functions [sprig](http://masterminds.github.io/sprig/)
   * [Support to pass variables by -var option](#feature-support-to-pass-variables-by--var-option)
   * [Add templates configuration](#feature-add-templates-configuration)
   * [Add template functions](#feature-add-template-functions)
   * [Add command-line options about CI](#feature-add-command-line-options-about-ci)
-  * [Get pull request number from CI_INFO_PR_NUMBER](#feature-)
+  * [Get pull request number from CI_INFO_PR_NUMBER](#feature-get-pull-request-number-from-ci_info_pr_number)
   * [Add --log-level option and log.level configuration and output structured log with logrus](#feature-add---log-level-option-and-loglevel-configuration-and-output-structured-log-with-logrus)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
@@ -361,6 +362,12 @@ You can omit the configuration `notifier.github.token`.
 You can complement the parameters like `pr` and `repo` on the other platform like Travis CI and Jenkins with Custom Environment Variable Definition.
 
 Please see [here](ENVIRONMENT_VARIABLE.md#custom-environment-variable-definition).
+
+## Feature: Syntax Highlight
+
+[#146](https://github.com/suzuki-shunsuke/tfcmt/pull/146)
+
+Use HCL Syntax Hightlit. Please see [Release Note](https://github.com/suzuki-shunsuke/tfcmt/releases/tag/v2.1.0)
 
 ## Feature: Support to configure label colors
 
