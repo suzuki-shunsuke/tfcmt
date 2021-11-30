@@ -31,7 +31,7 @@ tfcmt isn't compatible with tfnotify.
   * [Add templates configuration](#feature-add-templates-configuration)
   * [Add template functions](#feature-add-template-functions)
   * [Add command-line options about CI](#feature-add-command-line-options-about-ci)
-  * [Get pull request number from CI_INFO_PR_NUMBER](#feature-)
+  * [Get pull request number from CI_INFO_PR_NUMBER](#feature-get-pull-request-number-from-ci_info_pr_number)
   * [Add --log-level option and log.level configuration and output structured log with logrus](#feature-add---log-level-option-and-loglevel-configuration-and-output-structured-log-with-logrus)
   * [Don't recreate labels](#feature-dont-recreate-labels)
   * [--version option and `version` command](#feature---version-option-and-version-command)
