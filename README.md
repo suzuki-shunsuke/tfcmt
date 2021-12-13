@@ -56,9 +56,11 @@ Grab the binary from [GitHub Releases](https://github.com/suzuki-shunsuke/tfcmt/
 
 You can install tfcmt with [Homebrew](https://brew.sh/) too.
 
-```
+```console
 $ brew install suzuki-shunsuke/tfcmt/tfcmt
 ```
+
+You can install tfcmt with [aqua](https://aquaproj.github.io/) too.
 
 ## What tfcmt does
 
