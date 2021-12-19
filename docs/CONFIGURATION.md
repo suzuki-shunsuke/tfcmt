@@ -81,8 +81,36 @@ templates:
       * {{.}}
     {{- end}}{{end}}
   deletion_warning: |
+    {{if .HasDestroy}}
     ### :warning: Resource Deletion will happen :warning:
     This plan contains resource delete operation. Please check the plan result very carefully!
+    {{end}}
+  changed_result: |
+    {{if .ChangedResult}}
+    <details><summary>Change Result (Click me)</summary>
+    {{wrapCode .ChangedResult}}
+    </details>
+    {{end}}
+  change_outside_terraform: |
+    {{if .ChangeOutsideTerraform}}
+    <details><summary>:information_source: Objects have changed outside of Terraform</summary>
+
+    _This feature was introduced from [Terraform v0.15.4](https://github.com/hashicorp/terraform/releases/tag/v0.15.4)._
+    {{wrapCode .ChangeOutsideTerraform}}
+    </details>
+    {{end}}
+  warning: |
+    {{if .Warning}}
+    ## :warning: Warnings :warning:
+    {{wrapCode .Warning}}
+    {{end}}
+  error_messages: |
+    {{if .ErrorMessages}}
+    ## :warning: Errors
+    {{range .ErrorMessages}}
+    * {{. -}}
+    {{- end}}{{end}}
+  guide_apply_failure: ""
 terraform:
   plan:
     disable_label: false
@@ -91,17 +119,14 @@ terraform:
 
       {{if .Link}}[CI link]({{.Link}}){{end}}
 
-      {{if .HasDestroy}}{{template "deletion_warning" .}}{{end}}
+      {{template "deletion_warning" .}}
       {{template "result" .}}
       {{template "updated_resources" .}}
-      <details><summary>Details (Click me)</summary>
-      {{wrapCode .CombinedOutput}}
-      </details>
-      {{if .ErrorMessages}}
-      ## :warning: Errors
-      {{range .ErrorMessages}}
-      * {{. -}}
-      {{- end}}{{end}}
+
+      {{template "changed_result" .}}
+      {{template "change_outside_terraform" .}}
+      {{template "warning" .}}
+      {{template "error_messages" .}}
     when_add_or_update_only:
       label: "{{if .Vars.target}}{{.Vars.target}}/{{end}}add-or-update"
       label_color: 1d76db # blue
@@ -123,16 +148,14 @@ terraform:
 
       {{if .Link}}[CI link]({{.Link}}){{end}}
 
+      {{if ne .ExitCode 0}}{{template "guide_apply_failure" .}}{{end}}
+
       {{template "result" .}}
 
       <details><summary>Details (Click me)</summary>
       {{wrapCode .CombinedOutput}}
       </details>
-      {{if .ErrorMessages}}
-      ## :warning: Errors
-      {{range .ErrorMessages}}
-      * {{. -}}
-      {{- end}}{{end}}
+      {{template "error_messages" .}}`
     when_parse_error:
       template: |
         ## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
