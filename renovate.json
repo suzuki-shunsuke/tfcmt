@@ -1,6 +1,7 @@
 {
   "extends": [
-    "config:base"
+    "config:base",
+    "github>aquaproj/aqua-renovate-config"
   ],
   "automerge": true,
   "packageRules": [
@@ -15,6 +16,15 @@
     {
       "postUpdateOptions": ["gomodTidy"],
       "matchManagers": ["gomod"]
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
+      "matchStrings": [
+        "version: (?<currentValue>.*?) # renovate: depName=(?<depName>.*)"
+      ],
+      "datasourceTemplate": "github-releases"
     }
   ]
 }

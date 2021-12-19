@@ -13,15 +13,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
-          go-version: '1.17.1'
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+          go-version: '1.17.5'
+
+      - uses: int128/aqua-action@v1
         with:
-          version: v1.41
+          version: v0.8.6 # renovate: depName=aquaproj/aqua
+
+      - uses: suzuki-shunsuke/github-action-golangci-lint@v0.1.1
       - name: Test
         run: go test -v -race ./...

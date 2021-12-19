@@ -13,6 +13,8 @@ linters:
     - lll
     - godot
     - exhaustivestruct
+    - varnamelen
+    - ireturn
     # TODO
     - dupl
     - wrapcheck
