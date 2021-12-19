@@ -59,6 +59,8 @@ It failed to parse the result.
 
 {{if .Link}}[CI link]({{.Link}}){{end}}
 
+{{template "guide_apply_parse_error" .}}
+
 It failed to parse the result.
 
 <details><summary>Details (Click me)</summary>
@@ -241,7 +243,8 @@ _This feature was introduced from [Terraform v0.15.4](https://github.com/hashico
 {{range .ErrorMessages}}
 * {{. -}}
 {{- end}}{{end}}`,
-		"guide_apply_failure": "",
+		"guide_apply_failure":     "",
+		"guide_apply_parse_error": "",
 	}
 
 	for k, v := range t.Templates {

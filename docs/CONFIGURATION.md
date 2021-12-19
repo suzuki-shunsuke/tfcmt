@@ -111,6 +111,7 @@ templates:
     * {{. -}}
     {{- end}}{{end}}
   guide_apply_failure: ""
+  guide_apply_parse_error: ""
 terraform:
   plan:
     disable_label: false
@@ -161,6 +162,8 @@ terraform:
         ## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
 
         {{if .Link}}[CI link]({{.Link}}){{end}}
+
+        {{template "guide_apply_parse_error" .}}
 
         It failed to parse the result.
 
