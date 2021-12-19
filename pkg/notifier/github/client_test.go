@@ -7,11 +7,7 @@ import (
 )
 
 func TestNewClient(t *testing.T) { //nolint:paralleltest
-	githubToken := os.Getenv(EnvToken)
-	defer func() {
-		os.Setenv(EnvToken, githubToken)
-	}()
-	os.Setenv(EnvToken, "")
+	t.Setenv(EnvToken, "")
 
 	testCases := []struct {
 		config   Config
@@ -74,11 +70,7 @@ func TestNewClient(t *testing.T) { //nolint:paralleltest
 }
 
 func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
-	githubBaseURL := os.Getenv(EnvBaseURL)
-	defer func() {
-		os.Setenv(EnvBaseURL, githubBaseURL)
-	}()
-	os.Setenv(EnvBaseURL, "")
+	t.Setenv(EnvBaseURL, "")
 
 	testCases := []struct {
 		config     Config
