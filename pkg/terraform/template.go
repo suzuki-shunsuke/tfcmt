@@ -198,8 +198,8 @@ func (t *Template) Execute() (string, error) {
 	}
 
 	templates := map[string]string{
-		"plan_title":  "## {{if eq .ExitCode 1}}:x: {{end}}Plan Result{{if .Vars.target}} ({{.Vars.target}}){{end}}",
-		"apply_title": "## :{{if eq .ExitCode 0}}white_check_mark{{else}}x{{end}}: Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}",
+		"plan_title":  "## {{if eq .ExitCode 1}}:x: Plan Failed{{else}}Plan Result{{end}}{{if .Vars.target}} ({{.Vars.target}}){{end}}",
+		"apply_title": "## {{if eq .ExitCode 0}}:white_check_mark: Apply Succeeded{{else}}:x: Apply Failed{{end}}{{if .Vars.target}} ({{.Vars.target}}){{end}}",
 		"result":      "{{if .Result}}<pre><code>{{ .Result }}</code></pre>{{end}}",
 		"updated_resources": `{{if .CreatedResources}}
 * Create
