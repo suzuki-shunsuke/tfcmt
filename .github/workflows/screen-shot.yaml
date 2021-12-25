@@ -13,25 +13,13 @@ jobs:
       GITHUB_OWNER: suzuki-shunsuke
     steps:
     - uses: actions/checkout@v2
-    - name: Generate token
-      id: generate_token
-      uses: tibdex/github-app-token@v1
-      with:
-        app_id: ${{ secrets.APP_ID }}
-        private_key: ${{ secrets.APP_PRIVATE_KEY }}
     - uses: int128/aqua-action@v1
       with:
-        version: v0.7.6 # renovate: depName=suzuki-shunsuke/aqua
+        version: v0.8.7 # renovate: depName=suzuki-shunsuke/aqua
 
     - run: github-comment hide
       working-directory: examples/screen-shot
-      env:
-        GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
     - run: github-comment exec -- terraform init
       working-directory: examples/screen-shot
-      env:
-        GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
     - run: github-comment exec -- tfcmt -var target:foo plan -- terraform plan
       working-directory: examples/screen-shot
-      env:
-        GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
