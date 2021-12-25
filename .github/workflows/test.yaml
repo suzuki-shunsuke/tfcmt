@@ -22,7 +22,7 @@ jobs:
 
       - uses: int128/aqua-action@v1
         with:
-          version: v0.8.6 # renovate: depName=aquaproj/aqua
+          version: v0.8.7 # renovate: depName=aquaproj/aqua
 
       - uses: suzuki-shunsuke/github-action-golangci-lint@v0.1.1
       - name: Test
