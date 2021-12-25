@@ -21,5 +21,5 @@ jobs:
       working-directory: examples/screen-shot
     - run: github-comment exec -- terraform init
       working-directory: examples/screen-shot
-    - run: tfcmt plan -- terraform plan
+    - run: tfcmt -var target:foo plan -- terraform plan
       working-directory: examples/screen-shot
