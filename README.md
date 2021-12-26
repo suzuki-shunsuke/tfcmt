@@ -39,6 +39,7 @@ Combined with [github-comment](https://github.com/suzuki-shunsuke/github-comment
 - [Environment Variable](docs/ENVIRONMENT_VARIABLE.md)
 - [Compared with tfnotify](docs/COMPARED_WITH_TFNOTIFY.md)
 - [Release Notes](https://github.com/suzuki-shunsuke/tfcmt/releases)
+- [Blog](#blog)
 
 ## Forked version
 
@@ -80,6 +81,14 @@ Please see [Command Usage](docs/USAGE.md).
 ## Configuration
 
 Please see [Configuration](docs/CONFIGURATION.md).
+
+## Blog
+
+* [2021-12-26 tfcmt - Improve Terraform Workflow with PR Comment and Label](https://dev.to/suzukishunsuke/tfcmt-improve-terraform-workflow-with-pr-comment-and-label-1kh7)
+
+### Japanese
+
+* [2021-12-26 tfcmt で Terraform の CI/CD を改善する](https://zenn.dev/shunsuke_suzuki/articles/improve-terraform-cicd-with-tfcmt)
 
 ## Release Notes
 
