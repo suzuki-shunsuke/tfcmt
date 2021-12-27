@@ -1,0 +1,31 @@
+name: tfcmt
+description: install tfcmt
+inputs:
+  version:
+    description: "The version of tfcmt to install"
+    default: latest
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      working-directory: /tmp
+      run: |
+        set -e
+        VERSION="${{ inputs.version }}"
+        if [ "${VERSION}" = "latest" ]; then
+          DOWNLOAD_URL=$(curl -sS https://api.github.com/repos/suzuki-shunsuke/tfcmt/releases/latest|jq -r '.assets[].browser_download_url|select(match("linux.amd64."))')
+        else
+          DOWNLOAD_URL=$(curl -sS https://api.github.com/repos/suzuki-shunsuke/tfcmt/releases/tags/${VERSION}|jq -r '.assets[].browser_download_url|select(match("linux.amd64."))')
+        fi
+        cd /tmp
+        curl -sfLO ${DOWNLOAD_URL}
+        if [[ "${DOWNLOAD_URL}" =~ \.tar\.gz$ ]]; then
+          FILENAME=$(basename $DOWNLOAD_URL .tar.gz)
+          tar xzvf ${FILENAME}.tar.gz
+          sudo install tfcmt /usr/local/bin/tfcmt
+        elif [[ "${DOWNLOAD_URL}" =~ \.zip$ ]]; then
+          FILENAME=$(basename $DOWNLOAD_URL .zip)
+          unzip ${FILENAME}.zip
+          sudo install ${FILENAME} /usr/local/bin/tfcmt
+        fi
