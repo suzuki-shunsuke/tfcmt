@@ -17,7 +17,7 @@ tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and a
 
 You can separate the changes outside of Terraform.
 
-![image](https://user-images.githubusercontent.com/13323303/136237505-fb4cbd05-1d73-4fb0-903b-1ca7e8173e7b.png)
+![image](https://user-images.githubusercontent.com/13323303/147385656-54cdbef1-a876-49dc-945c-39bcf443ca59.png)
 
 You can exclude the log of refreshing state from the plan result.
 
