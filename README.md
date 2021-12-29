@@ -63,6 +63,10 @@ $ brew install suzuki-shunsuke/tfcmt/tfcmt
 
 You can install tfcmt with [aqua](https://aquaproj.github.io/) too.
 
+```console
+$ aqua g suzuki-shunsuke/tfcmt >> aqua.yaml
+```
+
 ## What tfcmt does
 
 1. Parse the execution result of Terraform
