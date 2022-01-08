@@ -55,7 +55,7 @@ It failed to parse the result.
 
 	// DefaultApplyParseErrorTemplate  is a default template for terraform apply parse error
 	DefaultApplyParseErrorTemplate = `
-## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
+{{template "apply_title" .}}
 
 {{if .Link}}[CI link]({{.Link}}){{end}}
 
