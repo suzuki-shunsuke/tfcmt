@@ -159,7 +159,7 @@ terraform:
       {{template "error_messages" .}}`
     when_parse_error:
       template: |
-        ## Apply Result{{if .Vars.target}} ({{.Vars.target}}){{end}}
+        {{template "apply_title" .}}
 
         {{if .Link}}[CI link]({{.Link}}){{end}}
 
