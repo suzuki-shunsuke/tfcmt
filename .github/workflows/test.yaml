@@ -22,7 +22,7 @@ jobs:
 
       - uses: aquaproj/aqua-installer@v0.5.0
         with:
-          aqua_version: v0.9.0
+          aqua_version: v0.10.0
 
       - uses: suzuki-shunsuke/github-action-golangci-lint@v0.1.1
       - name: Test
