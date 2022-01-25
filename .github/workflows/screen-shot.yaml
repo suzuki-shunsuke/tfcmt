@@ -1,0 +1,27 @@
+---
+name: screen shot
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_OWNER: suzuki-shunsuke
+    steps:
+    - uses: actions/checkout@v2
+    - uses: int128/aqua-action@v1
+      with:
+        version: v0.8.7 # renovate: depName=suzuki-shunsuke/aqua
+
+    - run: github-comment hide
+      working-directory: examples/screen-shot
+    - run: github-comment exec -- terraform init
+      working-directory: examples/screen-shot
+    # - run: tfcmt -var target:foo plan -- terraform plan
+    #   working-directory: examples/screen-shot
+    - run: tfcmt -var target:foo apply -- terraform apply -auto-approve
+      working-directory: examples/screen-shot
