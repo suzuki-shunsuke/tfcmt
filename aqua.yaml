@@ -7,4 +7,4 @@ registries:
 packages:
 - name: suzuki-shunsuke/cmdx@v1.6.1
 - name: reviewdog/reviewdog@v0.14.0
-- name: golangci/golangci-lint@v1.44.0
+- name: golangci/golangci-lint@v1.44.2
