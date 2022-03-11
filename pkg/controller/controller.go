@@ -180,6 +180,7 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		},
 		CI:                 ctrl.Config.CI.Link,
 		Parser:             ctrl.Parser,
+		Out:                ctrl.Config.Out,
 		UseRawOutput:       ctrl.Config.Terraform.UseRawOutput,
 		Template:           ctrl.Template,
 		ParseErrorTemplate: ctrl.ParseErrorTemplate,

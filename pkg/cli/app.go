@@ -25,6 +25,7 @@ func New(flags *LDFlags) *cli.App {
 		&cli.StringFlag{Name: "sha", Usage: "commit SHA (revision)"},
 		&cli.StringFlag{Name: "build-url", Usage: "build url"},
 		&cli.StringFlag{Name: "log-level", Usage: "log level"},
+		&cli.StringFlag{Name: "out", Usage: "out put file name"},
 		&cli.IntFlag{Name: "pr", Usage: "pull request number"},
 		&cli.StringFlag{Name: "config", Usage: "config path"},
 		&cli.StringSliceFlag{Name: "var", Usage: "template variables. The format of value is '<name>:<value>'"},

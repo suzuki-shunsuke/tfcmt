@@ -45,6 +45,7 @@ type Config struct {
 	PR      PullRequest
 	CI      string
 	Parser  terraform.Parser
+	Out     string
 	// Template is used for all Terraform command output
 	Template           *terraform.Template
 	ParseErrorTemplate *terraform.Template

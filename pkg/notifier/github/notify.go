@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"os"
+	"fmt"
 
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/github-comment-metadata/metadata"
@@ -93,6 +94,17 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	}).Debug("embedded HTML comment")
 	// embed HTML tag to hide old comments
 	body += embeddedComment
+
+	output := g.client.Config.Out
+	if output != "" {
+		file, err := os.OpenFile(output, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0666)
+		if err != nil {
+			return result.ExitCode, err
+		}
+		defer file.Close()
+		fmt.Fprintln(file, body)
+		return result.ExitCode, nil
+	}
 
 	if err := g.client.Comment.Post(ctx, body, PostOptions{
 		Number:   cfg.PR.Number,
