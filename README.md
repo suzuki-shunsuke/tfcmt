@@ -64,7 +64,7 @@ $ brew install suzuki-shunsuke/tfcmt/tfcmt
 You can install tfcmt with [aqua](https://aquaproj.github.io/) too.
 
 ```console
-$ aqua g suzuki-shunsuke/tfcmt >> aqua.yaml
+$ aqua g -i suzuki-shunsuke/tfcmt
 ```
 
 ## What tfcmt does
