@@ -22,6 +22,8 @@ archives:
         format: 'zip'
 release:
   prerelease: true # we update release note manually before releasing
+  header: |
+    [Pull Requests](https://github.com/suzuki-shunsuke/tfcmt/pulls?q=is%3Apr+milestone%3A{{.Tag}}) | [Issues](https://github.com/suzuki-shunsuke/tfcmt/issues?q=is%3Aissue+milestone%3A{{.Tag}}) | https://github.com/suzuki-shunsuke/tfcmt/compare/{{.PreviousTag}}...{{.Tag}}
 brews:
 -
   # NOTE: make sure the url_template, the token and given repo (github or gitlab) owner and name are from the
