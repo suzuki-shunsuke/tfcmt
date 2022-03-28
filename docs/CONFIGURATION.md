@@ -141,8 +141,16 @@ terraform:
       label:
       label_color:
     when_parse_error:
-      label:
-      label_color:
+      template: |
+        {{template "plan_title" .}}
+
+        {{if .Link}}[CI link]({{.Link}}){{end}}
+
+        It failed to parse the result.
+
+        <details><summary>Details (Click me)</summary>
+        {{wrapCode .CombinedOutput}}
+        </details>
   apply:
     template: |
       {{template "apply_title" .}}
