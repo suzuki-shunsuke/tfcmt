@@ -140,6 +140,15 @@ func avoidHTMLEscape(text string) htmltemplate.HTML {
 }
 
 func wrapCode(text string) interface{} {
+	if len(text) > 60000 { //nolint:gomnd
+		text = text[:20000] + `
+
+# ...
+# ... The maximum length of GitHub Comment is 65536, so the content is omitted by tfcmt.
+# ...
+
+` + text[len(text)-20000:]
+	}
 	if strings.Contains(text, "```") {
 		return `<pre><code>` + text + `</code></pre>`
 	}
