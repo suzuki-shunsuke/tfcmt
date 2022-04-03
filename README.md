@@ -9,7 +9,8 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 
 ## Document
 
-https://suzuki-shunsuke.github.io/tfcmt/docs/
+* https://suzuki-shunsuke.github.io/tfcmt/docs/
+* https://github.com/suzuki-shunsuke/tfcmt-docs
 
 ## License
 
