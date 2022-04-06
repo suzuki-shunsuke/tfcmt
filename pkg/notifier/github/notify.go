@@ -216,10 +216,9 @@ func (g *NotifyService) updateLabels(ctx context.Context, result terraform.Parse
 func (g *NotifyService) removeResultLabels(ctx context.Context, label string) (string, error) {
 	cfg := g.client.Config
 	// A Pull Request can have 100 labels the maximum
-	listOption := &github.ListOptions{
+	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, &github.ListOptions{
 		PerPage: 100,
-	}
-	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, listOption)
+	})
 	if err != nil {
 		return "", err
 	}
