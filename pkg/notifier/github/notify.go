@@ -217,7 +217,7 @@ func (g *NotifyService) removeResultLabels(ctx context.Context, label string) (s
 	cfg := g.client.Config
 	// A Pull Request can have 100 labels the maximum
 	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, &github.ListOptions{
-		PerPage: 100,
+		PerPage: 100, //nolint:gomnd
 	})
 	if err != nil {
 		return "", err
