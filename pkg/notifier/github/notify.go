@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/google/go-github/v39/github"
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/github-comment-metadata/metadata"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
@@ -214,7 +215,10 @@ func (g *NotifyService) updateLabels(ctx context.Context, result terraform.Parse
 
 func (g *NotifyService) removeResultLabels(ctx context.Context, label string) (string, error) {
 	cfg := g.client.Config
-	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, nil)
+	// A Pull Request can have 100 labels the maximum
+	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, &github.ListOptions{
+		PerPage: 100, //nolint:gomnd
+	})
 	if err != nil {
 		return "", err
 	}
