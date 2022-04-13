@@ -21,7 +21,7 @@ import (
 )
 
 type Controller struct {
-	Config             config.Config
+	Config             *config.Config
 	Parser             terraform.Parser
 	Template           *terraform.Template
 	ParseErrorTemplate *terraform.Template
@@ -33,8 +33,8 @@ type Command struct {
 }
 
 // Run sends the notification with notifier
-func (ctrl *Controller) Run(ctx context.Context, command Command) error {
-	if err := platform.Complement(&ctrl.Config); err != nil {
+func (ctrl *Controller) Run(ctx context.Context, command *Command) error {
+	if err := platform.Complement(ctrl.Config); err != nil {
 		return err
 	}
 
@@ -62,7 +62,7 @@ func (ctrl *Controller) Run(ctx context.Context, command Command) error {
 	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
 	_ = cmd.Run()
 
-	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
+	return apperr.NewExitError(ntf.Notify(ctx, &notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),

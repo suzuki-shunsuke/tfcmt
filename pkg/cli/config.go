@@ -5,15 +5,15 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newConfig(ctx *cli.Context) (config.Config, error) {
-	cfg := config.Config{}
+func newConfig(ctx *cli.Context) (*config.Config, error) {
+	cfg := &config.Config{}
 	confPath, err := cfg.Find(ctx.String("config"))
 	if err != nil {
-		return cfg, err
+		return nil, err
 	}
 	if confPath != "" {
 		if err := cfg.LoadFile(confPath); err != nil {
-			return cfg, err
+			return nil, err
 		}
 	}
 	return cfg, nil

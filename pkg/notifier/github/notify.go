@@ -17,7 +17,7 @@ import (
 type NotifyService service
 
 // Notify posts comment optimized for notifications
-func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (int, error) { //nolint:cyclop
+func (g *NotifyService) Notify(ctx context.Context, param *notifier.ParamExec) (int, error) { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
