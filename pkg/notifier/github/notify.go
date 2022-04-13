@@ -137,6 +137,10 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 				logE.Debug("comment isn't changed")
 				return result.ExitCode, nil
 			}
+			if comment.IsMinimized {
+				logE.Debug("comment is hidden")
+				continue
+			}
 			logE.Debug("patch")
 			if err := g.client.Comment.Patch(ctx, body, int64(comment.DatabaseID)); err != nil {
 				return result.ExitCode, err

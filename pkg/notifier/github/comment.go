@@ -56,8 +56,9 @@ type ListOptions struct {
 }
 
 type IssueComment struct {
-	DatabaseID int
-	Body       string
+	DatabaseID  int
+	Body        string
+	IsMinimized bool
 }
 
 func (g *CommentService) listIssueComment(ctx context.Context, owner, repo string, number int) ([]*IssueComment, error) { //nolint:dupl
