@@ -56,11 +56,8 @@ type ListOptions struct {
 }
 
 type IssueComment struct {
-	ID     int64
-	Body   string
-	Author struct {
-		Login string
-	}
+	DatabaseID int
+	Body       string
 }
 
 func (g *CommentService) listIssueComment(ctx context.Context, owner, repo string, number int) ([]*IssueComment, error) { //nolint:dupl
