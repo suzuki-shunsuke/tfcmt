@@ -12,7 +12,7 @@ func TestNotifyNotify(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
 		name      string
-		config    Config
+		config    *Config
 		ok        bool
 		exitCode  int
 		paramExec *notifier.ParamExec
@@ -20,11 +20,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 0",
 			// invalid body (cannot parse)
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "abcd",
 					Number:   1,
 				},
@@ -42,11 +42,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 1",
 			// invalid pr
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   0,
 				},
@@ -64,11 +64,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 2",
 			// valid, error
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
@@ -86,11 +86,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 3",
 			// valid, and isPR
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
@@ -108,11 +108,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 4",
 			// valid, and isRevision
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "revision-revision",
 					Number:   0,
 				},
@@ -131,11 +131,11 @@ func TestNotifyNotify(t *testing.T) {
 			name: "case 5",
 			// valid, and contains destroy
 			// TODO(dtan4): check two comments were made actually
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
@@ -154,18 +154,18 @@ func TestNotifyNotify(t *testing.T) {
 			name: "case 6",
 			// valid with no changes
 			// TODO(drlau): check that the label was actually added
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
 				Parser:             terraform.NewPlanParser(),
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
-				ResultLabels: ResultLabels{
+				ResultLabels: &ResultLabels{
 					AddOrUpdateLabel: "add-or-update",
 					DestroyLabel:     "destroy",
 					NoChangesLabel:   "no-changes",
@@ -182,11 +182,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 7",
 			// valid, contains destroy, but not to notify
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
@@ -204,11 +204,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 8",
 			// apply case without merge commit
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "revision",
 					Number:   0, // For apply, it is always 0
 				},
@@ -227,11 +227,11 @@ func TestNotifyNotify(t *testing.T) {
 			name: "case 9",
 			// apply case as merge commit
 			// TODO(drlau): validate cfg.PR.Number = 123
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "Merge pull request #123 from suzuki-shunsuke/tfcmt",
 					Number:   0, // For apply, it is always 0
 				},

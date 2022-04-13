@@ -85,7 +85,7 @@ func (g *NotifyService) Notify(ctx context.Context, param *notifier.ParamExec) (
 		"program": "tfcmt",
 	})
 
-	embeddedComment, err := getEmbeddedComment(&cfg, param.CIName, isPlan)
+	embeddedComment, err := getEmbeddedComment(cfg, param.CIName, isPlan)
 	if err != nil {
 		return result.ExitCode, err
 	}

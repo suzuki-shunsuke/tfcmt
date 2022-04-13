@@ -8,7 +8,7 @@ import (
 func TestCommentPost(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
-		config Config
+		config *Config
 		body   string
 		opt    PostOptions
 		ok     bool

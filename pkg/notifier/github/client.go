@@ -23,9 +23,9 @@ type Client struct {
 	*github.Client
 	Debug bool
 
-	Config Config
+	Config *Config
 
-	common service
+	common *service
 
 	Comment  *CommentService
 	Commits  *CommitsService
@@ -42,14 +42,14 @@ type Config struct {
 	BaseURL string
 	Owner   string
 	Repo    string
-	PR      PullRequest
+	PR      *PullRequest
 	CI      string
 	Parser  terraform.Parser
 	// Template is used for all Terraform command output
 	Template           *terraform.Template
 	ParseErrorTemplate *terraform.Template
 	// ResultLabels is a set of labels to apply depending on the plan result
-	ResultLabels     ResultLabels
+	ResultLabels     *ResultLabels
 	Vars             map[string]string
 	EmbeddedVarNames []string
 	Templates        map[string]string
@@ -68,7 +68,7 @@ type service struct {
 }
 
 // NewClient returns Client initialized with Config
-func NewClient(ctx context.Context, cfg Config) (*Client, error) {
+func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
 	token := cfg.Token
 	token = strings.TrimPrefix(token, "$")
 	if token == EnvToken {
@@ -103,12 +103,13 @@ func NewClient(ctx context.Context, cfg Config) (*Client, error) {
 		Config:   cfg,
 		Client:   client,
 		v4Client: githubv4.NewClient(tc),
+		common:   &service{},
 	}
 	c.common.client = c
-	c.Comment = (*CommentService)(&c.common)
-	c.Commits = (*CommitsService)(&c.common)
-	c.Notify = (*NotifyService)(&c.common)
-	c.User = (*UserService)(&c.common)
+	c.Comment = (*CommentService)(c.common)
+	c.Commits = (*CommitsService)(c.common)
+	c.Notify = (*NotifyService)(c.common)
+	c.User = (*UserService)(c.common)
 
 	c.API = &GitHub{
 		Client: client,
@@ -138,6 +139,9 @@ type ResultLabels struct {
 
 // HasAnyLabelDefined returns true if any of the internal labels are set
 func (r *ResultLabels) HasAnyLabelDefined() bool {
+	if r == nil {
+		return false
+	}
 	return r.AddOrUpdateLabel != "" || r.DestroyLabel != "" || r.NoChangesLabel != "" || r.PlanErrorLabel != ""
 }
 
