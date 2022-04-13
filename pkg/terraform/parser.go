@@ -8,7 +8,7 @@ import (
 
 // Parser is an interface for parsing terraform execution result
 type Parser interface {
-	Parse(body string) ParseResult
+	Parse(body string) *ParseResult
 }
 
 // ParseResult represents the result of parsed terraform execution
@@ -80,8 +80,8 @@ func NewApplyParser() *ApplyParser {
 }
 
 // Parse returns ParseResult related with terraform commands
-func (p *DefaultParser) Parse(body string) ParseResult {
-	return ParseResult{
+func (p *DefaultParser) Parse(body string) *ParseResult {
+	return &ParseResult{
 		Result:   body,
 		ExitCode: ExitPass,
 		Error:    nil,
@@ -96,7 +96,7 @@ func extractResource(pattern *regexp.Regexp, line string) string {
 }
 
 // Parse returns ParseResult related with terraform plan
-func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
+func (p *PlanParser) Parse(body string) *ParseResult { //nolint:cyclop
 	var exitCode int
 	switch {
 	case p.Pass.MatchString(body):
@@ -104,7 +104,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	case p.Fail.MatchString(body):
 		exitCode = ExitFail
 	default:
-		return ParseResult{
+		return &ParseResult{
 			Result:        "",
 			HasParseError: true,
 			ExitCode:      ExitFail,
@@ -188,7 +188,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		}
 	}
 
-	return ParseResult{
+	return &ParseResult{
 		Result:             result,
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
@@ -207,7 +207,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 }
 
 // Parse returns ParseResult related with terraform apply
-func (p *ApplyParser) Parse(body string) ParseResult {
+func (p *ApplyParser) Parse(body string) *ParseResult {
 	var exitCode int
 	switch {
 	case p.Pass.MatchString(body):
@@ -215,7 +215,7 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 	case p.Fail.MatchString(body):
 		exitCode = ExitFail
 	default:
-		return ParseResult{
+		return &ParseResult{
 			Result:        "",
 			ExitCode:      ExitFail,
 			HasParseError: true,
@@ -236,7 +236,7 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 	case p.Fail.MatchString(line):
 		result = strings.Join(trimLastNewline(lines[i:]), "\n")
 	}
-	return ParseResult{
+	return &ParseResult{
 		Result:   result,
 		ExitCode: exitCode,
 		Error:    nil,

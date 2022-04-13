@@ -202,7 +202,7 @@ func getEmbeddedComment(cfg *Config, ciName string, isPlan bool) (string, error)
 	return embeddedComment, nil
 }
 
-func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string { //nolint:cyclop
+func (g *NotifyService) updateLabels(ctx context.Context, result *terraform.ParseResult) []string { //nolint:cyclop
 	cfg := g.client.Config
 	var (
 		labelToAdd string
