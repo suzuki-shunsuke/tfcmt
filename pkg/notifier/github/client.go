@@ -54,6 +54,7 @@ type Config struct {
 	EmbeddedVarNames []string
 	Templates        map[string]string
 	UseRawOutput     bool
+	Patch            bool
 }
 
 // PullRequest represents GitHub Pull Request metadata

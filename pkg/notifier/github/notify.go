@@ -95,6 +95,35 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	// embed HTML tag to hide old comments
 	body += embeddedComment
 
+	if cfg.Patch && cfg.PR.Number != 0 {
+		logE.Debug("try patching")
+		comments, err := g.client.Comment.List(ctx, cfg.Owner, cfg.Repo, cfg.PR.Number)
+		if err != nil {
+			logE.WithError(err).Debug("list comments")
+			if err := g.client.Comment.Post(ctx, body, PostOptions{
+				Number:   cfg.PR.Number,
+				Revision: cfg.PR.Revision,
+			}); err != nil {
+				return result.ExitCode, err
+			}
+			return result.ExitCode, nil
+		}
+		logE.WithField("size", len(comments)).Debug("list comments")
+		comment := g.getPatchedComment(logE, comments, cfg.Vars["target"])
+		if comment != nil {
+			if comment.Body == body {
+				logE.Debug("comment isn't changed")
+				return result.ExitCode, nil
+			}
+			logE.WithField("comment_id", comment.DatabaseID).Debug("patch a comment")
+			if err := g.client.Comment.Patch(ctx, body, int64(comment.DatabaseID)); err != nil {
+				return result.ExitCode, err
+			}
+			return result.ExitCode, nil
+		}
+	}
+
+	logE.Debug("create a comment")
 	if err := g.client.Comment.Post(ctx, body, PostOptions{
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
@@ -102,6 +131,45 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		return result.ExitCode, err
 	}
 	return result.ExitCode, nil
+}
+
+func (g *NotifyService) getPatchedComment(logE *logrus.Entry, comments []*IssueComment, target string) *IssueComment {
+	var cmt *IssueComment
+	for i, comment := range comments {
+		logE := logE.WithFields(logrus.Fields{
+			"comment_database_id": comment.DatabaseID,
+			"comment_index":       i,
+		})
+		data := &Metadata{}
+		f, err := metadata.Extract(comment.Body, data)
+		if err != nil {
+			logE.WithError(err).Debug("extract metadata from comment")
+			continue
+		}
+		if !f {
+			logE.Debug("metadata isn't found")
+			continue
+		}
+		if data.Program != "tfcmt" {
+			logE.Debug("Program isn't tfcmt")
+			continue
+		}
+		if data.Target != target {
+			logE.Debug("target is different")
+			continue
+		}
+		if comment.IsMinimized {
+			logE.Debug("comment is hidden")
+			continue
+		}
+		cmt = comment
+	}
+	return cmt
+}
+
+type Metadata struct {
+	Target  string
+	Program string
 }
 
 func getEmbeddedComment(cfg *Config, ciName string, isPlan bool) (string, error) {

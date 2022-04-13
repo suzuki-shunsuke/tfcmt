@@ -34,6 +34,12 @@ func New(flags *LDFlags) *cli.App {
 			Name:   "plan",
 			Usage:  "Run terraform plan and post a comment to GitHub commit or pull request",
 			Action: cmdPlan,
+			Flags: []cli.Flag{
+				&cli.BoolFlag{
+					Name:  "patch",
+					Usage: "update an existing comment instead of creating a new comment. If there is no existing comment, a new comment is created.",
+				},
+			},
 		},
 		{
 			Name:   "apply",

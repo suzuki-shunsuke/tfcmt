@@ -9,6 +9,7 @@ import (
 // API is GitHub API interface
 type API interface {
 	IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
+	IssuesEditComment(ctx context.Context, commentID int64, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
 	IssuesListLabels(ctx context.Context, number int, opt *github.ListOptions) ([]*github.Label, *github.Response, error)
 	IssuesAddLabels(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
 	IssuesRemoveLabel(ctx context.Context, number int, label string) (*github.Response, error)
@@ -21,12 +22,17 @@ type API interface {
 // GitHub represents the attribute information necessary for requesting GitHub API
 type GitHub struct {
 	*github.Client
-	owner, repo string
+	owner string
+	repo  string
 }
 
 // IssuesCreateComment is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.CreateComment
 func (g *GitHub) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
 	return g.Client.Issues.CreateComment(ctx, g.owner, g.repo, number, comment)
+}
+
+func (g *GitHub) IssuesEditComment(ctx context.Context, commentID int64, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
+	return g.Client.Issues.EditComment(ctx, g.owner, g.repo, commentID, comment)
 }
 
 // IssuesAddLabels is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.AddLabelsToIssue
