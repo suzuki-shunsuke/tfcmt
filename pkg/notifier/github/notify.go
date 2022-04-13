@@ -43,7 +43,7 @@ func (g *NotifyService) Notify(ctx context.Context, param *notifier.ParamExec) (
 		}
 	}
 
-	template.SetValue(terraform.CommonTemplate{
+	template.SetValue(&terraform.CommonTemplate{
 		Result:                 result.Result,
 		ChangedResult:          result.ChangedResult,
 		ChangeOutsideTerraform: result.OutsideTerraform,

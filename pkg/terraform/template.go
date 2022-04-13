@@ -94,7 +94,7 @@ type CommonTemplate struct {
 // Template is a default template for terraform commands
 type Template struct {
 	Template string
-	CommonTemplate
+	*CommonTemplate
 }
 
 // NewPlanTemplate is PlanTemplate initializer
@@ -269,7 +269,7 @@ _This feature was introduced from [Terraform v0.15.4](https://github.com/hashico
 }
 
 // SetValue sets template entities to CommonTemplate
-func (t *Template) SetValue(ct CommonTemplate) {
+func (t *Template) SetValue(ct *CommonTemplate) {
 	t.CommonTemplate = ct
 }
 
