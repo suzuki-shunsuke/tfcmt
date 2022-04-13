@@ -12,16 +12,16 @@ import (
 
 // Config is for tfcmt config structure
 type Config struct {
-	CI               CI `yaml:"-"`
-	Terraform        Terraform
+	CI               *CI `yaml:"-"`
+	Terraform        *Terraform
 	Vars             map[string]string `yaml:"-"`
 	EmbeddedVarNames []string          `yaml:"embedded_var_names"`
 	Templates        map[string]string
-	Log              Log
-	GHEBaseURL       string     `yaml:"ghe_base_url"`
-	GitHubToken      string     `yaml:"-"`
-	Complement       Complement `yaml:"ci"`
-	Patch            bool       `yaml:"-"`
+	Log              *Log
+	GHEBaseURL       string      `yaml:"ghe_base_url"`
+	GitHubToken      string      `yaml:"-"`
+	Complement       *Complement `yaml:"ci"`
+	Patch            bool        `yaml:"-"`
 }
 
 type CI struct {
@@ -40,20 +40,20 @@ type Log struct {
 
 // Terraform represents terraform configurations
 type Terraform struct {
-	Plan         Plan
-	Apply        Apply
+	Plan         *Plan
+	Apply        *Apply
 	UseRawOutput bool `yaml:"use_raw_output"`
 }
 
 // Plan is a terraform plan config
 type Plan struct {
 	Template            string
-	WhenAddOrUpdateOnly WhenAddOrUpdateOnly `yaml:"when_add_or_update_only"`
-	WhenDestroy         WhenDestroy         `yaml:"when_destroy"`
-	WhenNoChanges       WhenNoChanges       `yaml:"when_no_changes"`
-	WhenPlanError       WhenPlanError       `yaml:"when_plan_error"`
-	WhenParseError      WhenParseError      `yaml:"when_parse_error"`
-	DisableLabel        bool                `yaml:"disable_label"`
+	WhenAddOrUpdateOnly *WhenAddOrUpdateOnly `yaml:"when_add_or_update_only"`
+	WhenDestroy         *WhenDestroy         `yaml:"when_destroy"`
+	WhenNoChanges       *WhenNoChanges       `yaml:"when_no_changes"`
+	WhenPlanError       *WhenPlanError       `yaml:"when_plan_error"`
+	WhenParseError      *WhenParseError      `yaml:"when_parse_error"`
+	DisableLabel        bool                 `yaml:"disable_label"`
 }
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
@@ -88,7 +88,7 @@ type WhenParseError struct {
 // Apply is a terraform apply config
 type Apply struct {
 	Template       string
-	WhenParseError WhenParseError `yaml:"when_parse_error"`
+	WhenParseError *WhenParseError `yaml:"when_parse_error"`
 }
 
 // LoadFile binds the config file to Config structure

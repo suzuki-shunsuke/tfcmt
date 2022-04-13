@@ -10,11 +10,11 @@ import (
 )
 
 func Complement(cfg *config.Config) error {
-	if err := complementWithCIEnv(&cfg.CI); err != nil {
+	if err := complementWithCIEnv(cfg.CI); err != nil {
 		return err
 	}
 
-	if err := complementCIInfo(&cfg.CI); err != nil {
+	if err := complementCIInfo(cfg.CI); err != nil {
 		return err
 	}
 
