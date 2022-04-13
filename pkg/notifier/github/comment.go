@@ -40,6 +40,15 @@ func (g *CommentService) Post(ctx context.Context, body string, opt PostOptions)
 	return errors.New("github.comment.post: Number or Revision is required")
 }
 
+func (g *CommentService) Patch(ctx context.Context, body string, commentID int64) error {
+	_, _, err := g.client.API.IssuesEditComment(
+		ctx,
+		commentID,
+		&github.IssueComment{Body: &body},
+	)
+	return err
+}
+
 type ListOptions struct {
 	PRNumber int
 	Owner    string
@@ -47,7 +56,7 @@ type ListOptions struct {
 }
 
 type IssueComment struct {
-	ID     string
+	ID     int64
 	Body   string
 	Author struct {
 		Login string

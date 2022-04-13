@@ -21,6 +21,7 @@ type Config struct {
 	GHEBaseURL       string     `yaml:"ghe_base_url"`
 	GitHubToken      string     `yaml:"-"`
 	Complement       Complement `yaml:"ci"`
+	Patch            bool       `yaml:"-"`
 }
 
 type CI struct {

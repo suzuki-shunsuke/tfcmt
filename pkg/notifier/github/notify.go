@@ -95,6 +95,34 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	// embed HTML tag to hide old comments
 	body += embeddedComment
 
+	if cfg.Patch && cfg.PR.Number != 0 {
+		comments, err := g.client.Comment.List(ctx, cfg.Owner, cfg.Repo, cfg.PR.Number)
+		if err != nil {
+			return result.ExitCode, err
+		}
+		target := cfg.Vars["target"]
+		for _, comment := range comments {
+			data := &Metadata{}
+			f, err := metadata.Extract(comment.Body, data)
+			if err != nil {
+				continue
+			}
+			if !f {
+				continue
+			}
+			if data.Program != "tfcmt" {
+				continue
+			}
+			if data.Target != target {
+				continue
+			}
+			if err := g.client.Comment.Patch(ctx, body, comment.ID); err != nil {
+				return result.ExitCode, err
+			}
+			return result.ExitCode, nil
+		}
+	}
+
 	if err := g.client.Comment.Post(ctx, body, PostOptions{
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
@@ -102,6 +130,11 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		return result.ExitCode, err
 	}
 	return result.ExitCode, nil
+}
+
+type Metadata struct {
+	Target  string `json:"target"`
+	Program string `json:"program"`
 }
 
 func getEmbeddedComment(cfg *Config, ciName string, isPlan bool) (string, error) {
