@@ -52,10 +52,6 @@ type IssueComment struct {
 	Author struct {
 		Login string
 	}
-	CreatedAt string
-	// TODO remove
-	IsMinimized       bool
-	ViewerCanMinimize bool
 }
 
 func (g *CommentService) listIssueComment(ctx context.Context, owner, repo string, number int) ([]*IssueComment, error) { //nolint:dupl
