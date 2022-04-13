@@ -100,7 +100,7 @@ func (g *NotifyService) Notify(ctx context.Context, param *notifier.ParamExec) (
 		comments, err := g.client.Comment.List(ctx, cfg.Owner, cfg.Repo, cfg.PR.Number)
 		if err != nil {
 			logE.WithError(err).Debug("list comments")
-			if err := g.client.Comment.Post(ctx, body, PostOptions{
+			if err := g.client.Comment.Post(ctx, body, &PostOptions{
 				Number:   cfg.PR.Number,
 				Revision: cfg.PR.Revision,
 			}); err != nil {
@@ -124,7 +124,7 @@ func (g *NotifyService) Notify(ctx context.Context, param *notifier.ParamExec) (
 	}
 
 	logE.Debug("create a comment")
-	if err := g.client.Comment.Post(ctx, body, PostOptions{
+	if err := g.client.Comment.Post(ctx, body, &PostOptions{
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}); err != nil {
