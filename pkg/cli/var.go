@@ -36,7 +36,9 @@ func parseOpts(ctx *cli.Context, cfg *config.Config) error {
 		cfg.CI.PRNumber = pr
 	}
 
-	cfg.Patch = ctx.Bool("patch")
+	if ctx.IsSet("patch") {
+		cfg.PlanPatch = ctx.Bool("patch")
+	}
 
 	if buildURL := ctx.String("build-url"); buildURL != "" {
 		cfg.CI.Link = buildURL
