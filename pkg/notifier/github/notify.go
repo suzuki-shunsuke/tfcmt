@@ -154,6 +154,10 @@ func (g *NotifyService) getPatchedComment(logE *logrus.Entry, comments []*IssueC
 			logE.Debug("Program isn't tfcmt")
 			continue
 		}
+		if data.Command != "plan" {
+			logE.Debug("Command isn't plan")
+			continue
+		}
 		if data.Target != target {
 			logE.Debug("target is different")
 			continue
@@ -170,6 +174,7 @@ func (g *NotifyService) getPatchedComment(logE *logrus.Entry, comments []*IssueC
 type Metadata struct {
 	Target  string
 	Program string
+	Command string
 }
 
 func getEmbeddedComment(cfg *Config, ciName string, isPlan bool) (string, error) {
