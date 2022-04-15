@@ -13,23 +13,19 @@ func TestLoadFile(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
 		file string
-		cfg  Config
+		cfg  *Config
 		ok   bool
 	}{
 		{
 			file: "../../example.tfcmt.yaml",
-			cfg: Config{
-				Terraform: Terraform{
-					Plan: Plan{
-						Template:    "## Plan Result\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .CombinedOutput }}\n</pre></code></details>\n",
-						WhenDestroy: WhenDestroy{},
-					},
-					Apply: Apply{
-						Template: "",
+			cfg: &Config{
+				Terraform: &Terraform{
+					Plan: &Plan{
+						Template: "## Plan Result\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .CombinedOutput }}\n</pre></code></details>\n",
 					},
 					UseRawOutput: false,
 				},
-				Complement: Complement{
+				Complement: &Complement{
 					PR:   []domain.ComplementEntry{},
 					Link: []domain.ComplementEntry{},
 					SHA:  []domain.ComplementEntry{},
@@ -50,9 +46,9 @@ func TestLoadFile(t *testing.T) {
 		},
 		{
 			file: "../../example-with-destroy-and-result-labels.tfcmt.yaml",
-			cfg: Config{
-				Terraform: Terraform{
-					Plan: Plan{
+			cfg: &Config{
+				Terraform: &Terraform{
+					Plan: &Plan{
 						Template: `{{if .HasDestroy}}
 ## :warning: WARNING: Resource Deletion will happen :warning:
 
@@ -69,21 +65,18 @@ This plan contains **resource deletion**. Please check the plan result very care
 </pre></code></details>
 {{end}}
 `,
-						WhenAddOrUpdateOnly: WhenAddOrUpdateOnly{
+						WhenAddOrUpdateOnly: &WhenAddOrUpdateOnly{
 							Label: "add-or-update",
 						},
-						WhenDestroy: WhenDestroy{
+						WhenDestroy: &WhenDestroy{
 							Label: "destroy",
 						},
-						WhenPlanError: WhenPlanError{
+						WhenPlanError: &WhenPlanError{
 							Label: "error",
 						},
-						WhenNoChanges: WhenNoChanges{
+						WhenNoChanges: &WhenNoChanges{
 							Label: "no-changes",
 						},
-					},
-					Apply: Apply{
-						Template: "",
 					},
 					UseRawOutput: false,
 				},
@@ -92,13 +85,13 @@ This plan contains **resource deletion**. Please check the plan result very care
 		},
 		{
 			file: "no-such-config.yaml",
-			cfg: Config{
-				Terraform: Terraform{
-					Plan: Plan{
+			cfg: &Config{
+				Terraform: &Terraform{
+					Plan: &Plan{
 						Template:    "## Plan Result\n{{if .Result}}\n<pre><code>{{ .Result }}\n</pre></code>\n{{end}}\n<details><summary>Details (Click me)</summary>\n\n<pre><code>{{ .CombinedOutput }}\n</pre></code></details>\n",
-						WhenDestroy: WhenDestroy{},
+						WhenDestroy: &WhenDestroy{},
 					},
-					Apply: Apply{
+					Apply: &Apply{
 						Template: "",
 					},
 				},
@@ -111,7 +104,7 @@ This plan contains **resource deletion**. Please check the plan result very care
 		testCase := testCase
 		t.Run(testCase.file, func(t *testing.T) {
 			t.Parallel()
-			var cfg Config
+			cfg := &Config{}
 
 			if err := cfg.LoadFile(testCase.file); err == nil {
 				if !testCase.ok {

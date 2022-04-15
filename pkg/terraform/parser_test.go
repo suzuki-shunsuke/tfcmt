@@ -301,11 +301,11 @@ func TestDefaultParserParse(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
 		body   string
-		result ParseResult
+		result *ParseResult
 	}{
 		{
 			body: "",
-			result: ParseResult{
+			result: &ParseResult{
 				Result:   "",
 				ExitCode: 0,
 				Error:    nil,
@@ -325,12 +325,12 @@ func TestPlanParserParse(t *testing.T) {
 	testCases := []struct {
 		name   string
 		body   string
-		result ParseResult
+		result *ParseResult
 	}{
 		{
 			name: "plan ok pattern",
 			body: planSuccessResult,
-			result: ParseResult{
+			result: &ParseResult{
 				Result:             "Plan: 1 to add, 0 to change, 0 to destroy.",
 				HasAddOrUpdateOnly: true,
 				HasDestroy:         false,
@@ -354,7 +354,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.`,
 		{
 			name: "no stdin",
 			body: "",
-			result: ParseResult{
+			result: &ParseResult{
 				Result:             "",
 				HasAddOrUpdateOnly: false,
 				HasDestroy:         false,
@@ -368,7 +368,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.`,
 		{
 			name: "plan ng pattern",
 			body: planFailureResult,
-			result: ParseResult{
+			result: &ParseResult{
 				Result: `Error: Error refreshing state: 4 error(s) occurred:
 
 * google_sql_database.main: 1 error(s) occurred:
@@ -386,7 +386,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.`,
 		{
 			name: "plan no changes",
 			body: planNoChanges,
-			result: ParseResult{
+			result: &ParseResult{
 				Result:             "No changes. Infrastructure is up-to-date.",
 				HasAddOrUpdateOnly: false,
 				HasDestroy:         false,
@@ -399,7 +399,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.`,
 		{
 			name: "plan has destroy",
 			body: planHasDestroy,
-			result: ParseResult{
+			result: &ParseResult{
 				Result:             "Plan: 0 to add, 0 to change, 1 to destroy.",
 				HasAddOrUpdateOnly: false,
 				HasDestroy:         true,
@@ -417,7 +417,7 @@ Plan: 0 to add, 0 to change, 1 to destroy.`,
 		{
 			name: "plan has add and destroy",
 			body: planHasAddAndDestroy,
-			result: ParseResult{
+			result: &ParseResult{
 				Result:             "Plan: 1 to add, 0 to change, 1 to destroy.",
 				HasAddOrUpdateOnly: false,
 				HasDestroy:         true,
@@ -442,7 +442,7 @@ Plan: 1 to add, 0 to change, 1 to destroy.`,
 		{
 			name: "plan has add and update in place",
 			body: planHasAddAndUpdateInPlace,
-			result: ParseResult{
+			result: &ParseResult{
 				Result:             "Plan: 1 to add, 1 to change, 0 to destroy.",
 				HasAddOrUpdateOnly: true,
 				HasDestroy:         false,
@@ -482,12 +482,12 @@ func TestApplyParserParse(t *testing.T) {
 	testCases := []struct {
 		name   string
 		body   string
-		result ParseResult
+		result *ParseResult
 	}{
 		{
 			name: "no stdin",
 			body: "",
-			result: ParseResult{
+			result: &ParseResult{
 				Result:        "",
 				ExitCode:      1,
 				HasParseError: true,
@@ -497,7 +497,7 @@ func TestApplyParserParse(t *testing.T) {
 		{
 			name: "apply ok pattern",
 			body: applySuccessResult,
-			result: ParseResult{
+			result: &ParseResult{
 				Result:   "Apply complete! Resources: 0 added, 0 changed, 0 destroyed.",
 				ExitCode: 0,
 				Error:    nil,
@@ -506,7 +506,7 @@ func TestApplyParserParse(t *testing.T) {
 		{
 			name: "apply ng pattern",
 			body: applyFailureResult,
-			result: ParseResult{
+			result: &ParseResult{
 				Result: `Error: Batch "project/tfcmt-jp-tfcmt-prod/services:batchEnable" for request "Enable Project Services tfcmt-jp-tfcmt-prod: map[logging.googleapis.com:{}]" returned error: failed to send enable services request: googleapi: Error 403: The caller does not have permission, forbidden
 
   on .terraform/modules/tfcmt-jp-tfcmt-prod/google_project_service.tf line 6, in resource "google_project_service" "gcp_api_service":

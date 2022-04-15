@@ -8,15 +8,15 @@ import (
 func TestCommentPost(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
-		config Config
+		config *Config
 		body   string
-		opt    PostOptions
+		opt    *PostOptions
 		ok     bool
 	}{
 		{
 			config: newFakeConfig(),
 			body:   "",
-			opt: PostOptions{
+			opt: &PostOptions{
 				Number:   1,
 				Revision: "abcd",
 			},
@@ -25,7 +25,7 @@ func TestCommentPost(t *testing.T) {
 		{
 			config: newFakeConfig(),
 			body:   "",
-			opt: PostOptions{
+			opt: &PostOptions{
 				Number:   0,
 				Revision: "abcd",
 			},
@@ -34,7 +34,7 @@ func TestCommentPost(t *testing.T) {
 		{
 			config: newFakeConfig(),
 			body:   "",
-			opt: PostOptions{
+			opt: &PostOptions{
 				Number:   2,
 				Revision: "",
 			},
@@ -43,7 +43,7 @@ func TestCommentPost(t *testing.T) {
 		{
 			config: newFakeConfig(),
 			body:   "",
-			opt: PostOptions{
+			opt: &PostOptions{
 				Number:   0,
 				Revision: "",
 			},

@@ -21,7 +21,7 @@ import (
 )
 
 type Controller struct {
-	Config             config.Config
+	Config             *config.Config
 	Parser             terraform.Parser
 	Template           *terraform.Template
 	ParseErrorTemplate *terraform.Template
@@ -33,8 +33,8 @@ type Command struct {
 }
 
 // Run sends the notification with notifier
-func (ctrl *Controller) Run(ctx context.Context, command Command) error {
-	if err := platform.Complement(&ctrl.Config); err != nil {
+func (ctrl *Controller) Run(ctx context.Context, command *Command) error {
+	if err := platform.Complement(ctrl.Config); err != nil {
 		return err
 	}
 
@@ -62,7 +62,7 @@ func (ctrl *Controller) Run(ctx context.Context, command Command) error {
 	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
 	_ = cmd.Run()
 
-	return apperr.NewExitError(ntf.Notify(ctx, notifier.ParamExec{
+	return apperr.NewExitError(ntf.Notify(ctx, &notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
@@ -86,8 +86,8 @@ func (ctrl *Controller) renderTemplate(tpl string) (string, error) {
 	return buf.String(), nil
 }
 
-func (ctrl *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolint:cyclop
-	labels := github.ResultLabels{
+func (ctrl *Controller) renderGitHubLabels() (*github.ResultLabels, error) { //nolint:cyclop
+	labels := &github.ResultLabels{
 		AddOrUpdateLabelColor: ctrl.Config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
 		DestroyLabelColor:     ctrl.Config.Terraform.Plan.WhenDestroy.Color,
 		NoChangesLabelColor:   ctrl.Config.Terraform.Plan.WhenNoChanges.Color,
@@ -161,7 +161,7 @@ func (ctrl *Controller) renderGitHubLabels() (github.ResultLabels, error) { //no
 }
 
 func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, error) {
-	labels := github.ResultLabels{}
+	labels := &github.ResultLabels{}
 	if !ctrl.Config.Terraform.Plan.DisableLabel {
 		a, err := ctrl.renderGitHubLabels()
 		if err != nil {
@@ -169,12 +169,12 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		}
 		labels = a
 	}
-	client, err := github.NewClient(ctx, github.Config{
+	client, err := github.NewClient(ctx, &github.Config{
 		Token:   ctrl.Config.GitHubToken,
 		BaseURL: ctrl.Config.GHEBaseURL,
 		Owner:   ctrl.Config.CI.Owner,
 		Repo:    ctrl.Config.CI.Repo,
-		PR: github.PullRequest{
+		PR: &github.PullRequest{
 			Revision: ctrl.Config.CI.SHA,
 			Number:   ctrl.Config.CI.PRNumber,
 		},

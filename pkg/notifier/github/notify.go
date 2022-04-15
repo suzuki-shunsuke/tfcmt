@@ -17,7 +17,7 @@ import (
 type NotifyService service
 
 // Notify posts comment optimized for notifications
-func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (int, error) { //nolint:cyclop
+func (g *NotifyService) Notify(ctx context.Context, param *notifier.ParamExec) (int, error) { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -43,7 +43,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		}
 	}
 
-	template.SetValue(terraform.CommonTemplate{
+	template.SetValue(&terraform.CommonTemplate{
 		Result:                 result.Result,
 		ChangedResult:          result.ChangedResult,
 		ChangeOutsideTerraform: result.OutsideTerraform,
@@ -86,7 +86,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		"program": "tfcmt",
 	})
 
-	embeddedComment, err := getEmbeddedComment(&cfg, param.CIName, isPlan)
+	embeddedComment, err := getEmbeddedComment(cfg, param.CIName, isPlan)
 	if err != nil {
 		return result.ExitCode, err
 	}
@@ -101,7 +101,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		comments, err := g.client.Comment.List(ctx, cfg.Owner, cfg.Repo, cfg.PR.Number)
 		if err != nil {
 			logE.WithError(err).Debug("list comments")
-			if err := g.client.Comment.Post(ctx, body, PostOptions{
+			if err := g.client.Comment.Post(ctx, body, &PostOptions{
 				Number:   cfg.PR.Number,
 				Revision: cfg.PR.Revision,
 			}); err != nil {
@@ -125,7 +125,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	}
 
 	logE.Debug("create a comment")
-	if err := g.client.Comment.Post(ctx, body, PostOptions{
+	if err := g.client.Comment.Post(ctx, body, &PostOptions{
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}); err != nil {
@@ -208,7 +208,7 @@ func getEmbeddedComment(cfg *Config, ciName string, isPlan bool) (string, error)
 	return embeddedComment, nil
 }
 
-func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string { //nolint:cyclop
+func (g *NotifyService) updateLabels(ctx context.Context, result *terraform.ParseResult) []string { //nolint:cyclop
 	cfg := g.client.Config
 	var (
 		labelToAdd string

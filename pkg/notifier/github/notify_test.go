@@ -12,19 +12,19 @@ func TestNotifyNotify(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
 		name      string
-		config    Config
+		config    *Config
 		ok        bool
 		exitCode  int
-		paramExec notifier.ParamExec
+		paramExec *notifier.ParamExec
 	}{
 		{
 			name: "case 0",
 			// invalid body (cannot parse)
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "abcd",
 					Number:   1,
 				},
@@ -32,7 +32,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "body",
 				ExitCode: 1,
 			},
@@ -42,11 +42,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 1",
 			// invalid pr
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   0,
 				},
@@ -54,7 +54,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "Plan: 1 to add",
 				ExitCode: 0,
 			},
@@ -64,11 +64,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 2",
 			// valid, error
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
@@ -76,7 +76,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "Error: hoge",
 				ExitCode: 1,
 			},
@@ -86,11 +86,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 3",
 			// valid, and isPR
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
@@ -98,7 +98,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "Plan: 1 to add",
 				ExitCode: 2,
 			},
@@ -108,11 +108,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 4",
 			// valid, and isRevision
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "revision-revision",
 					Number:   0,
 				},
@@ -120,7 +120,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "Plan: 1 to add",
 				ExitCode: 2,
 			},
@@ -131,11 +131,11 @@ func TestNotifyNotify(t *testing.T) {
 			name: "case 5",
 			// valid, and contains destroy
 			// TODO(dtan4): check two comments were made actually
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
@@ -143,7 +143,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "Plan: 1 to add, 1 to destroy",
 				ExitCode: 2,
 			},
@@ -154,25 +154,25 @@ func TestNotifyNotify(t *testing.T) {
 			name: "case 6",
 			// valid with no changes
 			// TODO(drlau): check that the label was actually added
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
 				Parser:             terraform.NewPlanParser(),
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
-				ResultLabels: ResultLabels{
+				ResultLabels: &ResultLabels{
 					AddOrUpdateLabel: "add-or-update",
 					DestroyLabel:     "destroy",
 					NoChangesLabel:   "no-changes",
 					PlanErrorLabel:   "error",
 				},
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "No changes. Infrastructure is up-to-date.",
 				ExitCode: 0,
 			},
@@ -182,11 +182,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 7",
 			// valid, contains destroy, but not to notify
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "",
 					Number:   1,
 				},
@@ -194,7 +194,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "Plan: 1 to add, 1 to destroy",
 				ExitCode: 2,
 			},
@@ -204,11 +204,11 @@ func TestNotifyNotify(t *testing.T) {
 		{
 			name: "case 8",
 			// apply case without merge commit
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "revision",
 					Number:   0, // For apply, it is always 0
 				},
@@ -216,7 +216,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "Apply complete!",
 				ExitCode: 0,
 			},
@@ -227,11 +227,11 @@ func TestNotifyNotify(t *testing.T) {
 			name: "case 9",
 			// apply case as merge commit
 			// TODO(drlau): validate cfg.PR.Number = 123
-			config: Config{
+			config: &Config{
 				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
-				PR: PullRequest{
+				PR: &PullRequest{
 					Revision: "Merge pull request #123 from suzuki-shunsuke/tfcmt",
 					Number:   0, // For apply, it is always 0
 				},
@@ -239,7 +239,7 @@ func TestNotifyNotify(t *testing.T) {
 				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
 				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
 			},
-			paramExec: notifier.ParamExec{
+			paramExec: &notifier.ParamExec{
 				Stdout:   "Apply complete!",
 				ExitCode: 0,
 			},

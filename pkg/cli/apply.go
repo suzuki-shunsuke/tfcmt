@@ -20,7 +20,7 @@ func cmdApply(ctx *cli.Context) error {
 		setLogLevel(logLevel)
 	}
 
-	if err := parseOpts(ctx, &cfg); err != nil {
+	if err := parseOpts(ctx, cfg); err != nil {
 		return err
 	}
 
@@ -33,7 +33,7 @@ func cmdApply(ctx *cli.Context) error {
 
 	args := ctx.Args()
 
-	return t.Run(ctx.Context, controller.Command{
+	return t.Run(ctx.Context, &controller.Command{
 		Cmd:  args.First(),
 		Args: args.Tail(),
 	})
