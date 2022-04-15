@@ -67,7 +67,8 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	if err != nil {
 		return result.ExitCode, err
 	}
-	if _, isApply := parser.(*terraform.ApplyParser); isApply {
+	_, isApply := parser.(*terraform.ApplyParser)
+	if isApply {
 		prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision)
 		if err == nil {
 			cfg.PR.Number = prNumber
@@ -95,7 +96,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 	// embed HTML tag to hide old comments
 	body += embeddedComment
 
-	if cfg.Patch && cfg.PR.Number != 0 {
+	if !isApply && cfg.Patch && cfg.PR.Number != 0 {
 		logE.Debug("try patching")
 		comments, err := g.client.Comment.List(ctx, cfg.Owner, cfg.Repo, cfg.PR.Number)
 		if err != nil {
