@@ -68,7 +68,7 @@ func (g *NotifyService) Notify(ctx context.Context, param notifier.ParamExec) (i
 		return result.ExitCode, err
 	}
 	_, isApply := parser.(*terraform.ApplyParser)
-	if isApply {
+	if isApply && cfg.PR.Number == 0 {
 		prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision)
 		if err == nil {
 			cfg.PR.Number = prNumber
