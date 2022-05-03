@@ -8,7 +8,87 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
-func TestNotifyNotify(t *testing.T) {
+func TestNotifyApply(t *testing.T) {
+	t.Parallel()
+	testCases := []struct {
+		name      string
+		config    Config
+		ok        bool
+		exitCode  int
+		paramExec notifier.ParamExec
+	}{
+		{
+			name: "case 8",
+			// apply case without merge commit
+			config: Config{
+				Token: "token",
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Revision: "revision",
+					Number:   0, // For apply, it is always 0
+				},
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
+			},
+			paramExec: notifier.ParamExec{
+				Stdout:   "Apply complete!",
+				ExitCode: 0,
+			},
+			ok:       true,
+			exitCode: 0,
+		},
+		{
+			name: "case 9",
+			// apply case as merge commit
+			// TODO(drlau): validate cfg.PR.Number = 123
+			config: Config{
+				Token: "token",
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Revision: "Merge pull request #123 from suzuki-shunsuke/tfcmt",
+					Number:   0, // For apply, it is always 0
+				},
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
+			},
+			paramExec: notifier.ParamExec{
+				Stdout:   "Apply complete!",
+				ExitCode: 0,
+			},
+			ok:       true,
+			exitCode: 0,
+		},
+	}
+
+	for i, testCase := range testCases {
+		testCase := testCase
+		if testCase.name == "" {
+			t.Fatalf("testCase.name is required: index: %d", i)
+		}
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			client, err := NewClient(context.Background(), testCase.config)
+			if err != nil {
+				t.Fatal(err)
+			}
+			api := newFakeAPI()
+			client.API = &api
+			exitCode, err := client.Notify.Apply(context.Background(), testCase.paramExec)
+			if (err == nil) != testCase.ok {
+				t.Errorf("got error %v", err)
+			}
+			if exitCode != testCase.exitCode {
+				t.Errorf("got %d but want %d", exitCode, testCase.exitCode)
+			}
+		})
+	}
+}
+
+func TestNotifyPlan(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
 		name      string
@@ -201,51 +281,6 @@ func TestNotifyNotify(t *testing.T) {
 			ok:       true,
 			exitCode: 2,
 		},
-		{
-			name: "case 8",
-			// apply case without merge commit
-			config: Config{
-				Token: "token",
-				Owner: "owner",
-				Repo:  "repo",
-				PR: PullRequest{
-					Revision: "revision",
-					Number:   0, // For apply, it is always 0
-				},
-				Parser:             terraform.NewApplyParser(),
-				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
-				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
-			},
-			paramExec: notifier.ParamExec{
-				Stdout:   "Apply complete!",
-				ExitCode: 0,
-			},
-			ok:       true,
-			exitCode: 0,
-		},
-		{
-			name: "case 9",
-			// apply case as merge commit
-			// TODO(drlau): validate cfg.PR.Number = 123
-			config: Config{
-				Token: "token",
-				Owner: "owner",
-				Repo:  "repo",
-				PR: PullRequest{
-					Revision: "Merge pull request #123 from suzuki-shunsuke/tfcmt",
-					Number:   0, // For apply, it is always 0
-				},
-				Parser:             terraform.NewApplyParser(),
-				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
-				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
-			},
-			paramExec: notifier.ParamExec{
-				Stdout:   "Apply complete!",
-				ExitCode: 0,
-			},
-			ok:       true,
-			exitCode: 0,
-		},
 	}
 
 	for i, testCase := range testCases {
@@ -261,7 +296,7 @@ func TestNotifyNotify(t *testing.T) {
 			}
 			api := newFakeAPI()
 			client.API = &api
-			exitCode, err := client.Notify.Notify(context.Background(), testCase.paramExec)
+			exitCode, err := client.Notify.Plan(context.Background(), testCase.paramExec)
 			if (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
