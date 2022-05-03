@@ -6,7 +6,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/drone/envsubst v1.0.3
 	github.com/google/go-cmp v0.5.8
-	github.com/google/go-github/v39 v39.2.0
+	github.com/google/go-github/v43 v43.0.0
 	github.com/mattn/go-colorable v0.1.12
 	github.com/shurcooL/githubv4 v0.0.0-20201206200315-234843c633fa
 	github.com/sirupsen/logrus v1.8.1
