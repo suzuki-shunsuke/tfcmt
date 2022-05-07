@@ -13,24 +13,9 @@ func TestMergedPRNumber(t *testing.T) {
 		revision string
 	}{
 		{
-			prNumber: 1,
+			prNumber: 2,
 			ok:       true,
-			revision: "Merge pull request #1 from suzuki-shunsuke/tfcmt",
-		},
-		{
-			prNumber: 123,
-			ok:       true,
-			revision: "Merge pull request #123 from suzuki-shunsuke/tfcmt",
-		},
-		{
-			prNumber: 0,
-			ok:       false,
-			revision: "destroyed the world",
-		},
-		{
-			prNumber: 0,
-			ok:       false,
-			revision: "Merge pull request #string from suzuki-shunsuke/tfcmt",
+			revision: "xxx",
 		},
 	}
 
