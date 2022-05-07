@@ -5,37 +5,6 @@ import (
 	"testing"
 )
 
-func TestCommitsList(t *testing.T) {
-	t.Parallel()
-	testCases := []struct {
-		revision string
-		ok       bool
-	}{
-		{
-			revision: "04e0917e448b662c2b16330fad50e97af16ff27a",
-			ok:       true,
-		},
-		{
-			revision: "",
-			ok:       false,
-		},
-	}
-
-	for _, testCase := range testCases {
-		cfg := newFakeConfig()
-		client, err := NewClient(context.Background(), cfg)
-		if err != nil {
-			t.Fatal(err)
-		}
-		api := newFakeAPI()
-		client.API = &api
-		_, err = client.Commits.List(context.Background(), testCase.revision)
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
-	}
-}
-
 func TestMergedPRNumber(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
