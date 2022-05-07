@@ -9,7 +9,7 @@ import (
 )
 
 // Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(ctx context.Context, param notifier.ParamExec) (int, error) { //nolint:cyclop
+func (g *NotifyService) Apply(ctx context.Context, param notifier.ParamExec) (int, error) {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -56,7 +56,7 @@ func (g *NotifyService) Apply(ctx context.Context, param notifier.ParamExec) (in
 		prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision)
 		if err == nil {
 			cfg.PR.Number = prNumber
-		} else if !cfg.PR.IsNumber() {
+		} else {
 			commits, err := g.client.Commits.List(ctx, cfg.PR.Revision)
 			if err != nil {
 				return result.ExitCode, err
