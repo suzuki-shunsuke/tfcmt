@@ -53,16 +53,8 @@ func (g *NotifyService) Apply(ctx context.Context, param notifier.ParamExec) (in
 		return result.ExitCode, err
 	}
 	if cfg.PR.Number == 0 {
-		prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision)
-		if err == nil {
+		if prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision); err == nil {
 			cfg.PR.Number = prNumber
-		} else {
-			commits, err := g.client.Commits.List(ctx, cfg.PR.Revision)
-			if err != nil {
-				return result.ExitCode, err
-			}
-			lastRevision, _ := g.client.Commits.lastOne(commits, cfg.PR.Revision)
-			cfg.PR.Revision = lastRevision
 		}
 	}
 

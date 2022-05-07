@@ -32,22 +32,6 @@ func (g *CommitsService) List(ctx context.Context, revision string) ([]string, e
 	return shas, nil
 }
 
-// Last returns the hash of the previous commit of the given commit
-func (g *CommitsService) lastOne(commits []string, revision string) (string, error) {
-	if revision == "" {
-		return "", errors.New("no revision specified")
-	}
-	if len(commits) == 0 {
-		return "", errors.New("no commits")
-	}
-	// e.g.
-	// a0ce5bf 2018/04/05 20:50:01 (HEAD -> master, origin/master)
-	// 5166cfc 2018/04/05 20:40:12
-	// 74c4d6e 2018/04/05 20:34:31
-	// 9260c54 2018/04/05 20:16:20
-	return commits[1], nil
-}
-
 func (g *CommitsService) MergedPRNumber(ctx context.Context, revision string) (int, error) {
 	commit, _, err := g.client.API.RepositoriesGetCommit(ctx, revision)
 	if err != nil {
