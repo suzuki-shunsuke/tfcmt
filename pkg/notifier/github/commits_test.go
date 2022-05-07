@@ -36,63 +36,6 @@ func TestCommitsList(t *testing.T) {
 	}
 }
 
-func TestCommitsLastOne(t *testing.T) {
-	t.Parallel()
-	testCases := []struct {
-		commits  []string
-		revision string
-		lastRev  string
-		ok       bool
-	}{
-		{
-			// ok
-			commits: []string{
-				"04e0917e448b662c2b16330fad50e97af16ff27a",
-				"04e0917e448b662c2b16330fad50e97af16ff27b",
-				"04e0917e448b662c2b16330fad50e97af16ff27c",
-			},
-			revision: "04e0917e448b662c2b16330fad50e97af16ff27a",
-			lastRev:  "04e0917e448b662c2b16330fad50e97af16ff27b",
-			ok:       true,
-		},
-		{
-			// no revision
-			commits: []string{
-				"04e0917e448b662c2b16330fad50e97af16ff27a",
-				"04e0917e448b662c2b16330fad50e97af16ff27b",
-				"04e0917e448b662c2b16330fad50e97af16ff27c",
-			},
-			revision: "",
-			lastRev:  "",
-			ok:       false,
-		},
-		{
-			// no commits
-			commits:  []string{},
-			revision: "04e0917e448b662c2b16330fad50e97af16ff27a",
-			lastRev:  "",
-			ok:       false,
-		},
-	}
-
-	for _, testCase := range testCases {
-		cfg := newFakeConfig()
-		client, err := NewClient(context.Background(), cfg)
-		if err != nil {
-			t.Fatal(err)
-		}
-		api := newFakeAPI()
-		client.API = &api
-		commit, err := client.Commits.lastOne(testCase.commits, testCase.revision)
-		if (err == nil) != testCase.ok {
-			t.Errorf("got error %q", err)
-		}
-		if commit != testCase.lastRev {
-			t.Errorf("got %q but want %q", commit, testCase.lastRev)
-		}
-	}
-}
-
 func TestMergedPRNumber(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
