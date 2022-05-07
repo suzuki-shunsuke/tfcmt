@@ -15,8 +15,7 @@ type API interface {
 	IssuesRemoveLabel(ctx context.Context, number int, label string) (*github.Response, error)
 	IssuesUpdateLabel(ctx context.Context, label, color string) (*github.Label, *github.Response, error)
 	RepositoriesCreateComment(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error)
-	RepositoriesListCommits(ctx context.Context, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error)
-	RepositoriesGetCommit(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error)
+	PullRequestsListPullRequestsWithCommit(ctx context.Context, sha string, opt *github.PullRequestListOptions) ([]*github.PullRequest, *github.Response, error)
 }
 
 // GitHub represents the attribute information necessary for requesting GitHub API
@@ -62,12 +61,6 @@ func (g *GitHub) RepositoriesCreateComment(ctx context.Context, sha string, comm
 	return g.Client.Repositories.CreateComment(ctx, g.owner, g.repo, sha, comment)
 }
 
-// RepositoriesListCommits is a wrapper of https://godoc.org/github.com/google/go-github/github#RepositoriesService.ListCommits
-func (g *GitHub) RepositoriesListCommits(ctx context.Context, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error) {
-	return g.Client.Repositories.ListCommits(ctx, g.owner, g.repo, opt)
-}
-
-// RepositoriesGetCommit is a wrapper of https://godoc.org/github.com/google/go-github/github#RepositoriesService.GetCommit
-func (g *GitHub) RepositoriesGetCommit(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error) {
-	return g.Client.Repositories.GetCommit(ctx, g.owner, g.repo, sha, nil)
+func (g *GitHub) PullRequestsListPullRequestsWithCommit(ctx context.Context, sha string, opt *github.PullRequestListOptions) ([]*github.PullRequest, *github.Response, error) {
+	return g.Client.PullRequests.ListPullRequestsWithCommit(ctx, g.owner, g.repo, sha, opt)
 }

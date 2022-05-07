@@ -9,13 +9,14 @@ import (
 
 type fakeAPI struct {
 	API
-	FakeIssuesCreateComment       func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
-	FakeIssuesListLabels          func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error)
-	FakeIssuesAddLabels           func(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
-	FakeIssuesRemoveLabel         func(ctx context.Context, number int, label string) (*github.Response, error)
-	FakeRepositoriesCreateComment func(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error)
-	FakeRepositoriesListCommits   func(ctx context.Context, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error)
-	FakeRepositoriesGetCommit     func(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error)
+	FakeIssuesCreateComment                    func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
+	FakeIssuesListLabels                       func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error)
+	FakeIssuesAddLabels                        func(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
+	FakeIssuesRemoveLabel                      func(ctx context.Context, number int, label string) (*github.Response, error)
+	FakeRepositoriesCreateComment              func(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error)
+	FakeRepositoriesListCommits                func(ctx context.Context, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error)
+	FakeRepositoriesGetCommit                  func(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error)
+	FakePullRequestsListPullRequestsWithCommit func(ctx context.Context, sha string, opt *github.PullRequestListOptions) ([]*github.PullRequest, *github.Response, error)
 }
 
 func (g *fakeAPI) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
@@ -44,6 +45,10 @@ func (g *fakeAPI) RepositoriesListCommits(ctx context.Context, opt *github.Commi
 
 func (g *fakeAPI) RepositoriesGetCommit(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error) {
 	return g.FakeRepositoriesGetCommit(ctx, sha)
+}
+
+func (g *fakeAPI) PullRequestsListPullRequestsWithCommit(ctx context.Context, sha string, opt *github.PullRequestListOptions) ([]*github.PullRequest, *github.Response, error) {
+	return g.FakePullRequestsListPullRequestsWithCommit(ctx, sha, opt)
 }
 
 func newFakeAPI() fakeAPI {
@@ -99,6 +104,18 @@ func newFakeAPI() fakeAPI {
 				SHA: github.String(sha),
 				Commit: &github.Commit{
 					Message: github.String(sha),
+				},
+			}, nil, nil
+		},
+		FakePullRequestsListPullRequestsWithCommit: func(ctx context.Context, sha string, opt *github.PullRequestListOptions) ([]*github.PullRequest, *github.Response, error) {
+			return []*github.PullRequest{
+				{
+					State:  github.String("open"),
+					Number: github.Int(1),
+				},
+				{
+					State:  github.String("closed"),
+					Number: github.Int(2),
 				},
 			}, nil, nil
 		},
