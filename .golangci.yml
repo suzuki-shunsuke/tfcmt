@@ -24,3 +24,5 @@ linters:
     - funlen
     - gocognit
     - gocyclo
+    - exhaustruct
+    - execinquery
