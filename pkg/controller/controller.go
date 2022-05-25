@@ -123,10 +123,11 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		labels = a
 	}
 	client, err := github.NewClient(ctx, github.Config{
-		Token:   ctrl.Config.GitHubToken,
-		BaseURL: ctrl.Config.GHEBaseURL,
-		Owner:   ctrl.Config.CI.Owner,
-		Repo:    ctrl.Config.CI.Repo,
+		Token:           ctrl.Config.GitHubToken,
+		BaseURL:         ctrl.Config.GHEBaseURL,
+		GraphQLEndpoint: ctrl.Config.GHEGraphQLEndpoint,
+		Owner:           ctrl.Config.CI.Owner,
+		Repo:            ctrl.Config.CI.Repo,
 		PR: github.PullRequest{
 			Revision: ctrl.Config.CI.SHA,
 			Number:   ctrl.Config.CI.PRNumber,
