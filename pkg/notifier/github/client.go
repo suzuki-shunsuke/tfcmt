@@ -38,13 +38,14 @@ type Client struct {
 
 // Config is a configuration for GitHub client
 type Config struct {
-	Token   string
-	BaseURL string
-	Owner   string
-	Repo    string
-	PR      PullRequest
-	CI      string
-	Parser  terraform.Parser
+	Token           string
+	BaseURL         string
+	GraphQLEndpoint string
+	Owner           string
+	Repo            string
+	PR              PullRequest
+	CI              string
+	Parser          terraform.Parser
 	// Template is used for all Terraform command output
 	Template           *terraform.Template
 	ParseErrorTemplate *terraform.Template
@@ -100,10 +101,15 @@ func NewClient(ctx context.Context, cfg Config) (*Client, error) {
 	}
 
 	c := &Client{
-		Config:   cfg,
-		Client:   client,
-		v4Client: githubv4.NewClient(tc),
+		Config: cfg,
+		Client: client,
 	}
+	if cfg.GraphQLEndpoint == "" {
+		c.v4Client = githubv4.NewClient(tc)
+	} else {
+		c.v4Client = githubv4.NewEnterpriseClient(cfg.GraphQLEndpoint, tc)
+	}
+
 	c.common.client = c
 	c.Comment = (*CommentService)(&c.common)
 	c.Commits = (*CommitsService)(&c.common)
