@@ -34,6 +34,7 @@ func (ctrl *Controller) Apply(ctx context.Context, command Command) error {
 	}
 
 	cmd := exec.CommandContext(ctx, command.Cmd, command.Args...) //nolint:gosec
+	cmd.Stdin = os.Stdin
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
 	combinedOutput := &bytes.Buffer{}
