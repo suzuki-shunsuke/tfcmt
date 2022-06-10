@@ -6,8 +6,8 @@ import (
 
 // Notifier is a notification interface
 type Notifier interface {
-	Apply(ctx context.Context, param ParamExec) (int, error)
-	Plan(ctx context.Context, param ParamExec) (int, error)
+	Apply(ctx context.Context, param *ParamExec) (int, error)
+	Plan(ctx context.Context, param *ParamExec) (int, error)
 }
 
 type ParamExec struct {

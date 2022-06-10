@@ -23,7 +23,7 @@ type Client struct {
 	*github.Client
 	Debug bool
 
-	Config Config
+	Config *Config
 
 	common service
 
@@ -69,7 +69,7 @@ type service struct {
 }
 
 // NewClient returns Client initialized with Config
-func NewClient(ctx context.Context, cfg Config) (*Client, error) {
+func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
 	token := cfg.Token
 	token = strings.TrimPrefix(token, "$")
 	if token == EnvToken {

@@ -9,7 +9,7 @@ import (
 )
 
 // Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(ctx context.Context, param notifier.ParamExec) (int, error) {
+func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (int, error) {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -62,7 +62,7 @@ func (g *NotifyService) Apply(ctx context.Context, param notifier.ParamExec) (in
 		"program": "tfcmt",
 	})
 
-	embeddedComment, err := getEmbeddedComment(&cfg, param.CIName, false)
+	embeddedComment, err := getEmbeddedComment(cfg, param.CIName, false)
 	if err != nil {
 		return result.ExitCode, err
 	}
@@ -73,7 +73,7 @@ func (g *NotifyService) Apply(ctx context.Context, param notifier.ParamExec) (in
 	body += embeddedComment
 
 	logE.Debug("create a comment")
-	if err := g.client.Comment.Post(ctx, body, PostOptions{
+	if err := g.client.Comment.Post(ctx, body, &PostOptions{
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}); err != nil {

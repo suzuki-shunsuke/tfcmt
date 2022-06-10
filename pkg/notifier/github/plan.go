@@ -9,7 +9,7 @@ import (
 )
 
 // Plan posts comment optimized for notifications
-func (g *NotifyService) Plan(ctx context.Context, param notifier.ParamExec) (int, error) { //nolint:cyclop
+func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (int, error) { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -61,7 +61,7 @@ func (g *NotifyService) Plan(ctx context.Context, param notifier.ParamExec) (int
 		"program": "tfcmt",
 	})
 
-	embeddedComment, err := getEmbeddedComment(&cfg, param.CIName, true)
+	embeddedComment, err := getEmbeddedComment(cfg, param.CIName, true)
 	if err != nil {
 		return result.ExitCode, err
 	}
@@ -76,7 +76,7 @@ func (g *NotifyService) Plan(ctx context.Context, param notifier.ParamExec) (int
 		comments, err := g.client.Comment.List(ctx, cfg.Owner, cfg.Repo, cfg.PR.Number)
 		if err != nil {
 			logE.WithError(err).Debug("list comments")
-			if err := g.client.Comment.Post(ctx, body, PostOptions{
+			if err := g.client.Comment.Post(ctx, body, &PostOptions{
 				Number:   cfg.PR.Number,
 				Revision: cfg.PR.Revision,
 			}); err != nil {
@@ -100,7 +100,7 @@ func (g *NotifyService) Plan(ctx context.Context, param notifier.ParamExec) (int
 	}
 
 	logE.Debug("create a comment")
-	if err := g.client.Comment.Post(ctx, body, PostOptions{
+	if err := g.client.Comment.Post(ctx, body, &PostOptions{
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}); err != nil {

@@ -122,7 +122,7 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		}
 		labels = a
 	}
-	client, err := github.NewClient(ctx, github.Config{
+	client, err := github.NewClient(ctx, &github.Config{
 		Token:           ctrl.Config.GitHubToken,
 		BaseURL:         ctrl.Config.GHEBaseURL,
 		GraphQLEndpoint: ctrl.Config.GHEGraphQLEndpoint,

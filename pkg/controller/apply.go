@@ -45,7 +45,7 @@ func (ctrl *Controller) Apply(ctx context.Context, command Command) error {
 	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
 	_ = cmd.Run()
 
-	return apperr.NewExitError(ntf.Apply(ctx, notifier.ParamExec{
+	return apperr.NewExitError(ntf.Apply(ctx, &notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),

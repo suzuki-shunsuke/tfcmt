@@ -20,7 +20,7 @@ type PostOptions struct {
 }
 
 // Post posts comment
-func (g *CommentService) Post(ctx context.Context, body string, opt PostOptions) error {
+func (g *CommentService) Post(ctx context.Context, body string, opt *PostOptions) error {
 	if opt.Number != 0 {
 		_, _, err := g.client.API.IssuesCreateComment(
 			ctx,

@@ -52,13 +52,13 @@ func TestCommentPost(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		client, err := NewClient(context.Background(), testCase.config)
+		client, err := NewClient(context.Background(), &testCase.config)
 		if err != nil {
 			t.Fatal(err)
 		}
 		api := newFakeAPI()
 		client.API = &api
-		err = client.Comment.Post(context.Background(), testCase.body, testCase.opt)
+		err = client.Comment.Post(context.Background(), testCase.body, &testCase.opt)
 		if (err == nil) != testCase.ok {
 			t.Errorf("got error %q", err)
 		}

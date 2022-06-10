@@ -21,7 +21,7 @@ func TestMergedPRNumber(t *testing.T) {
 
 	for _, testCase := range testCases {
 		cfg := newFakeConfig()
-		client, err := NewClient(context.Background(), cfg)
+		client, err := NewClient(context.Background(), &cfg)
 		if err != nil {
 			t.Fatal(err)
 		}
