@@ -49,7 +49,6 @@ func (ctrl *Controller) Plan(ctx context.Context, command Command) error {
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
-		Cmd:            cmd,
 		CIName:         ctrl.Config.CI.Name,
 		ExitCode:       cmd.ProcessState.ExitCode(),
 	}))
