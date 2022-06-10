@@ -2,7 +2,6 @@ package notifier
 
 import (
 	"context"
-	"os/exec"
 )
 
 // Notifier is a notification interface
@@ -16,6 +15,5 @@ type ParamExec struct {
 	Stderr         string
 	CombinedOutput string
 	CIName         string
-	Cmd            *exec.Cmd
 	ExitCode       int
 }
