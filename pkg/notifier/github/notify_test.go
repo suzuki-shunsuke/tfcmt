@@ -71,13 +71,13 @@ func TestNotifyApply(t *testing.T) {
 		}
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			client, err := NewClient(context.Background(), testCase.config)
+			client, err := NewClient(context.Background(), &testCase.config)
 			if err != nil {
 				t.Fatal(err)
 			}
 			api := newFakeAPI()
 			client.API = &api
-			exitCode, err := client.Notify.Apply(context.Background(), testCase.paramExec)
+			exitCode, err := client.Notify.Apply(context.Background(), &testCase.paramExec)
 			if (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
@@ -290,13 +290,13 @@ func TestNotifyPlan(t *testing.T) {
 		}
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			client, err := NewClient(context.Background(), testCase.config)
+			client, err := NewClient(context.Background(), &testCase.config)
 			if err != nil {
 				t.Fatal(err)
 			}
 			api := newFakeAPI()
 			client.API = &api
-			exitCode, err := client.Notify.Plan(context.Background(), testCase.paramExec)
+			exitCode, err := client.Notify.Plan(context.Background(), &testCase.paramExec)
 			if (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
