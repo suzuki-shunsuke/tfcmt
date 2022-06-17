@@ -9,17 +9,15 @@ builds:
     binary: tfcmt
     env:
       - CGO_ENABLED=0
+    goos:
+    - windows
+    - darwin
+    - linux
+    goarch:
+    - amd64
+    - arm64
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-    replacements:
-      darwin: 'darwin'
-      linux: 'linux'
-      windows: 'windows'
-      386: '386'
-      amd64: 'amd64'
-    format_overrides:
-      - goos: 'windows'
-        format: 'zip'
 release:
   prerelease: true # we update release note manually before releasing
   header: |
