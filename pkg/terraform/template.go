@@ -6,7 +6,7 @@ import (
 	"strings"
 	texttemplate "text/template"
 
-	"github.com/Masterminds/sprig/v3"
+	tmpl "github.com/suzuki-shunsuke/tfcmt/pkg/template"
 )
 
 const (
@@ -162,7 +162,7 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 		tpl, err := texttemplate.New(kind).Funcs(texttemplate.FuncMap{
 			"avoidHTMLEscape": avoidHTMLEscape,
 			"wrapCode":        wrapCode,
-		}).Funcs(sprig.TxtFuncMap()).Parse(template)
+		}).Funcs(tmpl.TxtFuncMap()).Parse(template)
 		if err != nil {
 			return "", err
 		}
@@ -173,7 +173,7 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 		tpl, err := htmltemplate.New(kind).Funcs(htmltemplate.FuncMap{
 			"avoidHTMLEscape": avoidHTMLEscape,
 			"wrapCode":        wrapCode,
-		}).Funcs(sprig.FuncMap()).Parse(template)
+		}).Funcs(tmpl.FuncMap()).Parse(template)
 		if err != nil {
 			return "", err
 		}
