@@ -10,6 +10,12 @@ import (
 )
 
 func Complement(cfg *config.Config) error {
+	if cfg.RepoOwner != "" {
+		cfg.CI.Owner = cfg.RepoOwner
+	}
+	if cfg.RepoName != "" {
+		cfg.CI.Repo = cfg.RepoName
+	}
 	if err := complementWithCIEnv(&cfg.CI); err != nil {
 		return err
 	}
@@ -84,6 +90,34 @@ func complementWithCIEnv(ci *config.CI) error {
 		if ci.Link == "" {
 			ci.Link = getLink(ci.Name)
 		}
+		return nil
+	}
+
+	// Google CloudBuild
+	region := os.Getenv("_REGION")
+	projectID := os.Getenv("PROJECT_ID")
+	prNumber := os.Getenv("_PR_NUMBER")
+	sha := os.Getenv("COMMIT_SHA")
+	buildID := os.Getenv("BUILD_ID")
+	if projectID != "" && sha != "" && buildID != "" {
+		ci.Name = "cloud-build"
+		ci.SHA = sha
+		if prNumber != "" {
+			n, err := strconv.Atoi(prNumber)
+			if err != nil {
+				return fmt.Errorf("environment variable _PR_NUMBER is invalid: %w", err)
+			}
+			ci.PRNumber = n
+		}
+		if region == "" {
+			region = "global"
+		}
+		ci.Link = fmt.Sprintf(
+			"https://console.cloud.google.com/cloud-build/builds;region=%s/%s?project=%s",
+			region,
+			buildID,
+			projectID,
+		)
 	}
 	return nil
 }
