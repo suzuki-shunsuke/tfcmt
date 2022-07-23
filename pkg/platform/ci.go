@@ -94,6 +94,10 @@ func complementWithCIEnv(ci *config.CI) error {
 	}
 
 	// Google CloudBuild
+	return complementGoogleCloudBuild(ci)
+}
+
+func complementGoogleCloudBuild(ci *config.CI) error {
 	region := os.Getenv("_REGION")
 	projectID := os.Getenv("PROJECT_ID")
 	prNumber := os.Getenv("_PR_NUMBER")
