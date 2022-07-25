@@ -18,13 +18,12 @@ type Config struct {
 	EmbeddedVarNames   []string          `yaml:"embedded_var_names"`
 	Templates          map[string]string
 	Log                Log
-	GHEBaseURL         string     `yaml:"ghe_base_url"`
-	GHEGraphQLEndpoint string     `yaml:"ghe_graphql_endpoint"`
-	GitHubToken        string     `yaml:"-"`
-	Complement         Complement `yaml:"ci"`
-	PlanPatch          bool       `yaml:"plan_patch"`
-	RepoOwner          string     `yaml:"repo_owner"`
-	RepoName           string     `yaml:"repo_name"`
+	GHEBaseURL         string `yaml:"ghe_base_url"`
+	GHEGraphQLEndpoint string `yaml:"ghe_graphql_endpoint"`
+	GitHubToken        string `yaml:"-"`
+	PlanPatch          bool   `yaml:"plan_patch"`
+	RepoOwner          string `yaml:"repo_owner"`
+	RepoName           string `yaml:"repo_name"`
 }
 
 type CI struct {
