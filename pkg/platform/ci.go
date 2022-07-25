@@ -5,11 +5,17 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/suzuki-shunsuke/go-ci-env/cienv"
+	"github.com/suzuki-shunsuke/go-ci-env/v3/cienv"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 )
 
 func Complement(cfg *config.Config) error {
+	if cfg.RepoOwner != "" {
+		cfg.CI.Owner = cfg.RepoOwner
+	}
+	if cfg.RepoName != "" {
+		cfg.CI.Repo = cfg.RepoName
+	}
 	if err := complementWithCIEnv(&cfg.CI); err != nil {
 		return err
 	}
@@ -47,9 +53,14 @@ func getLink(ciname string) string {
 			os.Getenv("GITHUB_REPOSITORY"),
 			os.Getenv("GITHUB_RUN_ID"),
 		)
-	case "cloud-build", "cloudbuild":
+	case "google-cloud-build":
+		region := os.Getenv("_REGION")
+		if region == "" {
+			region = "global"
+		}
 		return fmt.Sprintf(
-			"https://console.cloud.google.com/cloud-build/builds/%s?project=%s",
+			"https://console.cloud.google.com/cloud-build/builds;region=%s/%s?project=%s",
+			region,
 			os.Getenv("BUILD_ID"),
 			os.Getenv("PROJECT_ID"),
 		)
@@ -58,8 +69,11 @@ func getLink(ciname string) string {
 }
 
 func complementWithCIEnv(ci *config.CI) error {
-	if pt := cienv.Get(); pt != nil {
-		ci.Name = pt.CI()
+	cienv.Add(func(param *cienv.Param) cienv.Platform {
+		return NewGoogleCloudBuild(param)
+	})
+	if pt := cienv.Get(nil); pt != nil {
+		ci.Name = pt.ID()
 
 		if ci.Owner == "" {
 			ci.Owner = pt.RepoOwner()
