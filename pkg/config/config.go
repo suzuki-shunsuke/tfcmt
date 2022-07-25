@@ -23,6 +23,8 @@ type Config struct {
 	GitHubToken        string     `yaml:"-"`
 	Complement         Complement `yaml:"ci"`
 	PlanPatch          bool       `yaml:"plan_patch"`
+	RepoOwner          string     `yaml:"repo_owner"`
+	RepoName           string     `yaml:"repo_name"`
 }
 
 type CI struct {
