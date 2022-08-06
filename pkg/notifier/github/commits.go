@@ -9,13 +9,21 @@ import (
 // methods of GitHub API
 type CommitsService service
 
-func (g *CommitsService) MergedPRNumber(ctx context.Context, sha string) (int, error) {
+type PullRequestState string
+
+const (
+	PullRequestStateOpen   = "open"
+	PullRequestStateClosed = "closed"
+	PullRequestStateAll    = "all"
+)
+
+func (g *CommitsService) PRNumber(ctx context.Context, sha string, state PullRequestState) (int, error) {
 	prs, _, err := g.client.API.PullRequestsListPullRequestsWithCommit(ctx, sha, nil)
 	if err != nil {
 		return 0, err
 	}
 	for _, pr := range prs {
-		if pr.GetState() != "closed" {
+		if pr.GetState() != string(state) {
 			continue
 		}
 		return pr.GetNumber(), nil

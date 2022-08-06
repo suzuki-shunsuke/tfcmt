@@ -53,7 +53,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 		return result.ExitCode, err
 	}
 	if cfg.PR.Number == 0 {
-		if prNumber, err := g.client.Commits.MergedPRNumber(ctx, cfg.PR.Revision); err == nil {
+		if prNumber, err := g.client.Commits.PRNumber(ctx, cfg.PR.Revision, PullRequestStateClosed); err == nil {
 			cfg.PR.Number = prNumber
 		}
 	}

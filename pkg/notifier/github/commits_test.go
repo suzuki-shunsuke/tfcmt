@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestMergedPRNumber(t *testing.T) {
+func TestPRNumber(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
 		prNumber int
@@ -27,7 +27,7 @@ func TestMergedPRNumber(t *testing.T) {
 		}
 		api := newFakeAPI()
 		client.API = &api
-		prNumber, err := client.Commits.MergedPRNumber(context.Background(), testCase.revision)
+		prNumber, err := client.Commits.PRNumber(context.Background(), testCase.revision, PullRequestStateClosed)
 		if (err == nil) != testCase.ok {
 			t.Errorf("got error %q", err)
 		}
