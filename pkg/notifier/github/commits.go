@@ -3,22 +3,32 @@ package github
 import (
 	"context"
 	"errors"
+
+	"github.com/google/go-github/v43/github"
 )
 
 // CommitsService handles communication with the commits related
 // methods of GitHub API
 type CommitsService service
 
-func (g *CommitsService) MergedPRNumber(ctx context.Context, sha string) (int, error) {
-	prs, _, err := g.client.API.PullRequestsListPullRequestsWithCommit(ctx, sha, nil)
+type PullRequestState string
+
+const (
+	PullRequestStateOpen   = "open"
+	PullRequestStateClosed = "closed"
+	PullRequestStateAll    = "all"
+)
+
+func (g *CommitsService) PRNumber(ctx context.Context, sha string, state PullRequestState) (int, error) {
+	prs, _, err := g.client.API.PullRequestsListPullRequestsWithCommit(ctx, sha, &github.PullRequestListOptions{
+		State: string(state),
+		Sort:  "updated",
+	})
 	if err != nil {
 		return 0, err
 	}
-	for _, pr := range prs {
-		if pr.GetState() != "closed" {
-			continue
-		}
-		return pr.GetNumber(), nil
+	if len(prs) == 0 {
+		return 0, errors.New("associated pull request isn't found")
 	}
-	return 0, errors.New("associated pull request isn't found")
+	return prs[0].GetNumber(), nil
 }
