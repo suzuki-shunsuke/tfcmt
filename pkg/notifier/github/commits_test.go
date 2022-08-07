@@ -13,7 +13,7 @@ func TestPRNumber(t *testing.T) {
 		revision string
 	}{
 		{
-			prNumber: 2,
+			prNumber: 1,
 			ok:       true,
 			revision: "xxx",
 		},
@@ -27,12 +27,12 @@ func TestPRNumber(t *testing.T) {
 		}
 		api := newFakeAPI()
 		client.API = &api
-		prNumber, err := client.Commits.PRNumber(context.Background(), testCase.revision, PullRequestStateClosed)
+		prNumber, err := client.Commits.PRNumber(context.Background(), testCase.revision, PullRequestStateOpen)
 		if (err == nil) != testCase.ok {
 			t.Errorf("got error %q", err)
 		}
 		if prNumber != testCase.prNumber {
-			t.Errorf("got %q but want %q", prNumber, testCase.prNumber)
+			t.Errorf("got %d but want %d", prNumber, testCase.prNumber)
 		}
 	}
 }
