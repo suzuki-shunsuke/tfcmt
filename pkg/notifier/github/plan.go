@@ -56,6 +56,11 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 	if err != nil {
 		return result.ExitCode, err
 	}
+	if cfg.PR.Number == 0 && cfg.PR.Revision != "" {
+		if prNumber, err := g.client.Commits.PRNumber(ctx, cfg.PR.Revision, PullRequestStateOpen); err == nil {
+			cfg.PR.Number = prNumber
+		}
+	}
 
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
