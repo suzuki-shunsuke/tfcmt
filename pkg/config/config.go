@@ -3,7 +3,6 @@ package config
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/suzuki-shunsuke/go-findconfig/findconfig"
@@ -99,7 +98,7 @@ func (cfg *Config) LoadFile(path string) error {
 	if _, err := os.Stat(path); err != nil {
 		return fmt.Errorf("%s: no config file", path)
 	}
-	raw, _ := ioutil.ReadFile(path)
+	raw, _ := os.ReadFile(path)
 	return yaml.Unmarshal(raw, cfg)
 }
 
