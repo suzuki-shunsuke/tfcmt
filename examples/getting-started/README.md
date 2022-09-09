@@ -1,3 +1,3 @@
 # Getting Started
 
-https://suzuki-shunsuke.github.io/tfcmt/docs/getting-started
+https://suzuki-shunsuke.github.io/tfcmt/getting-started
