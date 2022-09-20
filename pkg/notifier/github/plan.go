@@ -15,6 +15,12 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 	template := g.client.Config.Template
 	var errMsgs []string
 
+	if cfg.PR.Number == 0 && cfg.PR.Revision != "" {
+		if prNumber, err := g.client.Commits.PRNumber(ctx, cfg.PR.Revision, PullRequestStateOpen); err == nil {
+			cfg.PR.Number = prNumber
+		}
+	}
+
 	result := parser.Parse(param.CombinedOutput)
 	result.ExitCode = param.ExitCode
 	if result.HasParseError {
@@ -55,11 +61,6 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 	body, err := template.Execute()
 	if err != nil {
 		return result.ExitCode, err
-	}
-	if cfg.PR.Number == 0 && cfg.PR.Revision != "" {
-		if prNumber, err := g.client.Commits.PRNumber(ctx, cfg.PR.Revision, PullRequestStateOpen); err == nil {
-			cfg.PR.Number = prNumber
-		}
 	}
 
 	logE := logrus.WithFields(logrus.Fields{
