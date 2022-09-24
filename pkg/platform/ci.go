@@ -24,7 +24,7 @@ func Complement(cfg *config.Config) error {
 		return err
 	}
 
-	return complementWithGeneric(cfg)
+	return nil
 }
 
 func complementCIInfo(ci *config.CI) error {
@@ -100,50 +100,5 @@ func complementWithCIEnv(ci *config.CI) error {
 			ci.Link = getLink(ci.Name)
 		}
 	}
-	return nil
-}
-
-func complementWithGeneric(cfg *config.Config) error {
-	gen := generic{
-		param: Param{
-			RepoOwner: cfg.Complement.Owner,
-			RepoName:  cfg.Complement.Repo,
-			SHA:       cfg.Complement.SHA,
-			PRNumber:  cfg.Complement.PR,
-			Link:      cfg.Complement.Link,
-			Vars:      cfg.Complement.Vars,
-		},
-	}
-
-	if cfg.CI.Owner == "" {
-		cfg.CI.Owner = gen.RepoOwner()
-	}
-
-	if cfg.CI.Repo == "" {
-		cfg.CI.Repo = gen.RepoName()
-	}
-
-	if cfg.CI.SHA == "" {
-		cfg.CI.SHA = gen.SHA()
-	}
-
-	if cfg.CI.PRNumber <= 0 {
-		n, err := gen.PRNumber()
-		if err != nil {
-			return err
-		}
-		cfg.CI.PRNumber = n
-	}
-
-	if cfg.CI.Link == "" {
-		cfg.CI.Link = gen.Link()
-	}
-
-	vars := gen.Vars()
-	for k, v := range cfg.Vars {
-		vars[k] = v
-	}
-	cfg.Vars = vars
-
 	return nil
 }

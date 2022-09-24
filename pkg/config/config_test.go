@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/domain"
 )
 
 func TestLoadFile(t *testing.T) {
@@ -28,22 +27,6 @@ func TestLoadFile(t *testing.T) {
 						Template: "",
 					},
 					UseRawOutput: false,
-				},
-				Complement: Complement{
-					PR:   []domain.ComplementEntry{},
-					Link: []domain.ComplementEntry{},
-					SHA:  []domain.ComplementEntry{},
-					Owner: []domain.ComplementEntry{
-						&ComplementEnvsubstEntry{
-							Value: "suzuki-shunsuke",
-						},
-					},
-					Repo: []domain.ComplementEntry{
-						&ComplementEnvsubstEntry{
-							Value: "tfcmt",
-						},
-					},
-					Vars: map[string][]domain.ComplementEntry{},
 				},
 			},
 			ok: true,

@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"text/template"
 
-	"github.com/Masterminds/sprig/v3"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
+	tmpl "github.com/suzuki-shunsuke/tfcmt/pkg/template"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
@@ -26,7 +26,7 @@ type Command struct {
 }
 
 func (ctrl *Controller) renderTemplate(tpl string) (string, error) {
-	tmpl, err := template.New("_").Funcs(sprig.TxtFuncMap()).Parse(tpl)
+	tmpl, err := template.New("_").Funcs(tmpl.TxtFuncMap()).Parse(tpl)
 	if err != nil {
 		return "", err
 	}
