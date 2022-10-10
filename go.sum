@@ -67,8 +67,8 @@ github.com/suzuki-shunsuke/go-ci-env/v3 v3.0.1 h1:deCm9of48iwRq0Axg3ne8mx/26h3ok
 github.com/suzuki-shunsuke/go-ci-env/v3 v3.0.1/go.mod h1:VmLj5u0w7Yf/IJIzZ+TWiB7mVT3pRKPMeb0Jssk7YsA=
 github.com/suzuki-shunsuke/go-findconfig v1.1.1 h1:7jBTjf7RjfvRC6XNpCKCJC6y8hHVYPVVefOQHQPHRVw=
 github.com/suzuki-shunsuke/go-findconfig v1.1.1/go.mod h1:u/0Zz6/GDE6G0gofzVhR9UPOIKLSUoDMjUoFWqOoVlg=
-github.com/urfave/cli/v2 v2.19.1 h1:5Lt6gp6VugLvDmsyl80uqZlmCn/gyI9af8JvC2voqCI=
-github.com/urfave/cli/v2 v2.19.1/go.mod h1:1CNUng3PtjQMtRzJO4FMXBQvkGtuYRxxiR9xMa7jMwI=
+github.com/urfave/cli/v2 v2.19.2 h1:eXu5089gqqiDQKSnFW+H/FhjrxRGztwSxlTsVK7IuqQ=
+github.com/urfave/cli/v2 v2.19.2/go.mod h1:1CNUng3PtjQMtRzJO4FMXBQvkGtuYRxxiR9xMa7jMwI=
 github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 h1:bAn7/zixMGCfxrRTfdpNzjtPYqr8smhKouy9mxVdGPU=
 github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673/go.mod h1:N3UwUGtsrSj3ccvlPHLoLsHnpR27oXr4ZE984MbSER8=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
