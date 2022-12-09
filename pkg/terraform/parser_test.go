@@ -297,6 +297,42 @@ Error: Batch "project/tfcmt-jp-tfcmt-prod/services:batchEnable" for request "Ena
 
 `
 
+const changeOutputResult = `
+Note: Objects have changed outside of Terraform
+
+Terraform detected the following changes made outside of Terraform since the
+last "terraform apply":
+
+  # mongodbatlas_cluster.foo has been changed
+  ~ resource "mongodbatlas_cluster" "foo" {
+        # ...
+        # (29 unchanged attributes hidden)
+
+
+
+        # (3 unchanged blocks hidden)
+    }
+
+Unless you have made equivalent changes to your configuration, or ignored the
+relevant attributes using ignore_changes, the following plan may include
+actions to undo or respond to these changes.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Changes to Outputs:
+  + foo_mongo_uri = "xxx"
+
+You can apply this plan to save these new output values to the Terraform
+state, without changing any real infrastructure.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Saved the plan to: tfplan.binary
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "tfplan.binary"
+`
+
 func TestDefaultParserParse(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
@@ -327,6 +363,33 @@ func TestPlanParserParse(t *testing.T) {
 		body   string
 		result ParseResult
 	}{
+		{
+			name: "plan changed outside",
+			body: changeOutputResult,
+			result: ParseResult{
+				Result:             "Note: Objects have changed outside of Terraform",
+				HasAddOrUpdateOnly: false,
+				HasDestroy:         false,
+				HasNoChanges:       true,
+				ExitCode:           0,
+				Error:              nil,
+				OutsideTerraform: `
+Terraform detected the following changes made outside of Terraform since the
+last "terraform apply":
+
+  # mongodbatlas_cluster.foo has been changed
+  ~ resource "mongodbatlas_cluster" "foo" {
+        # ...
+        # (29 unchanged attributes hidden)
+
+
+
+        # (3 unchanged blocks hidden)
+    }
+
+Unless you have made equivalent changes to your configuration, or ignored the`,
+			},
+		},
 		{
 			name: "plan ok pattern",
 			body: planSuccessResult,

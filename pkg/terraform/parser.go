@@ -59,11 +59,11 @@ func NewDefaultParser() *DefaultParser {
 // NewPlanParser is PlanParser initialized with its Regexp
 func NewPlanParser() *PlanParser {
 	return &PlanParser{
-		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.)`),
+		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.|Note: Objects have changed outside of Terraform)`),
 		Fail: regexp.MustCompile(`(?m)^(Error: )`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:   regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
-		HasNoChanges: regexp.MustCompile(`(?m)^(No changes.)`),
+		HasNoChanges: regexp.MustCompile(`(?m)^(No changes.|Note: Objects have changed outside of Terraform)`),
 		Create:       regexp.MustCompile(`^ *# (.*) will be created$`),
 		Update:       regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
 		Delete:       regexp.MustCompile(`^ *# (.*) will be destroyed$`),
