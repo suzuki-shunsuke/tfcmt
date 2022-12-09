@@ -35,14 +35,15 @@ type DefaultParser struct{}
 
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
-	Pass         *regexp.Regexp
-	Fail         *regexp.Regexp
-	HasDestroy   *regexp.Regexp
-	HasNoChanges *regexp.Regexp
-	Create       *regexp.Regexp
-	Update       *regexp.Regexp
-	Delete       *regexp.Regexp
-	Replace      *regexp.Regexp
+	Pass           *regexp.Regexp
+	Fail           *regexp.Regexp
+	ChangesOutside *regexp.Regexp
+	HasDestroy     *regexp.Regexp
+	HasNoChanges   *regexp.Regexp
+	Create         *regexp.Regexp
+	Update         *regexp.Regexp
+	Delete         *regexp.Regexp
+	Replace        *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -59,11 +60,12 @@ func NewDefaultParser() *DefaultParser {
 // NewPlanParser is PlanParser initialized with its Regexp
 func NewPlanParser() *PlanParser {
 	return &PlanParser{
-		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.|Note: Objects have changed outside of Terraform)`),
-		Fail: regexp.MustCompile(`(?m)^(Error: )`),
+		Pass:           regexp.MustCompile(`(?m)^(Plan: \d|No changes.)`),
+		Fail:           regexp.MustCompile(`(?m)^(Error: )`),
+		ChangesOutside: regexp.MustCompile(`(?m)^(Note: Objects have changed outside of Terraform)`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:   regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
-		HasNoChanges: regexp.MustCompile(`(?m)^(No changes.|Note: Objects have changed outside of Terraform)`),
+		HasNoChanges: regexp.MustCompile(`(?m)^(No changes.)`),
 		Create:       regexp.MustCompile(`^ *# (.*) will be created$`),
 		Update:       regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
 		Delete:       regexp.MustCompile(`^ *# (.*) will be destroyed$`),
@@ -103,6 +105,9 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		exitCode = ExitPass
 	case p.Fail.MatchString(body):
 		exitCode = ExitFail
+	// changes outside of terraform only
+	case p.ChangesOutside.MatchString(body):
+		exitCode = ExitPass
 	default:
 		return ParseResult{
 			Result:        "",
@@ -141,7 +146,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 			endWarning = i
 		}
 		if firstMatchLineIndex == -1 {
-			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
+			if p.Pass.MatchString(line) || p.Fail.MatchString(line) || p.ChangesOutside.MatchString(line) {
 				firstMatchLineIndex = i
 				firstMatchLine = line
 			}
@@ -163,6 +168,8 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	case p.Fail.MatchString(firstMatchLine):
 		hasPlanError = true
 		result = strings.Join(trimLastNewline(lines[firstMatchLineIndex:]), "\n")
+	case p.ChangesOutside.MatchString(firstMatchLine):
+		result = lines[firstMatchLineIndex]
 	}
 
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)

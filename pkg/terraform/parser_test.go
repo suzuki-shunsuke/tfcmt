@@ -297,7 +297,7 @@ Error: Batch "project/tfcmt-jp-tfcmt-prod/services:batchEnable" for request "Ena
 
 `
 
-const changeOutputResult = `
+const changesOutputOnlyResult = `
 Note: Objects have changed outside of Terraform
 
 Terraform detected the following changes made outside of Terraform since the
@@ -365,12 +365,12 @@ func TestPlanParserParse(t *testing.T) {
 	}{
 		{
 			name: "plan changed outside",
-			body: changeOutputResult,
+			body: changesOutputOnlyResult,
 			result: ParseResult{
 				Result:             "Note: Objects have changed outside of Terraform",
-				HasAddOrUpdateOnly: false,
+				HasAddOrUpdateOnly: true,
 				HasDestroy:         false,
-				HasNoChanges:       true,
+				HasNoChanges:       false,
 				ExitCode:           0,
 				Error:              nil,
 				OutsideTerraform: `
