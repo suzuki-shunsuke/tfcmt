@@ -24,7 +24,7 @@ jobs:
 
       - uses: aquaproj/aqua-installer@a39f721a15ed34ccbc85706e6e8ae8572c9ca9c6 # v1.2.0
         with:
-          aqua_version: v1.26.1
+          aqua_version: v1.26.2
 
       - uses: suzuki-shunsuke/github-action-golangci-lint@4b6bb7682772359cf0e7959932803ca2ff998895 # v0.1.4
       - name: Test
