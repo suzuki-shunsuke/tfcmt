@@ -7,3 +7,4 @@ packages:
 - name: suzuki-shunsuke/cmdx@v1.6.1
 - name: reviewdog/reviewdog@v0.14.1
 - name: golangci/golangci-lint@v1.49.0
+- name: sigstore/cosign@v1.13.1
