@@ -1,58 +1,82 @@
 project_name: tfcmt
+
 env:
   - GO111MODULE=on
+
 before:
   hooks:
     - go mod tidy
+
 builds:
   - main: ./cmd/tfcmt
     binary: tfcmt
     env:
       - CGO_ENABLED=0
     goos:
-    - windows
-    - darwin
-    - linux
+      - windows
+      - darwin
+      - linux
     goarch:
-    - amd64
-    - arm64
+      - amd64
+      - arm64
+
+signs:
+  - cmd: cosign
+    artifacts: checksum
+    signature: ${artifact}.sig
+    certificate: ${artifact}.pem
+    output: true
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    args:
+      - sign-blob
+      - --output-signature
+      - ${signature}
+      - --output-certificate
+      - ${certificate}
+      - --oidc-provider
+      - github
+      - ${artifact}
+
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+
 release:
   prerelease: true # we update release note manually before releasing
   header: |
     [Pull Requests](https://github.com/suzuki-shunsuke/tfcmt/pulls?q=is%3Apr+milestone%3A{{.Tag}}) | [Issues](https://github.com/suzuki-shunsuke/tfcmt/issues?q=is%3Aissue+milestone%3A{{.Tag}}) | https://github.com/suzuki-shunsuke/tfcmt/compare/{{.PreviousTag}}...{{.Tag}}
+
 brews:
--
-  # NOTE: make sure the url_template, the token and given repo (github or gitlab) owner and name are from the
-  # same kind. We will probably unify this in the next major version like it is done with scoop.
+  -
+    # NOTE: make sure the url_template, the token and given repo (github or gitlab) owner and name are from the
+    # same kind. We will probably unify this in the next major version like it is done with scoop.
 
-  # GitHub/GitLab repository to push the formula to
-  tap:
-    owner: suzuki-shunsuke
-    name: homebrew-tfcmt
-    token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-  # The project name and current git tag are used in the format string.
-  commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
-  # Your app's homepage.
-  # Default is empty.
-  homepage: https://github.com/suzuki-shunsuke/tfcmt
+    # GitHub/GitLab repository to push the formula to
+    tap:
+      owner: suzuki-shunsuke
+      name: homebrew-tfcmt
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    # The project name and current git tag are used in the format string.
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    # Your app's homepage.
+    # Default is empty.
+    homepage: https://github.com/suzuki-shunsuke/tfcmt
 
-  # Template of your app's description.
-  # Default is empty.
-  description: |
-    Fork of mercari/tfnotify. tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and advanced formatting options
-  license: MIT
+    # Template of your app's description.
+    # Default is empty.
+    description: |
+      Fork of mercari/tfnotify. tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and advanced formatting options
+    license: MIT
 
-  # Setting this will prevent goreleaser to actually try to commit the updated
-  # formula - instead, the formula file will be stored on the dist folder only,
-  # leaving the responsibility of publishing it to the user.
-  # If set to auto, the release will not be uploaded to the homebrew tap
-  # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
-  # Default is false.
-  skip_upload: auto
+    # Setting this will prevent goreleaser to actually try to commit the updated
+    # formula - instead, the formula file will be stored on the dist folder only,
+    # leaving the responsibility of publishing it to the user.
+    # If set to auto, the release will not be uploaded to the homebrew tap
+    # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
+    # Default is false.
+    skip_upload: auto
 
-  # So you can `brew test` your formula.
-  # Default is empty.
-  test: |
-    system "#{bin}/tfcmt --version"
+    # So you can `brew test` your formula.
+    # Default is empty.
+    test: |
+      system "#{bin}/tfcmt --version"

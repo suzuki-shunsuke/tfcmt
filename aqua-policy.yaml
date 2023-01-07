@@ -1,0 +1,7 @@
+# aqua - CLI Version Manager
+# https://github.com/aquaproj/aqua
+registries:
+- type: standard
+  ref: semver(">= 3.0.0")
+packages:
+- registry: standard
