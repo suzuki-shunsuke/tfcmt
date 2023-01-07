@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/google/go-github/v43/github"
+	"github.com/google/go-github/v49/github"
 )
 
 // CommitsService handles communication with the commits related
