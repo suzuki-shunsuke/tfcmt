@@ -3,7 +3,7 @@
     "config:base",
     "helpers:pinGitHubActionDigests",
     "github>suzuki-shunsuke/renovate-config",
-    "github>aquaproj/aqua-renovate-config#1.5.0"
+    "github>aquaproj/aqua-renovate-config#1.5.1"
   ],
   "packageRules": [
     {
