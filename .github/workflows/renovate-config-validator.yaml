@@ -1,5 +1,7 @@
 name: renovate-config-validator
 
+permissions: {}
+
 on:
   pull_request:
     branches:

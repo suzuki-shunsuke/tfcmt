@@ -10,22 +10,6 @@ on:
 permissions: {}
 jobs:
   test:
-    runs-on: ubuntu-latest
+    uses: suzuki-shunsuke/go-test-workflow/.github/workflows/test.yaml@e63ffd2de162e7a38c0f1b3ccaba92f9425edb6e # v0.1.0
     permissions:
-      pull-requests: write # To update pull requests by reviewdog
-    steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-      - uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
-        with:
-          go-version: '1.19.4'
-          cache: true
-
-      - uses: aquaproj/aqua-installer@61e2563dfe7674cbf74fe6ec212e444198a3bb00 # v2.0.2
-        with:
-          aqua_version: v1.31.0
-
-      - uses: suzuki-shunsuke/github-action-golangci-lint@4b6bb7682772359cf0e7959932803ca2ff998895 # v0.1.4
-        with:
-          timeout: 120s
-
-      - run: go test -v ./... -race -covermode=atomic
+      pull-requests: write
