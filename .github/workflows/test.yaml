@@ -13,3 +13,4 @@ jobs:
     uses: suzuki-shunsuke/go-test-workflow/.github/workflows/test.yaml@ce331bee1ba303d4aef68ff262d3c6ad389b3fa1 # v0.2.0
     permissions:
       pull-requests: write
+      contents: read
