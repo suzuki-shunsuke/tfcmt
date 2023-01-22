@@ -1,10 +1,14 @@
-# aqua - CLI Version Manager
-# https://github.com/aquaproj/aqua
+---
+# aqua - Declarative CLI Version Manager
+# https://aquaproj.github.io/
+checksum:
+  # Enable Checksum Verification
+  # https://aquaproj.github.io/docs/tutorial-extras/checksum/
+  enabled: true
+  require_checksum: true
 registries:
-- type: standard
-  ref: v3.123.0 # renovate: depName=aquaproj/aqua-registry
+  - type: standard
+    ref: v3.123.0 # renovate: depName=aquaproj/aqua-registry
 packages:
-- name: suzuki-shunsuke/cmdx@v1.6.1
-- name: reviewdog/reviewdog@v0.14.1
-- name: golangci/golangci-lint@v1.49.0
-- name: sigstore/cosign@v1.13.1
+  # Split packages per package with `import` to avoid pull requests' conflict
+  - import: aqua/*.yaml
