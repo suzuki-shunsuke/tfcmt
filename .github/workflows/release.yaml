@@ -8,7 +8,7 @@ env:
   AQUA_POLICY_CONFIG: ${{ github.workspace }}/aqua-policy.yaml
 jobs:
   release:
-    uses: suzuki-shunsuke/go-release-workflow/.github/workflows/release.yaml@b00b650f092aaa9e748caa01d96ab380cf8348b5 # v0.2.1
+    uses: suzuki-shunsuke/go-release-workflow/.github/workflows/release.yaml@5f97504fee36e24636d22b12f10e3e343f14f0ae # v0.2.2
     with:
       homebrew: true
     secrets:
