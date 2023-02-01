@@ -62,53 +62,61 @@ func (ctrl *Controller) renderGitHubLabels() (github.ResultLabels, error) { //no
 		labels.NoChangesLabelColor = "0e8a16" // green
 	}
 
-	if ctrl.Config.Terraform.Plan.WhenAddOrUpdateOnly.Label == "" {
-		if target == "" {
-			labels.AddOrUpdateLabel = "add-or-update"
+	if !ctrl.Config.Terraform.Plan.WhenAddOrUpdateOnly.DisableLabel {
+		if ctrl.Config.Terraform.Plan.WhenAddOrUpdateOnly.Label == "" {
+			if target == "" {
+				labels.AddOrUpdateLabel = "add-or-update"
+			} else {
+				labels.AddOrUpdateLabel = target + "/add-or-update"
+			}
 		} else {
-			labels.AddOrUpdateLabel = target + "/add-or-update"
+			addOrUpdateLabel, err := ctrl.renderTemplate(ctrl.Config.Terraform.Plan.WhenAddOrUpdateOnly.Label)
+			if err != nil {
+				return labels, err
+			}
+			labels.AddOrUpdateLabel = addOrUpdateLabel
 		}
-	} else {
-		addOrUpdateLabel, err := ctrl.renderTemplate(ctrl.Config.Terraform.Plan.WhenAddOrUpdateOnly.Label)
+	}
+
+	if !ctrl.Config.Terraform.Plan.WhenDestroy.DisableLabel {
+		if ctrl.Config.Terraform.Plan.WhenDestroy.Label == "" {
+			if target == "" {
+				labels.DestroyLabel = "destroy"
+			} else {
+				labels.DestroyLabel = target + "/destroy"
+			}
+		} else {
+			destroyLabel, err := ctrl.renderTemplate(ctrl.Config.Terraform.Plan.WhenDestroy.Label)
+			if err != nil {
+				return labels, err
+			}
+			labels.DestroyLabel = destroyLabel
+		}
+	}
+
+	if !ctrl.Config.Terraform.Plan.WhenNoChanges.DisableLabel {
+		if ctrl.Config.Terraform.Plan.WhenNoChanges.Label == "" {
+			if target == "" {
+				labels.NoChangesLabel = "no-changes"
+			} else {
+				labels.NoChangesLabel = target + "/no-changes"
+			}
+		} else {
+			nochangesLabel, err := ctrl.renderTemplate(ctrl.Config.Terraform.Plan.WhenNoChanges.Label)
+			if err != nil {
+				return labels, err
+			}
+			labels.NoChangesLabel = nochangesLabel
+		}
+	}
+
+	if !ctrl.Config.Terraform.Plan.WhenPlanError.DisableLabel {
+		planErrorLabel, err := ctrl.renderTemplate(ctrl.Config.Terraform.Plan.WhenPlanError.Label)
 		if err != nil {
 			return labels, err
 		}
-		labels.AddOrUpdateLabel = addOrUpdateLabel
+		labels.PlanErrorLabel = planErrorLabel
 	}
-
-	if ctrl.Config.Terraform.Plan.WhenDestroy.Label == "" {
-		if target == "" {
-			labels.DestroyLabel = "destroy"
-		} else {
-			labels.DestroyLabel = target + "/destroy"
-		}
-	} else {
-		destroyLabel, err := ctrl.renderTemplate(ctrl.Config.Terraform.Plan.WhenDestroy.Label)
-		if err != nil {
-			return labels, err
-		}
-		labels.DestroyLabel = destroyLabel
-	}
-
-	if ctrl.Config.Terraform.Plan.WhenNoChanges.Label == "" {
-		if target == "" {
-			labels.NoChangesLabel = "no-changes"
-		} else {
-			labels.NoChangesLabel = target + "/no-changes"
-		}
-	} else {
-		nochangesLabel, err := ctrl.renderTemplate(ctrl.Config.Terraform.Plan.WhenNoChanges.Label)
-		if err != nil {
-			return labels, err
-		}
-		labels.NoChangesLabel = nochangesLabel
-	}
-
-	planErrorLabel, err := ctrl.renderTemplate(ctrl.Config.Terraform.Plan.WhenPlanError.Label)
-	if err != nil {
-		return labels, err
-	}
-	labels.PlanErrorLabel = planErrorLabel
 
 	return labels, nil
 }

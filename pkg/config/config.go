@@ -59,26 +59,30 @@ type Plan struct {
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
 type WhenAddOrUpdateOnly struct {
-	Label string
-	Color string `yaml:"label_color"`
+	Label        string
+	Color        string `yaml:"label_color"`
+	DisableLabel bool   `yaml:"disable_label"`
 }
 
 // WhenDestroy is a configuration to notify the plan result contains destroy operation
 type WhenDestroy struct {
-	Label string
-	Color string `yaml:"label_color"`
+	Label        string
+	Color        string `yaml:"label_color"`
+	DisableLabel bool   `yaml:"disable_label"`
 }
 
 // WhenNoChanges is a configuration to add a label when the plan result contains no change
 type WhenNoChanges struct {
-	Label string
-	Color string `yaml:"label_color"`
+	Label        string
+	Color        string `yaml:"label_color"`
+	DisableLabel bool   `yaml:"disable_label"`
 }
 
 // WhenPlanError is a configuration to notify the plan result returns an error
 type WhenPlanError struct {
-	Label string
-	Color string `yaml:"label_color"`
+	Label        string
+	Color        string `yaml:"label_color"`
+	DisableLabel bool   `yaml:"disable_label"`
 }
 
 // WhenParseError is a configuration to notify the plan result returns an error
