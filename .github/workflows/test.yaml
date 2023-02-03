@@ -69,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{steps.generate_token.outputs.token}}
 
   test:
-    uses: suzuki-shunsuke/go-test-workflow/.github/workflows/test.yaml@ef3bf756c7e21e23d232b73fd7bab92c848455cf # v0.2.1
+    uses: suzuki-shunsuke/go-test-workflow/.github/workflows/test.yaml@2bdeeb26dac484af74f203a6eca9e7784a29f48c # v0.3.1
     if: "! github.event.pull_request.head.repo.fork"
     permissions:
       pull-requests: write
