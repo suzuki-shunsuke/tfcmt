@@ -9,6 +9,7 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/localFile"
 	tmpl "github.com/suzuki-shunsuke/tfcmt/pkg/template"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
@@ -130,29 +131,48 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		}
 		labels = a
 	}
-	client, err := github.NewClient(ctx, &github.Config{
-		Token:           ctrl.Config.GitHubToken,
-		BaseURL:         ctrl.Config.GHEBaseURL,
-		GraphQLEndpoint: ctrl.Config.GHEGraphQLEndpoint,
-		Owner:           ctrl.Config.CI.Owner,
-		Repo:            ctrl.Config.CI.Repo,
-		PR: github.PullRequest{
-			Revision: ctrl.Config.CI.SHA,
-			Number:   ctrl.Config.CI.PRNumber,
-		},
-		CI:                 ctrl.Config.CI.Link,
-		Parser:             ctrl.Parser,
-		UseRawOutput:       ctrl.Config.Terraform.UseRawOutput,
-		Template:           ctrl.Template,
-		ParseErrorTemplate: ctrl.ParseErrorTemplate,
-		ResultLabels:       labels,
-		Vars:               ctrl.Config.Vars,
-		EmbeddedVarNames:   ctrl.Config.EmbeddedVarNames,
-		Templates:          ctrl.Config.Templates,
-		Patch:              ctrl.Config.PlanPatch,
-	})
-	if err != nil {
-		return nil, err
+	// Write output to file instead of github comment
+	if ctrl.Config.Output != "" {
+		client, err := localFile.NewClient(ctx, &localFile.Config{
+			OutputFile:         ctrl.Config.Output,
+			Parser:             ctrl.Parser,
+			UseRawOutput:       ctrl.Config.Terraform.UseRawOutput,
+			Template:           ctrl.Template,
+			ParseErrorTemplate: ctrl.ParseErrorTemplate,
+			Vars:               ctrl.Config.Vars,
+			EmbeddedVarNames:   ctrl.Config.EmbeddedVarNames,
+			Templates:          ctrl.Config.Templates,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return client.Notify, nil
+	} else {
+		client, err := github.NewClient(ctx, &github.Config{
+			Token:           ctrl.Config.GitHubToken,
+			BaseURL:         ctrl.Config.GHEBaseURL,
+			GraphQLEndpoint: ctrl.Config.GHEGraphQLEndpoint,
+			Owner:           ctrl.Config.CI.Owner,
+			Repo:            ctrl.Config.CI.Repo,
+			PR: github.PullRequest{
+				Revision: ctrl.Config.CI.SHA,
+				Number:   ctrl.Config.CI.PRNumber,
+			},
+			CI:                 ctrl.Config.CI.Link,
+			Parser:             ctrl.Parser,
+			UseRawOutput:       ctrl.Config.Terraform.UseRawOutput,
+			Template:           ctrl.Template,
+			ParseErrorTemplate: ctrl.ParseErrorTemplate,
+			ResultLabels:       labels,
+			Vars:               ctrl.Config.Vars,
+			EmbeddedVarNames:   ctrl.Config.EmbeddedVarNames,
+			Templates:          ctrl.Config.Templates,
+			Patch:              ctrl.Config.PlanPatch,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return client.Notify, nil
 	}
-	return client.Notify, nil
+
 }

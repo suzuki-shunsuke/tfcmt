@@ -23,6 +23,7 @@ type Config struct {
 	PlanPatch          bool   `yaml:"plan_patch"`
 	RepoOwner          string `yaml:"repo_owner"`
 	RepoName           string `yaml:"repo_name"`
+	Output			   string `yaml:"output_file"`
 }
 
 type CI struct {
@@ -107,6 +108,10 @@ func (cfg *Config) LoadFile(path string) error {
 
 // Validate validates config file
 func (cfg *Config) Validate() error {
+
+	if cfg.Output != "" {
+		return nil
+	}
 	if cfg.CI.Owner == "" {
 		return errors.New("repository owner is missing")
 	}
