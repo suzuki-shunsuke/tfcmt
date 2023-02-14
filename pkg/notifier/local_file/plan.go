@@ -1,4 +1,4 @@
-package localFile
+package local_file
 
 import (
 	"context"
@@ -8,13 +8,13 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
-// Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (int, error) {
+// Plan posts comment optimized for notifications
+func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (int, error) { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
 	var errMsgs []string
-
+	
 	result := parser.Parse(param.CombinedOutput)
 	result.ExitCode = param.ExitCode
 	if result.HasParseError {
@@ -51,12 +51,13 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 	if err != nil {
 		return result.ExitCode, err
 	}
-
+	
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
 	})
 
-	logE.Debug("write output apply to file")
+	logE.Debug("write output plan to file")
+	// WriteFile to Outputfile define in config (via command -output)
 	if err := g.client.Comment.Post(ctx, body, cfg.OutputFile); err != nil {
 		return result.ExitCode, err
 	}
