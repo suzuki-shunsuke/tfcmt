@@ -1,4 +1,4 @@
-package local_file
+package tofile
 
 import (
 	"context"
@@ -14,7 +14,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
 	var errMsgs []string
-	
+
 	result := parser.Parse(param.CombinedOutput)
 	result.ExitCode = param.ExitCode
 	if result.HasParseError {
@@ -51,7 +51,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 	if err != nil {
 		return result.ExitCode, err
 	}
-	
+
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
 	})

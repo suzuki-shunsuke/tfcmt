@@ -1,4 +1,4 @@
-package local_file
+package tofile
 
 // NotifyService handles communication with the notification related
 // methods of GitHub API
