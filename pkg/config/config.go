@@ -23,7 +23,7 @@ type Config struct {
 	PlanPatch          bool   `yaml:"plan_patch"`
 	RepoOwner          string `yaml:"repo_owner"`
 	RepoName           string `yaml:"repo_name"`
-	Output			   string `yaml:"output_file"`
+	Output			   string `yaml:"-"`
 }
 
 type CI struct {
