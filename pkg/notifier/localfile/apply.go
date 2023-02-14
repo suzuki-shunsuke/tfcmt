@@ -1,4 +1,4 @@
-package tofile
+package localfile
 
 import (
 	"context"
@@ -8,8 +8,8 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
 
-// Plan posts comment optimized for notifications
-func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (int, error) {
+// Apply posts comment optimized for notifications
+func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (int, error) {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -56,8 +56,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 		"program": "tfcmt",
 	})
 
-	logE.Debug("write output plan to file")
-	// WriteFile to Outputfile define in config (via command -output)
+	logE.Debug("write output apply to file")
 	if err := g.client.Comment.Post(ctx, body, cfg.OutputFile); err != nil {
 		return result.ExitCode, err
 	}
