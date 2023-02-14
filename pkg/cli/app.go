@@ -28,7 +28,7 @@ func New(flags *LDFlags) *cli.App {
 		&cli.IntFlag{Name: "pr", Usage: "pull request number"},
 		&cli.StringFlag{Name: "config", Usage: "config path"},
 		&cli.StringSliceFlag{Name: "var", Usage: "template variables. The format of value is '<name>:<value>'"},
-		&cli.StringFlag{Name: "output",  Usage: "specify file to output result instead of post comment"},
+		&cli.StringFlag{Name: "output", Usage: "specify file to output result instead of post comment"},
 	}
 	app.Commands = []*cli.Command{
 		{

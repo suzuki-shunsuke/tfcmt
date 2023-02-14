@@ -16,7 +16,6 @@ func (f *LocalFileService) Post(ctx context.Context, body string, outputFile str
 	})
 
 	file, err := os.Create(outputFile)
-
 	if err != nil {
 		return err
 	}

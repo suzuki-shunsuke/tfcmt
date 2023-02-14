@@ -173,5 +173,4 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		return nil, err
 	}
 	return client.Notify, nil
-
 }
