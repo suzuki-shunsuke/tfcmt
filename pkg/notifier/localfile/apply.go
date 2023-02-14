@@ -57,7 +57,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 	})
 
 	logE.Debug("write output apply to file")
-	if err := g.client.Comment.Post(ctx, body, cfg.OutputFile); err != nil {
+	if err := g.client.Output.WriteToFile(ctx, body, cfg.OutputFile); err != nil {
 		return result.ExitCode, err
 	}
 	return result.ExitCode, nil

@@ -9,8 +9,8 @@ import (
 
 type OutputService service
 
-// Post posts comment
-func (f *OutputService) Post(ctx context.Context, body string, outputFile string) error {
+// WriteToFile Write result to file
+func (f *OutputService) WriteToFile(ctx context.Context, body string, outputFile string) error {
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
 	})

@@ -15,7 +15,7 @@ type Client struct {
 	common service
 
 	Notify  *NotifyService
-	Comment *OutputService
+	Output *OutputService
 }
 
 // Config is a configuration for local file
