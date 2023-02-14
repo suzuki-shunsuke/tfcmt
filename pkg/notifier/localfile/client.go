@@ -14,7 +14,7 @@ type Client struct {
 
 	common service
 
-	Notify  *NotifyService
+	Notify *NotifyService
 	Output *OutputService
 }
 
