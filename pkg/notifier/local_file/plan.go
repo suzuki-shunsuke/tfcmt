@@ -9,7 +9,7 @@ import (
 )
 
 // Plan posts comment optimized for notifications
-func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (int, error) { //nolint:cyclop
+func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (int, error) {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
