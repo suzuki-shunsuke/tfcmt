@@ -7,10 +7,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type LocalFileService service
+type OutputService service
 
 // Post posts comment
-func (f *LocalFileService) Post(ctx context.Context, body string, outputFile string) error {
+func (f *OutputService) Post(ctx context.Context, body string, outputFile string) error {
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
 	})
