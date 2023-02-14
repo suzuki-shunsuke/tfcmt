@@ -108,7 +108,6 @@ func (cfg *Config) LoadFile(path string) error {
 
 // Validate validates config file
 func (cfg *Config) Validate() error {
-
 	if cfg.Output != "" {
 		return nil
 	}
