@@ -22,10 +22,8 @@ func (f *OutputService) WriteToFile(ctx context.Context, body string, outputFile
 
 	defer file.Close()
 
-	_, err2 := file.WriteString(body)
-
-	if err2 != nil {
-		return err2
+	if _, err := file.WriteString(body); err != nil {
+		return err
 	}
 	logE.Debug("Output to file success")
 
