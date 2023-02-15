@@ -57,7 +57,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 		"program": "tfcmt",
 	})
 
-	logE.Debug("write output apply to file")
+	logE.Debug("write the apply result to a file")
 	if err := g.client.Output.WriteToFile(ctx, body, cfg.OutputFile); err != nil {
 		return result.ExitCode, err
 	}

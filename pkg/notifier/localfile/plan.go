@@ -2,6 +2,7 @@ package localfile
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
@@ -57,10 +58,9 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 		"program": "tfcmt",
 	})
 
-	logE.Debug("write output plan to file")
-	// WriteFile to Outputfile define in config (via command -output)
+	logE.Debug("write a plan output to a file")
 	if err := g.client.Output.WriteToFile(ctx, body, cfg.OutputFile); err != nil {
-		return result.ExitCode, err
+		return result.ExitCode, fmt.Errorf("write a plan output to a file: %w", err)
 	}
 	return result.ExitCode, nil
 }
