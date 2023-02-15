@@ -9,6 +9,7 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
+	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/localfile"
 	tmpl "github.com/suzuki-shunsuke/tfcmt/pkg/template"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 )
@@ -129,6 +130,23 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 			return nil, err
 		}
 		labels = a
+	}
+	// Write output to file instead of github comment
+	if ctrl.Config.Output != "" {
+		client, err := localfile.NewClient(ctx, &localfile.Config{
+			OutputFile:         ctrl.Config.Output,
+			Parser:             ctrl.Parser,
+			UseRawOutput:       ctrl.Config.Terraform.UseRawOutput,
+			Template:           ctrl.Template,
+			ParseErrorTemplate: ctrl.ParseErrorTemplate,
+			Vars:               ctrl.Config.Vars,
+			EmbeddedVarNames:   ctrl.Config.EmbeddedVarNames,
+			Templates:          ctrl.Config.Templates,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return client.Notify, nil
 	}
 	client, err := github.NewClient(ctx, &github.Config{
 		Token:           ctrl.Config.GitHubToken,
