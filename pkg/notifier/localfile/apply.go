@@ -34,6 +34,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 		ChangeOutsideTerraform: result.OutsideTerraform,
 		Warning:                result.Warning,
 		HasDestroy:             result.HasDestroy,
+		Link:                   cfg.CI,
 		UseRawOutput:           cfg.UseRawOutput,
 		Vars:                   cfg.Vars,
 		Templates:              cfg.Templates,

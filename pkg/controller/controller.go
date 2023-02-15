@@ -137,6 +137,7 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 			OutputFile:         ctrl.Config.Output,
 			Parser:             ctrl.Parser,
 			UseRawOutput:       ctrl.Config.Terraform.UseRawOutput,
+			CI:                 ctrl.Config.CI.Link,
 			Template:           ctrl.Template,
 			ParseErrorTemplate: ctrl.ParseErrorTemplate,
 			Vars:               ctrl.Config.Vars,

@@ -28,6 +28,7 @@ type Config struct {
 	Vars               map[string]string
 	EmbeddedVarNames   []string
 	Templates          map[string]string
+	CI                 string
 	UseRawOutput       bool
 }
 
