@@ -8,9 +8,10 @@ env:
   AQUA_POLICY_CONFIG: ${{ github.workspace }}/aqua-policy.yaml
 jobs:
   release:
-    uses: suzuki-shunsuke/go-release-workflow/.github/workflows/release.yaml@72c13fd359150f22a93394f47a02840d08edd146 # v0.3.0
+    uses: suzuki-shunsuke/go-release-workflow/.github/workflows/release.yaml@900ca573c11c589375527553edee097fd80dc9a4
     with:
       homebrew: true
+      go-version: 1.20.1
     secrets:
       gh_app_id: ${{ secrets.APP_ID }}
       gh_app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
