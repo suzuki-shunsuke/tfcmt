@@ -142,5 +142,5 @@ func (g *CommentService) List(ctx context.Context, owner, repo string, number in
 	if err == nil {
 		return cmts, nil
 	}
-	return nil, fmt.Errorf("get pull request or issue comments: %w, %v", prErr, err)
+	return nil, fmt.Errorf("get pull request or issue comments: %w, %v", prErr, err) //nolint:errorlint
 }
