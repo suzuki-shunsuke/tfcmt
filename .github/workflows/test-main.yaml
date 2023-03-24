@@ -14,13 +14,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
-      - uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
+      - uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 # v4.0.0
         with:
           go-version: "1.19.5"
           cache: true
       - uses: aquaproj/aqua-installer@61e2563dfe7674cbf74fe6ec212e444198a3bb00 # v2.0.2
         with:
-          aqua_version: v1.33.0
+          aqua_version: v2.1.0
         env:
           AQUA_GITHUB_TOKEN: ${{github.token}}
       - run: golangci-lint run
