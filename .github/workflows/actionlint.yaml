@@ -10,7 +10,7 @@ on:
 permissions: {}
 jobs:
   actionlint:
-    uses: suzuki-shunsuke/actionlint-workflow/.github/workflows/actionlint.yaml@6196583ab88cd36f36f7260fca4e8e4b2c4c9b66 # v0.4.1
+    uses: suzuki-shunsuke/actionlint-workflow/.github/workflows/actionlint.yaml@dca1267d5844edc50b4ed717250ee9dba7dc6a1c # v0.4.2
     with:
       aqua_version: v2.2.2
     permissions:
