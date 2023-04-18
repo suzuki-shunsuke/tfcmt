@@ -21,16 +21,19 @@ func New(flags *LDFlags) *cli.App {
 	app.Version = flags.AppVersion()
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:  "owner",
-			Usage: "GitHub Repository owner name",
+			Name:    "owner",
+			Usage:   "GitHub Repository owner name",
+			EnvVars: []string{"TFCMT_REPO_OWNER"},
 		},
 		&cli.StringFlag{
-			Name:  "repo",
-			Usage: "GitHub Repository name",
+			Name:    "repo",
+			Usage:   "GitHub Repository name",
+			EnvVars: []string{"TFCMT_REPO_NAME"},
 		},
 		&cli.StringFlag{
-			Name:  "sha",
-			Usage: "commit SHA (revision)",
+			Name:    "sha",
+			Usage:   "commit SHA (revision)",
+			EnvVars: []string{"TFCMT_SHA"},
 		},
 		&cli.StringFlag{
 			Name:  "build-url",
@@ -41,12 +44,14 @@ func New(flags *LDFlags) *cli.App {
 			Usage: "log level",
 		},
 		&cli.IntFlag{
-			Name:  "pr",
-			Usage: "pull request number",
+			Name:    "pr",
+			Usage:   "pull request number",
+			EnvVars: []string{"TFCMT_PR_NUMBER"},
 		},
 		&cli.StringFlag{
-			Name:  "config",
-			Usage: "config path",
+			Name:    "config",
+			Usage:   "config path",
+			EnvVars: []string{"TFCMT_CONFIG"},
 		},
 		&cli.StringSliceFlag{
 			Name:  "var",
