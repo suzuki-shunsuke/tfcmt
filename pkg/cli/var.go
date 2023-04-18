@@ -8,6 +8,11 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+func parseVars(vars []string, envs []string, varsM map[string]string) error {
+	parseVarEnvs(envs, varsM)
+	return parseVarOpts(vars, varsM)
+}
+
 func parseVarOpts(vars []string, varsM map[string]string) error {
 	for _, v := range vars {
 		a := strings.Index(v, ":")
@@ -19,7 +24,16 @@ func parseVarOpts(vars []string, varsM map[string]string) error {
 	return nil
 }
 
-func parseOpts(ctx *cli.Context, cfg *config.Config) error {
+func parseVarEnvs(envs []string, m map[string]string) {
+	for _, kv := range envs {
+		k, v, _ := strings.Cut(kv, "=")
+		if a := strings.TrimPrefix(k, "TFCMT_VAR_"); k != a {
+			m[a] = v
+		}
+	}
+}
+
+func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error {
 	if owner := ctx.String("owner"); owner != "" {
 		cfg.CI.Owner = owner
 	}
@@ -50,7 +64,7 @@ func parseOpts(ctx *cli.Context, cfg *config.Config) error {
 
 	vars := ctx.StringSlice("var")
 	vm := make(map[string]string, len(vars))
-	if err := parseVarOpts(vars, vm); err != nil {
+	if err := parseVars(vars, envs, vm); err != nil {
 		return err
 	}
 	cfg.Vars = vm

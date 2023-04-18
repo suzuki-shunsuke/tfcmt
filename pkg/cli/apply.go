@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"os"
+
 	"github.com/suzuki-shunsuke/tfcmt/pkg/controller"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
 	"github.com/urfave/cli/v2"
@@ -20,7 +22,7 @@ func cmdApply(ctx *cli.Context) error {
 		setLogLevel(logLevel)
 	}
 
-	if err := parseOpts(ctx, &cfg); err != nil {
+	if err := parseOpts(ctx, &cfg, os.Environ()); err != nil {
 		return err
 	}
 
