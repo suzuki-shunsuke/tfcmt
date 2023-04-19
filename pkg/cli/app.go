@@ -20,15 +20,47 @@ func New(flags *LDFlags) *cli.App {
 	app.Usage = "Notify the execution result of terraform command"
 	app.Version = flags.AppVersion()
 	app.Flags = []cli.Flag{
-		&cli.StringFlag{Name: "owner", Usage: "GitHub Repository owner name"},
-		&cli.StringFlag{Name: "repo", Usage: "GitHub Repository name"},
-		&cli.StringFlag{Name: "sha", Usage: "commit SHA (revision)"},
-		&cli.StringFlag{Name: "build-url", Usage: "build url"},
-		&cli.StringFlag{Name: "log-level", Usage: "log level"},
-		&cli.IntFlag{Name: "pr", Usage: "pull request number"},
-		&cli.StringFlag{Name: "config", Usage: "config path"},
-		&cli.StringSliceFlag{Name: "var", Usage: "template variables. The format of value is '<name>:<value>'"},
-		&cli.StringFlag{Name: "output", Usage: "specify file to output result instead of post comment"},
+		&cli.StringFlag{
+			Name:    "owner",
+			Usage:   "GitHub Repository owner name",
+			EnvVars: []string{"TFCMT_REPO_OWNER"},
+		},
+		&cli.StringFlag{
+			Name:    "repo",
+			Usage:   "GitHub Repository name",
+			EnvVars: []string{"TFCMT_REPO_NAME"},
+		},
+		&cli.StringFlag{
+			Name:    "sha",
+			Usage:   "commit SHA (revision)",
+			EnvVars: []string{"TFCMT_SHA"},
+		},
+		&cli.StringFlag{
+			Name:  "build-url",
+			Usage: "build url",
+		},
+		&cli.StringFlag{
+			Name:  "log-level",
+			Usage: "log level",
+		},
+		&cli.IntFlag{
+			Name:    "pr",
+			Usage:   "pull request number",
+			EnvVars: []string{"TFCMT_PR_NUMBER"},
+		},
+		&cli.StringFlag{
+			Name:    "config",
+			Usage:   "config path",
+			EnvVars: []string{"TFCMT_CONFIG"},
+		},
+		&cli.StringSliceFlag{
+			Name:  "var",
+			Usage: "template variables. The format of value is '<name>:<value>'",
+		},
+		&cli.StringFlag{
+			Name:  "output",
+			Usage: "specify file to output result instead of post comment",
+		},
 	}
 	app.Commands = []*cli.Command{
 		{
