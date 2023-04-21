@@ -6,6 +6,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/google/go-cmp v0.5.9
 	github.com/google/go-github/v50 v50.2.0
+	github.com/google/go-github/v52 v52.0.0
 	github.com/mattn/go-colorable v0.1.13
 	github.com/shurcooL/githubv4 v0.0.0-20201206200315-234843c633fa
 	github.com/sirupsen/logrus v1.9.0
