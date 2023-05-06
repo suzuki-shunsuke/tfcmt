@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/suzuki-shunsuke/tfcmt/discussions
+    about: Please create a discussion instead of issue
