@@ -72,6 +72,10 @@ func New(flags *LDFlags) *cli.App {
 					Name:  "patch",
 					Usage: "update an existing comment instead of creating a new comment. If there is no existing comment, a new comment is created.",
 				},
+				&cli.BoolFlag{
+					Name:  "skip-no-changes",
+					Usage: "If there is no change tfcmt updates a label but doesn't post a comment",
+				},
 			},
 		},
 		{

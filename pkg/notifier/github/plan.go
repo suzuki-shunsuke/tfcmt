@@ -105,6 +105,11 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 		}
 	}
 
+	if result.HasNoChanges && cfg.SkipNoChanges {
+		logE.Debug("skip posting a comment because there is no change")
+		return result.ExitCode, nil
+	}
+
 	logE.Debug("create a comment")
 	if err := g.client.Comment.Post(ctx, body, &PostOptions{
 		Number:   cfg.PR.Number,

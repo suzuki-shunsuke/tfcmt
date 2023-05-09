@@ -74,9 +74,10 @@ type WhenDestroy struct {
 
 // WhenNoChanges is a configuration to add a label when the plan result contains no change
 type WhenNoChanges struct {
-	Label        string
-	Color        string `yaml:"label_color"`
-	DisableLabel bool   `yaml:"disable_label"`
+	Label          string
+	Color          string `yaml:"label_color"`
+	DisableLabel   bool   `yaml:"disable_label"`
+	DisableComment bool   `yaml:"disable_comment"`
 }
 
 // WhenPlanError is a configuration to notify the plan result returns an error

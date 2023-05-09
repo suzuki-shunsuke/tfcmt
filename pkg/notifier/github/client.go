@@ -56,6 +56,7 @@ type Config struct {
 	Templates        map[string]string
 	UseRawOutput     bool
 	Patch            bool
+	SkipNoChanges    bool
 }
 
 // PullRequest represents GitHub Pull Request metadata
