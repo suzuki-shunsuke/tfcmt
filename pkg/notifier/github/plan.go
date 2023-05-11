@@ -105,7 +105,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 		}
 	}
 
-	if result.HasNoChanges && cfg.SkipNoChanges {
+	if result.HasNoChanges && result.Warning == "" && len(errMsgs) == 0 && cfg.SkipNoChanges {
 		logE.Debug("skip posting a comment because there is no change")
 		return result.ExitCode, nil
 	}
