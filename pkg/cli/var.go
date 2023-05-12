@@ -62,6 +62,10 @@ func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error {
 		cfg.Output = output
 	}
 
+	if ctx.IsSet("skip-no-changes") {
+		cfg.Terraform.Plan.WhenNoChanges.DisableComment = ctx.Bool("skip-no-changes")
+	}
+
 	vars := ctx.StringSlice("var")
 	vm := make(map[string]string, len(vars))
 	if err := parseVars(vars, envs, vm); err != nil {
