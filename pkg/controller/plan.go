@@ -9,6 +9,7 @@ import (
 	"os/exec"
 
 	"github.com/mattn/go-colorable"
+	"github.com/suzuki-shunsuke/go-timeout/timeout"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/apperr"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
@@ -33,7 +34,7 @@ func (ctrl *Controller) Plan(ctx context.Context, command Command) error {
 		return errors.New("no notifier specified at all")
 	}
 
-	cmd := exec.CommandContext(ctx, command.Cmd, command.Args...) //nolint:gosec
+	cmd := exec.Command(command.Cmd, command.Args...) //nolint:gosec
 	cmd.Stdin = os.Stdin
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
@@ -43,7 +44,7 @@ func (ctrl *Controller) Plan(ctx context.Context, command Command) error {
 	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
 	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
 	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
-	_ = cmd.Run()
+	_ = timeout.NewRunner(0).Run(ctx, cmd)
 
 	return apperr.NewExitError(ntf.Plan(ctx, &notifier.ParamExec{
 		Stdout:         stdout.String(),
