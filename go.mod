@@ -13,7 +13,7 @@ require (
 	github.com/suzuki-shunsuke/go-ci-env/v3 v3.0.1
 	github.com/suzuki-shunsuke/go-findconfig v1.1.1
 	github.com/suzuki-shunsuke/go-timeout v1.0.0
-	github.com/urfave/cli/v2 v2.25.6
+	github.com/urfave/cli/v2 v2.25.7
 	golang.org/x/oauth2 v0.9.0
 	gopkg.in/yaml.v2 v2.4.0
 )
