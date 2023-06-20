@@ -67,7 +67,7 @@ func NewPlanParser() *PlanParser {
 		Create:       regexp.MustCompile(`^ *# (.*) will be created$`),
 		Update:       regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
 		Delete:       regexp.MustCompile(`^ *# (.*) will be destroyed$`),
-		Replace:      regexp.MustCompile(`^ *# (.*) must be replaced$`),
+		Replace:      regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
 	}
 }
 
