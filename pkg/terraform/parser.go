@@ -35,14 +35,15 @@ type DefaultParser struct{}
 
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
-	Pass         *regexp.Regexp
-	Fail         *regexp.Regexp
-	HasDestroy   *regexp.Regexp
-	HasNoChanges *regexp.Regexp
-	Create       *regexp.Regexp
-	Update       *regexp.Regexp
-	Delete       *regexp.Regexp
-	Replace      *regexp.Regexp
+	Pass          *regexp.Regexp
+	Fail          *regexp.Regexp
+	HasDestroy    *regexp.Regexp
+	HasNoChanges  *regexp.Regexp
+	Create        *regexp.Regexp
+	Update        *regexp.Regexp
+	Delete        *regexp.Regexp
+	Replace       *regexp.Regexp
+	ReplaceOption *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -62,12 +63,13 @@ func NewPlanParser() *PlanParser {
 		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.)`),
 		Fail: regexp.MustCompile(`(?m)^(Error: )`),
 		// "0 to destroy" should be treated as "no destroy"
-		HasDestroy:   regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
-		HasNoChanges: regexp.MustCompile(`(?m)^(No changes.)`),
-		Create:       regexp.MustCompile(`^ *# (.*) will be created$`),
-		Update:       regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
-		Delete:       regexp.MustCompile(`^ *# (.*) will be destroyed$`),
-		Replace:      regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
+		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
+		HasNoChanges:  regexp.MustCompile(`(?m)^(No changes.)`),
+		Create:        regexp.MustCompile(`^ *# (.*) will be created$`),
+		Update:        regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
+		Delete:        regexp.MustCompile(`^ *# (.*) will be destroyed$`),
+		Replace:       regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
+		ReplaceOption: regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
 	}
 }
 
@@ -153,6 +155,8 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		} else if rsc := extractResource(p.Delete, line); rsc != "" {
 			deletedResources = append(deletedResources, rsc)
 		} else if rsc := extractResource(p.Replace, line); rsc != "" {
+			replacedResources = append(replacedResources, rsc)
+		} else if rsc := extractResource(p.ReplaceOption, line); rsc != "" {
 			replacedResources = append(replacedResources, rsc)
 		}
 	}
