@@ -46,9 +46,9 @@ body:
 
         ```
 
-        Other related code such as local Registry
+        Terraform Configuration
 
-        ```
+        ```tf
 
         ```
 
