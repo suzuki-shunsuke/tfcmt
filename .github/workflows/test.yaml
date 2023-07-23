@@ -9,7 +9,7 @@ jobs:
   test:
     uses: suzuki-shunsuke/go-test-full-workflow/.github/workflows/test.yaml@363126b27a86b64fc8e7fe88dbc90e254060cce2 # v0.2.2
     with:
-      aqua_version: v2.10.0
+      aqua_version: v2.10.1
       go-version: 1.20.6
     secrets:
       gh_app_id: ${{secrets.APP_ID}}
