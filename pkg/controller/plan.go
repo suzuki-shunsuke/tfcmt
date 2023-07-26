@@ -7,9 +7,9 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/mattn/go-colorable"
-	"github.com/suzuki-shunsuke/go-timeout/timeout"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/apperr"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
@@ -34,7 +34,7 @@ func (ctrl *Controller) Plan(ctx context.Context, command Command) error {
 		return errors.New("no notifier specified at all")
 	}
 
-	cmd := exec.Command(command.Cmd, command.Args...) //nolint:gosec
+	cmd := exec.CommandContext(ctx, command.Cmd, command.Args...) //nolint:gosec
 	cmd.Stdin = os.Stdin
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
@@ -44,7 +44,8 @@ func (ctrl *Controller) Plan(ctx context.Context, command Command) error {
 	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
 	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
 	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
-	_ = timeout.NewRunner(0).Run(ctx, cmd)
+	setCancel(cmd)
+	_ = cmd.Run()
 
 	return apperr.NewExitError(ntf.Plan(ctx, &notifier.ParamExec{
 		Stdout:         stdout.String(),
@@ -53,4 +54,13 @@ func (ctrl *Controller) Plan(ctx context.Context, command Command) error {
 		CIName:         ctrl.Config.CI.Name,
 		ExitCode:       cmd.ProcessState.ExitCode(),
 	}))
+}
+
+const waitDelay = 1000 * time.Hour
+
+func setCancel(cmd *exec.Cmd) {
+	cmd.Cancel = func() error {
+		return cmd.Process.Signal(os.Interrupt) //nolint:wrapcheck
+	}
+	cmd.WaitDelay = waitDelay
 }
