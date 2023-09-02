@@ -57,6 +57,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 		UpdatedResources:       result.UpdatedResources,
 		DeletedResources:       result.DeletedResources,
 		ReplacedResources:      result.ReplacedResources,
+		MovedResources:         result.MovedResources,
 	})
 	body, err := template.Execute()
 	if err != nil {
