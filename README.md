@@ -9,8 +9,8 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 
 ## Document
 
-* https://suzuki-shunsuke.github.io/tfcmt/
-* https://github.com/suzuki-shunsuke/tfcmt-docs
+- https://suzuki-shunsuke.github.io/tfcmt/
+- https://github.com/suzuki-shunsuke/tfcmt-docs
 
 > tfcmt supports notifying to only GitHub. If you'd like to notify to GitLab, maybe [tfcmt-gitlab](https://github.com/hirosassa/tfcmt-gitlab), which is a fork of tfcmt for GitLab, is useful.
 
