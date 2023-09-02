@@ -28,6 +28,7 @@ type ParseResult struct {
 	UpdatedResources   []string
 	DeletedResources   []string
 	ReplacedResources  []string
+	MovedResources     []*MovedResource
 }
 
 // DefaultParser is a parser for terraform commands
@@ -44,6 +45,7 @@ type PlanParser struct {
 	Delete        *regexp.Regexp
 	Replace       *regexp.Regexp
 	ReplaceOption *regexp.Regexp
+	Move          *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -70,6 +72,7 @@ func NewPlanParser() *PlanParser {
 		Delete:        regexp.MustCompile(`^ *# (.*) will be destroyed$`),
 		Replace:       regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
 		ReplaceOption: regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
+		Move:          regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
 	}
 }
 
@@ -97,6 +100,16 @@ func extractResource(pattern *regexp.Regexp, line string) string {
 	return ""
 }
 
+func extractMovedResource(pattern *regexp.Regexp, line string) *MovedResource {
+	if arr := pattern.FindStringSubmatch(line); len(arr) == 3 { //nolint:gomnd
+		return &MovedResource{
+			Before: arr[1],
+			After:  arr[2],
+		}
+	}
+	return nil
+}
+
 // Parse returns ParseResult related with terraform plan
 func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	var exitCode int
@@ -117,6 +130,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	firstMatchLineIndex := -1
 	var result, firstMatchLine string
 	var createdResources, updatedResources, deletedResources, replacedResources []string
+	var movedResources []*MovedResource
 	startOutsideTerraform := -1
 	endOutsideTerraform := -1
 	startChangeOutput := -1
@@ -158,6 +172,8 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 			replacedResources = append(replacedResources, rsc)
 		} else if rsc := extractResource(p.ReplaceOption, line); rsc != "" {
 			replacedResources = append(replacedResources, rsc)
+		} else if rsc := extractMovedResource(p.Move, line); rsc != nil {
+			movedResources = append(movedResources, rsc)
 		}
 	}
 	var hasPlanError bool
@@ -207,7 +223,13 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		UpdatedResources:   updatedResources,
 		DeletedResources:   deletedResources,
 		ReplacedResources:  replacedResources,
+		MovedResources:     movedResources,
 	}
+}
+
+type MovedResource struct {
+	Before string
+	After  string
 }
 
 // Parse returns ParseResult related with terraform apply
