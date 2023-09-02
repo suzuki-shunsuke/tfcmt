@@ -30,6 +30,7 @@ tasks:
         validate:
           - regexp: "^v\\d+\\.\\d+.\\d+(-\\d+)?$"
   - name: install
+    short: i
     description: go install
     usage: go install
     script: go install ./cmd/tfcmt
