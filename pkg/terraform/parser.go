@@ -29,6 +29,7 @@ type ParseResult struct {
 	DeletedResources   []string
 	ReplacedResources  []string
 	MovedResources     []*MovedResource
+	ImportedResources  []string
 }
 
 // DefaultParser is a parser for terraform commands
@@ -46,6 +47,7 @@ type PlanParser struct {
 	Replace       *regexp.Regexp
 	ReplaceOption *regexp.Regexp
 	Move          *regexp.Regexp
+	Import        *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -73,6 +75,7 @@ func NewPlanParser() *PlanParser {
 		Replace:       regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
 		ReplaceOption: regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
 		Move:          regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
+		Import:        regexp.MustCompile(`^ *# (.*?) will be imported$`),
 	}
 }
 
@@ -129,7 +132,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	lines := strings.Split(body, "\n")
 	firstMatchLineIndex := -1
 	var result, firstMatchLine string
-	var createdResources, updatedResources, deletedResources, replacedResources []string
+	var createdResources, updatedResources, deletedResources, replacedResources, importedResources []string
 	var movedResources []*MovedResource
 	startOutsideTerraform := -1
 	endOutsideTerraform := -1
@@ -172,6 +175,8 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 			replacedResources = append(replacedResources, rsc)
 		} else if rsc := extractResource(p.ReplaceOption, line); rsc != "" {
 			replacedResources = append(replacedResources, rsc)
+		} else if rsc := extractResource(p.Import, line); rsc != "" {
+			importedResources = append(importedResources, rsc)
 		} else if rsc := extractMovedResource(p.Move, line); rsc != nil {
 			movedResources = append(movedResources, rsc)
 		}
@@ -224,6 +229,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		DeletedResources:   deletedResources,
 		ReplacedResources:  replacedResources,
 		MovedResources:     movedResources,
+		ImportedResources:  importedResources,
 	}
 }
 
