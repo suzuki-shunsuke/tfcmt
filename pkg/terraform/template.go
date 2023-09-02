@@ -90,6 +90,7 @@ type CommonTemplate struct {
 	DeletedResources       []string
 	ReplacedResources      []string
 	MovedResources         []*MovedResource
+	ImportedResources      []string
 }
 
 // Template is a default template for terraform commands
@@ -205,6 +206,7 @@ func (t *Template) Execute() (string, error) {
 		"DeletedResources":       t.DeletedResources,
 		"ReplacedResources":      t.ReplacedResources,
 		"MovedResources":         t.MovedResources,
+		"ImportedResources":      t.ImportedResources,
 		"HasDestroy":             t.HasDestroy,
 	}
 
@@ -227,6 +229,10 @@ func (t *Template) Execute() (string, error) {
 {{- end}}{{end}}{{if .ReplacedResources}}
 * Replace
 {{- range .ReplacedResources}}
+  * {{.}}
+{{- end}}{{end}}{{if .ImportedResources}}
+* Import
+{{- range .ImportedResources}}
   * {{.}}
 {{- end}}{{end}}{{if .MovedResources}}
 * Move
