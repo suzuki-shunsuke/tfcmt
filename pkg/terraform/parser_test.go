@@ -436,7 +436,7 @@ Changes to Outputs:
 			name: "plan output changes only pattern 0.15",
 			body: planOnlyOutputChangesSuccessResult0_15,
 			result: ParseResult{
-				Result:             "Changes to Outputs:",
+				Result:             "Only Outputs will be changed.",
 				HasAddOrUpdateOnly: true,
 				HasDestroy:         false,
 				HasNoChanges:       false,
@@ -454,7 +454,7 @@ state, without changing any real infrastructure.`,
 			name: "plan output changes only pattern with TF_IN_AUTOMATION",
 			body: planOnlyOutputChangesSuccessInAutomationResult,
 			result: ParseResult{
-				Result:             "Changes to Outputs:",
+				Result:             "Only Outputs will be changed.",
 				HasAddOrUpdateOnly: true,
 				HasDestroy:         false,
 				HasNoChanges:       false,

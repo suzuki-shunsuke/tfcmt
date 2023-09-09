@@ -226,7 +226,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 
 	return ParseResult{
-		Result:             result,
+		Result:             refinePlanResult(result),
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
 		Warning:            warnings,
@@ -243,6 +243,15 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		MovedResources:     movedResources,
 		ImportedResources:  importedResources,
 	}
+}
+
+// It can be difficult to understand if we just cut out a part of
+// Terraform's output, so rewrite the text in a way that users can understand.
+func refinePlanResult(s string) string {
+	if s == "Changes to Outputs:" {
+		return "Only Outputs will be changed."
+	}
+	return s
 }
 
 type MovedResource struct {
