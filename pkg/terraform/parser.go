@@ -150,6 +150,11 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		if line == "Terraform will perform the following actions:" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L252
 			startChangeOutput = i + 1
 		}
+		// If we have output changes but not resource changes, Terraform
+		// does not output `Terraform will perform the following actions:`.
+		if line == "Changes to Outputs:" && startChangeOutput == -1 {
+			startChangeOutput = i
+		}
 		if strings.HasPrefix(line, "Warning:") && startWarning == -1 {
 			startWarning = i
 		}
