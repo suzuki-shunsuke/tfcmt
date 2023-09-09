@@ -360,29 +360,6 @@ Error: Batch "project/tfcmt-jp-tfcmt-prod/services:batchEnable" for request "Ena
 
 `
 
-func TestDefaultParserParse(t *testing.T) {
-	t.Parallel()
-	testCases := []struct {
-		body   string
-		result ParseResult
-	}{
-		{
-			body: "",
-			result: ParseResult{
-				Result:   "",
-				ExitCode: 0,
-				Error:    nil,
-			},
-		},
-	}
-	for _, testCase := range testCases {
-		result := NewDefaultParser().Parse(testCase.body)
-		if diff := cmp.Diff(result, testCase.result, cmpopts.IgnoreUnexported(ParseResult{}), cmpopts.IgnoreFields(ParseResult{}, "Error")); diff != "" {
-			t.Error(diff)
-		}
-	}
-}
-
 func TestPlanParserParse(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
