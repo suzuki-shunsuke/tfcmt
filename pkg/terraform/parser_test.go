@@ -119,7 +119,7 @@ Terraform will perform the following actions:
 Changes to Outputs:
   + aws_instance_name = "my-instance"
 
-------------------------------------------------------------------------
+────────────────────────────────────────────────────────────────────────
 
 Note: You didn't specify an "-out" parameter to save this plan, so Terraform
 can't guarantee that exactly these actions will be performed if

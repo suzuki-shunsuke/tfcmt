@@ -150,14 +150,17 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		if line == "Terraform will perform the following actions:" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L252
 			startChangeOutput = i + 1
 		}
-		if startChangeOutput != -1 && endChangeOutput == -1 && strings.HasPrefix(line, "-----") { // https://github.com/hashicorp/terraform/blob/1ac7a37d00f3c796f816070847bf02109cb9cab2/internal/command/views/operation.go#L142
-			endChangeOutput = i - 1
-		}
 		if strings.HasPrefix(line, "Warning:") && startWarning == -1 {
 			startWarning = i
 		}
-		if strings.HasPrefix(line, "─────") && startWarning != -1 && endWarning == -1 {
-			endWarning = i
+		// Terraform uses two types of rules.
+		if strings.HasPrefix(line, "─────") || strings.HasPrefix(line, "-----") {
+			if startWarning != -1 && endWarning == -1 {
+				endWarning = i
+			}
+			if startChangeOutput != -1 && endChangeOutput == -1 {
+				endChangeOutput = i - 1
+			}
 		}
 		if firstMatchLineIndex == -1 {
 			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
