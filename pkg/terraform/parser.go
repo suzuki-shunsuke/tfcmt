@@ -64,7 +64,7 @@ func NewDefaultParser() *DefaultParser {
 // NewPlanParser is PlanParser initialized with its Regexp
 func NewPlanParser() *PlanParser {
 	return &PlanParser{
-		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.)`),
+		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.|Changes to Outputs:)`),
 		Fail: regexp.MustCompile(`(?m)^(Error: )`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
@@ -150,14 +150,22 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		if line == "Terraform will perform the following actions:" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L252
 			startChangeOutput = i + 1
 		}
-		if startChangeOutput != -1 && endChangeOutput == -1 && strings.HasPrefix(line, "Plan: ") { // https://github.com/hashicorp/terraform/blob/dfc12a6a9e1cff323829026d51873c1b80200757/internal/command/views/plan.go#L306
-			endChangeOutput = i + 1
+		// If we have output changes but not resource changes, Terraform
+		// does not output `Terraform will perform the following actions:`.
+		if line == "Changes to Outputs:" && startChangeOutput == -1 {
+			startChangeOutput = i
 		}
 		if strings.HasPrefix(line, "Warning:") && startWarning == -1 {
 			startWarning = i
 		}
-		if strings.HasPrefix(line, "─────") && startWarning != -1 && endWarning == -1 {
-			endWarning = i
+		// Terraform uses two types of rules.
+		if strings.HasPrefix(line, "─────") || strings.HasPrefix(line, "-----") {
+			if startWarning != -1 && endWarning == -1 {
+				endWarning = i
+			}
+			if startChangeOutput != -1 && endChangeOutput == -1 {
+				endChangeOutput = i - 1
+			}
 		}
 		if firstMatchLineIndex == -1 {
 			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
@@ -201,6 +209,10 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 
 	changeResult := ""
 	if startChangeOutput != -1 {
+		// if we get here before finding a horizontal rule, output all remaining.
+		if endChangeOutput == -1 {
+			endChangeOutput = len(lines) - 1
+		}
 		changeResult = strings.Join(lines[startChangeOutput:endChangeOutput], "\n")
 	}
 
@@ -214,7 +226,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 
 	return ParseResult{
-		Result:             result,
+		Result:             refinePlanResult(result),
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
 		Warning:            warnings,
@@ -231,6 +243,15 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		MovedResources:     movedResources,
 		ImportedResources:  importedResources,
 	}
+}
+
+// It can be difficult to understand if we just cut out a part of
+// Terraform's output, so rewrite the text in a way that users can understand.
+func refinePlanResult(s string) string {
+	if s == "Changes to Outputs:" {
+		return "Only Outputs will be changed."
+	}
+	return s
 }
 
 type MovedResource struct {
