@@ -32,9 +32,6 @@ type ParseResult struct {
 	ImportedResources  []string
 }
 
-// DefaultParser is a parser for terraform commands
-type DefaultParser struct{}
-
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
 	Pass          *regexp.Regexp
@@ -54,11 +51,6 @@ type PlanParser struct {
 type ApplyParser struct {
 	Pass *regexp.Regexp
 	Fail *regexp.Regexp
-}
-
-// NewDefaultParser is DefaultParser initializer
-func NewDefaultParser() *DefaultParser {
-	return &DefaultParser{}
 }
 
 // NewPlanParser is PlanParser initialized with its Regexp
@@ -84,15 +76,6 @@ func NewApplyParser() *ApplyParser {
 	return &ApplyParser{
 		Pass: regexp.MustCompile(`(?m)^(Apply complete!)`),
 		Fail: regexp.MustCompile(`(?m)^(Error: )`),
-	}
-}
-
-// Parse returns ParseResult related with terraform commands
-func (p *DefaultParser) Parse(body string) ParseResult {
-	return ParseResult{
-		Result:   body,
-		ExitCode: ExitPass,
-		Error:    nil,
 	}
 }
 
