@@ -592,9 +592,7 @@ func TestApplyParserParse(t *testing.T) {
 				Result: `Error: Batch "project/tfcmt-jp-tfcmt-prod/services:batchEnable" for request "Enable Project Services tfcmt-jp-tfcmt-prod: map[logging.googleapis.com:{}]" returned error: failed to send enable services request: googleapi: Error 403: The caller does not have permission, forbidden
 
   on .terraform/modules/tfcmt-jp-tfcmt-prod/google_project_service.tf line 6, in resource "google_project_service" "gcp_api_service":
-   6: resource "google_project_service" "gcp_api_service" {
-
-`,
+   6: resource "google_project_service" "gcp_api_service" {`,
 				Error: nil,
 			},
 		},
