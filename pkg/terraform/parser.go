@@ -204,7 +204,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 
 	return ParseResult{
-		Result:             refinePlanResult(result),
+		Result:             strings.TrimSpace(refinePlanResult(result)),
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
 		Warning:            warnings,
@@ -263,7 +263,7 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 		result = strings.Join(trimBars(trimLastNewline(lines[i:])), "\n")
 	}
 	return ParseResult{
-		Result: result,
+		Result: strings.TrimSpace(result),
 		Error:  nil,
 	}
 }
