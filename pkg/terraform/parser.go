@@ -56,7 +56,7 @@ type ApplyParser struct {
 func NewPlanParser() *PlanParser {
 	return &PlanParser{
 		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.|Changes to Outputs:)`),
-		Fail: regexp.MustCompile(`(?m)^(Error: )`),
+		Fail: regexp.MustCompile(`(?m)^([│|] )?(Error: )`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		HasNoChanges:  regexp.MustCompile(`(?m)^(No changes.)`),
@@ -173,7 +173,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		result = lines[firstMatchLineIndex]
 	case p.Fail.MatchString(firstMatchLine):
 		hasPlanError = true
-		result = strings.Join(trimLastNewline(lines[firstMatchLineIndex:]), "\n")
+		result = strings.Join(trimBars(trimLastNewline(lines[firstMatchLineIndex:])), "\n")
 	}
 
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
@@ -204,7 +204,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 
 	return ParseResult{
-		Result:             refinePlanResult(result),
+		Result:             strings.TrimSpace(refinePlanResult(result)),
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
 		Warning:            warnings,
@@ -260,10 +260,10 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 	case p.Pass.MatchString(line):
 		result = lines[i]
 	case p.Fail.MatchString(line):
-		result = strings.Join(trimLastNewline(lines[i:]), "\n")
+		result = strings.Join(trimBars(trimLastNewline(lines[i:])), "\n")
 	}
 	return ParseResult{
-		Result: result,
+		Result: strings.TrimSpace(result),
 		Error:  nil,
 	}
 }
@@ -277,4 +277,12 @@ func trimLastNewline(s []string) []string {
 		return s[:last]
 	}
 	return s
+}
+
+func trimBars(list []string) []string {
+	ret := make([]string, len(list))
+	for i, elem := range list {
+		ret[i] = strings.TrimPrefix(strings.TrimPrefix(strings.TrimPrefix(elem, "|"), "│"), "╵")
+	}
+	return ret
 }
