@@ -173,7 +173,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		result = lines[firstMatchLineIndex]
 	case p.Fail.MatchString(firstMatchLine):
 		hasPlanError = true
-		result = strings.Join(trimLastNewline(lines[firstMatchLineIndex:]), "\n")
+		result = strings.Join(trimBars(trimLastNewline(lines[firstMatchLineIndex:])), "\n")
 	}
 
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
@@ -260,7 +260,7 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 	case p.Pass.MatchString(line):
 		result = lines[i]
 	case p.Fail.MatchString(line):
-		result = strings.Join(trimLastNewline(lines[i:]), "\n")
+		result = strings.Join(trimBars(trimLastNewline(lines[i:])), "\n")
 	}
 	return ParseResult{
 		Result: result,
@@ -277,4 +277,12 @@ func trimLastNewline(s []string) []string {
 		return s[:last]
 	}
 	return s
+}
+
+func trimBars(list []string) []string {
+	ret := make([]string, len(list))
+	for i, elem := range list {
+		ret[i] = strings.TrimPrefix(strings.TrimPrefix(strings.TrimPrefix(elem, "|"), "│"), "╵")
+	}
+	return ret
 }
