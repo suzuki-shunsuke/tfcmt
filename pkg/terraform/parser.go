@@ -20,7 +20,7 @@ type ParseResult struct {
 	HasAddOrUpdateOnly bool
 	HasDestroy         bool
 	HasNoChanges       bool
-	HasPlanError       bool
+	HasError           bool
 	HasParseError      bool
 	Error              error
 	CreatedResources   []string
@@ -212,7 +212,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		HasAddOrUpdateOnly: HasAddOrUpdateOnly,
 		HasDestroy:         hasDestroy,
 		HasNoChanges:       hasNoChanges,
-		HasPlanError:       hasPlanError,
+		HasError:           hasPlanError,
 		Error:              nil,
 		CreatedResources:   createdResources,
 		UpdatedResources:   updatedResources,
