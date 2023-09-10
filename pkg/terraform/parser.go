@@ -56,7 +56,7 @@ type ApplyParser struct {
 func NewPlanParser() *PlanParser {
 	return &PlanParser{
 		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.|Changes to Outputs:)`),
-		Fail: regexp.MustCompile(`(?m)^(Error: )`),
+		Fail: regexp.MustCompile(`(?m)^([│|] )?(Error: )`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		HasNoChanges:  regexp.MustCompile(`(?m)^(No changes.)`),
