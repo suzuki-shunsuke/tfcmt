@@ -22,7 +22,6 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) er
 	}
 
 	result := parser.Parse(param.CombinedOutput)
-	result.ExitCode = param.ExitCode
 	if result.HasParseError {
 		template = g.client.Config.ParseErrorTemplate
 	} else {
