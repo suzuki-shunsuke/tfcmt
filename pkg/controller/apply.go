@@ -46,7 +46,7 @@ func (ctrl *Controller) Apply(ctx context.Context, command Command) error {
 	setCancel(cmd)
 	_ = cmd.Run()
 
-	return apperr.NewExitError(ntf.Apply(ctx, &notifier.ParamExec{
+	return apperr.NewExitError(cmd.ProcessState.ExitCode(), ntf.Apply(ctx, &notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
