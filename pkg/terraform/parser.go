@@ -33,17 +33,18 @@ type ParseResult struct {
 
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
-	Pass          *regexp.Regexp
-	Fail          *regexp.Regexp
-	HasDestroy    *regexp.Regexp
-	HasNoChanges  *regexp.Regexp
-	Create        *regexp.Regexp
-	Update        *regexp.Regexp
-	Delete        *regexp.Regexp
-	Replace       *regexp.Regexp
-	ReplaceOption *regexp.Regexp
-	Move          *regexp.Regexp
-	Import        *regexp.Regexp
+	Pass           *regexp.Regexp
+	Fail           *regexp.Regexp
+	OutputsChanges *regexp.Regexp
+	HasDestroy     *regexp.Regexp
+	HasNoChanges   *regexp.Regexp
+	Create         *regexp.Regexp
+	Update         *regexp.Regexp
+	Delete         *regexp.Regexp
+	Replace        *regexp.Regexp
+	ReplaceOption  *regexp.Regexp
+	Move           *regexp.Regexp
+	Import         *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -55,8 +56,9 @@ type ApplyParser struct {
 // NewPlanParser is PlanParser initialized with its Regexp
 func NewPlanParser() *PlanParser {
 	return &PlanParser{
-		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.|Changes to Outputs:)`),
-		Fail: regexp.MustCompile(`(?m)^([│|] )?(Error: )`),
+		Pass:           regexp.MustCompile(`(?m)^(Plan: \d|No changes.)`),
+		Fail:           regexp.MustCompile(`(?m)^([│|] )?(Error: )`),
+		OutputsChanges: regexp.MustCompile(`(?m)^Changes to Outputs:`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		HasNoChanges:  regexp.MustCompile(`(?m)^(No changes.)`),
@@ -98,8 +100,8 @@ func extractMovedResource(pattern *regexp.Regexp, line string) *MovedResource {
 // Parse returns ParseResult related with terraform plan
 func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	switch {
-	case p.Pass.MatchString(body):
 	case p.Fail.MatchString(body):
+	case p.Pass.MatchString(body) || p.OutputsChanges.MatchString(body):
 	default:
 		return ParseResult{
 			Result:        "",
@@ -146,7 +148,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 			}
 		}
 		if firstMatchLineIndex == -1 {
-			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
+			if p.Pass.MatchString(line) || p.Fail.MatchString(line) || p.OutputsChanges.MatchString(line) {
 				firstMatchLineIndex = i
 				firstMatchLine = line
 			}
@@ -175,6 +177,8 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		result = strings.Join(trimBars(trimLastNewline(lines[firstMatchLineIndex:])), "\n")
 	case p.Pass.MatchString(firstMatchLine):
 		result = lines[firstMatchLineIndex]
+	case p.OutputsChanges.MatchString(firstMatchLine):
+		result = "Only Outputs will be changed."
 	}
 
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
@@ -205,7 +209,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 
 	return ParseResult{
-		Result:             strings.TrimSpace(refinePlanResult(result)),
+		Result:             strings.TrimSpace(result),
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
 		Warning:            warnings,
@@ -221,15 +225,6 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		MovedResources:     movedResources,
 		ImportedResources:  importedResources,
 	}
-}
-
-// It can be difficult to understand if we just cut out a part of
-// Terraform's output, so rewrite the text in a way that users can understand.
-func refinePlanResult(s string) string {
-	if s == "Changes to Outputs:" {
-		return "Only Outputs will be changed."
-	}
-	return s
 }
 
 type MovedResource struct {
