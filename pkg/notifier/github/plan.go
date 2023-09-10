@@ -9,7 +9,7 @@ import (
 )
 
 // Plan posts comment optimized for notifications
-func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (int, error) { //nolint:cyclop
+func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) error { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -27,10 +27,10 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 		template = g.client.Config.ParseErrorTemplate
 	} else {
 		if result.Error != nil {
-			return result.ExitCode, result.Error
+			return result.Error
 		}
 		if result.Result == "" {
-			return result.ExitCode, result.Error
+			return result.Error
 		}
 	}
 
@@ -62,7 +62,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 	})
 	body, err := template.Execute()
 	if err != nil {
-		return result.ExitCode, err
+		return err
 	}
 
 	logE := logrus.WithFields(logrus.Fields{
@@ -71,7 +71,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 
 	embeddedComment, err := getEmbeddedComment(cfg, param.CIName, true)
 	if err != nil {
-		return result.ExitCode, err
+		return err
 	}
 	logE.WithFields(logrus.Fields{
 		"comment": embeddedComment,
@@ -88,28 +88,28 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 				Number:   cfg.PR.Number,
 				Revision: cfg.PR.Revision,
 			}); err != nil {
-				return result.ExitCode, err
+				return err
 			}
-			return result.ExitCode, nil
+			return nil
 		}
 		logE.WithField("size", len(comments)).Debug("list comments")
 		comment := g.getPatchedComment(logE, comments, cfg.Vars["target"])
 		if comment != nil {
 			if comment.Body == body {
 				logE.Debug("comment isn't changed")
-				return result.ExitCode, nil
+				return nil
 			}
 			logE.WithField("comment_id", comment.DatabaseID).Debug("patch a comment")
 			if err := g.client.Comment.Patch(ctx, body, int64(comment.DatabaseID)); err != nil {
-				return result.ExitCode, err
+				return err
 			}
-			return result.ExitCode, nil
+			return nil
 		}
 	}
 
 	if result.HasNoChanges && result.Warning == "" && len(errMsgs) == 0 && cfg.SkipNoChanges {
 		logE.Debug("skip posting a comment because there is no change")
-		return result.ExitCode, nil
+		return nil
 	}
 
 	logE.Debug("create a comment")
@@ -117,7 +117,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) (in
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}); err != nil {
-		return result.ExitCode, err
+		return err
 	}
-	return result.ExitCode, nil
+	return nil
 }

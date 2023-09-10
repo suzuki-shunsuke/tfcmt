@@ -9,7 +9,7 @@ import (
 )
 
 // Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (int, error) {
+func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) error {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -21,10 +21,10 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 		template = g.client.Config.ParseErrorTemplate
 	} else {
 		if result.Error != nil {
-			return result.ExitCode, result.Error
+			return result.Error
 		}
 		if result.Result == "" {
-			return result.ExitCode, result.Error
+			return result.Error
 		}
 	}
 
@@ -50,7 +50,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 	})
 	body, err := template.Execute()
 	if err != nil {
-		return result.ExitCode, err
+		return err
 	}
 
 	logE := logrus.WithFields(logrus.Fields{
@@ -59,7 +59,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 
 	logE.Debug("write the apply result to a file")
 	if err := g.client.Output.WriteToFile(ctx, body, cfg.OutputFile); err != nil {
-		return result.ExitCode, err
+		return err
 	}
-	return result.ExitCode, nil
+	return nil
 }
