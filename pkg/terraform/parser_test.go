@@ -593,7 +593,8 @@ func TestApplyParserParse(t *testing.T) {
 
   on .terraform/modules/tfcmt-jp-tfcmt-prod/google_project_service.tf line 6, in resource "google_project_service" "gcp_api_service":
    6: resource "google_project_service" "gcp_api_service" {`,
-				Error: nil,
+				Error:    nil,
+				HasError: true,
 			},
 		},
 	}
