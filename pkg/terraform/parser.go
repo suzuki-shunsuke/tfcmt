@@ -22,7 +22,6 @@ type ParseResult struct {
 	HasNoChanges       bool
 	HasPlanError       bool
 	HasParseError      bool
-	ExitCode           int
 	Error              error
 	CreatedResources   []string
 	UpdatedResources   []string
@@ -34,17 +33,18 @@ type ParseResult struct {
 
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
-	Pass          *regexp.Regexp
-	Fail          *regexp.Regexp
-	HasDestroy    *regexp.Regexp
-	HasNoChanges  *regexp.Regexp
-	Create        *regexp.Regexp
-	Update        *regexp.Regexp
-	Delete        *regexp.Regexp
-	Replace       *regexp.Regexp
-	ReplaceOption *regexp.Regexp
-	Move          *regexp.Regexp
-	Import        *regexp.Regexp
+	Pass           *regexp.Regexp
+	Fail           *regexp.Regexp
+	OutputsChanges *regexp.Regexp
+	HasDestroy     *regexp.Regexp
+	HasNoChanges   *regexp.Regexp
+	Create         *regexp.Regexp
+	Update         *regexp.Regexp
+	Delete         *regexp.Regexp
+	Replace        *regexp.Regexp
+	ReplaceOption  *regexp.Regexp
+	Move           *regexp.Regexp
+	Import         *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -56,8 +56,9 @@ type ApplyParser struct {
 // NewPlanParser is PlanParser initialized with its Regexp
 func NewPlanParser() *PlanParser {
 	return &PlanParser{
-		Pass: regexp.MustCompile(`(?m)^(Plan: \d|No changes.|Changes to Outputs:)`),
-		Fail: regexp.MustCompile(`(?m)^(Error: )`),
+		Pass:           regexp.MustCompile(`(?m)^(Plan: \d|No changes.)`),
+		Fail:           regexp.MustCompile(`(?m)^([│|] )?(Error: )`),
+		OutputsChanges: regexp.MustCompile(`(?m)^Changes to Outputs:`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		HasNoChanges:  regexp.MustCompile(`(?m)^(No changes.)`),
@@ -98,17 +99,12 @@ func extractMovedResource(pattern *regexp.Regexp, line string) *MovedResource {
 
 // Parse returns ParseResult related with terraform plan
 func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
-	var exitCode int
 	switch {
-	case p.Pass.MatchString(body):
-		exitCode = ExitPass
 	case p.Fail.MatchString(body):
-		exitCode = ExitFail
+	case p.Pass.MatchString(body) || p.OutputsChanges.MatchString(body):
 	default:
 		return ParseResult{
-			Result:        "",
 			HasParseError: true,
-			ExitCode:      ExitFail,
 			Error:         errors.New("cannot parse plan result"),
 		}
 	}
@@ -123,6 +119,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	endChangeOutput := -1
 	startWarning := -1
 	endWarning := -1
+	startErrorIndex := -1
 	for i, line := range lines {
 		if line == "Note: Objects have changed outside of Terraform" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L403
 			startOutsideTerraform = i + 1
@@ -150,8 +147,15 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 				endChangeOutput = i - 1
 			}
 		}
+		if startErrorIndex == -1 {
+			if p.Fail.MatchString(line) {
+				startErrorIndex = i
+				firstMatchLineIndex = i
+				firstMatchLine = line
+			}
+		}
 		if firstMatchLineIndex == -1 {
-			if p.Pass.MatchString(line) || p.Fail.MatchString(line) {
+			if p.Pass.MatchString(line) || p.OutputsChanges.MatchString(line) {
 				firstMatchLineIndex = i
 				firstMatchLine = line
 			}
@@ -174,11 +178,13 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 	var hasPlanError bool
 	switch {
-	case p.Pass.MatchString(firstMatchLine):
-		result = lines[firstMatchLineIndex]
 	case p.Fail.MatchString(firstMatchLine):
 		hasPlanError = true
-		result = strings.Join(trimLastNewline(lines[firstMatchLineIndex:]), "\n")
+		result = strings.Join(trimBars(trimLastNewline(lines[firstMatchLineIndex:])), "\n")
+	case p.Pass.MatchString(firstMatchLine):
+		result = lines[firstMatchLineIndex]
+	case p.OutputsChanges.MatchString(firstMatchLine):
+		result = "Only Outputs will be changed."
 	}
 
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
@@ -209,7 +215,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 
 	return ParseResult{
-		Result:             refinePlanResult(result),
+		Result:             result,
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
 		Warning:            warnings,
@@ -217,7 +223,6 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		HasDestroy:         hasDestroy,
 		HasNoChanges:       hasNoChanges,
 		HasPlanError:       hasPlanError,
-		ExitCode:           exitCode,
 		Error:              nil,
 		CreatedResources:   createdResources,
 		UpdatedResources:   updatedResources,
@@ -228,13 +233,12 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 }
 
-// It can be difficult to understand if we just cut out a part of
-// Terraform's output, so rewrite the text in a way that users can understand.
-func refinePlanResult(s string) string {
-	if s == "Changes to Outputs:" {
-		return "Only Outputs will be changed."
+func trimBars(list []string) []string {
+	ret := make([]string, len(list))
+	for i, elem := range list {
+		ret[i] = strings.TrimSpace(strings.TrimPrefix(strings.TrimPrefix(strings.TrimPrefix(strings.TrimSpace(elem), "|"), "│"), "╵"))
 	}
-	return s
+	return ret
 }
 
 type MovedResource struct {
@@ -244,16 +248,13 @@ type MovedResource struct {
 
 // Parse returns ParseResult related with terraform apply
 func (p *ApplyParser) Parse(body string) ParseResult {
-	var exitCode int
+	var hasPlanError bool
 	switch {
-	case p.Pass.MatchString(body):
-		exitCode = ExitPass
 	case p.Fail.MatchString(body):
-		exitCode = ExitFail
+		hasPlanError = true
+	case p.Pass.MatchString(body):
 	default:
 		return ParseResult{
-			Result:        "",
-			ExitCode:      ExitFail,
 			HasParseError: true,
 			Error:         errors.New("cannot parse apply result"),
 		}
@@ -267,15 +268,15 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 		}
 	}
 	switch {
-	case p.Pass.MatchString(line):
-		result = lines[i]
 	case p.Fail.MatchString(line):
 		result = strings.Join(trimLastNewline(lines[i:]), "\n")
+	case p.Pass.MatchString(line):
+		result = lines[i]
 	}
 	return ParseResult{
-		Result:   result,
-		ExitCode: exitCode,
-		Error:    nil,
+		Result:       result,
+		HasPlanError: hasPlanError,
+		Error:        nil,
 	}
 }
 

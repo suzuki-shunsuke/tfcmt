@@ -376,7 +376,6 @@ func TestPlanParserParse(t *testing.T) {
 				HasDestroy:         false,
 				HasNoChanges:       false,
 				HasPlanError:       false,
-				ExitCode:           0,
 				Error:              nil,
 				ChangedResult: `
   + google_compute_global_address.my_another_project
@@ -400,7 +399,6 @@ Plan: 1 to add, 0 to change, 0 to destroy.`,
 				HasDestroy:         false,
 				HasNoChanges:       false,
 				HasPlanError:       false,
-				ExitCode:           0,
 				Error:              nil,
 				ChangedResult: `
 Plan: 0 to add, 0 to change, 0 to destroy.
@@ -418,7 +416,6 @@ Changes to Outputs:
 				HasDestroy:         false,
 				HasNoChanges:       false,
 				HasPlanError:       false,
-				ExitCode:           0,
 				Error:              nil,
 				ChangedResult: `Changes to Outputs:
   + test = 42
@@ -436,7 +433,6 @@ state, without changing any real infrastructure.`,
 				HasDestroy:         false,
 				HasNoChanges:       false,
 				HasPlanError:       false,
-				ExitCode:           0,
 				Error:              nil,
 				ChangedResult: `Changes to Outputs:
   + test = 42
@@ -455,7 +451,6 @@ state, without changing any real infrastructure.`,
 				HasNoChanges:       false,
 				HasPlanError:       false,
 				HasParseError:      true,
-				ExitCode:           1,
 				Error:              errors.New("cannot parse plan result"),
 			},
 		},
@@ -473,7 +468,6 @@ state, without changing any real infrastructure.`,
 				HasDestroy:         false,
 				HasNoChanges:       false,
 				HasPlanError:       true,
-				ExitCode:           1,
 				Error:              nil,
 			},
 		},
@@ -486,7 +480,6 @@ state, without changing any real infrastructure.`,
 				HasDestroy:         false,
 				HasNoChanges:       true,
 				HasPlanError:       false,
-				ExitCode:           0,
 				Error:              nil,
 			},
 		},
@@ -499,7 +492,6 @@ state, without changing any real infrastructure.`,
 				HasDestroy:         true,
 				HasNoChanges:       false,
 				HasPlanError:       false,
-				ExitCode:           0,
 				Error:              nil,
 				ChangedResult: `
   - google_project_iam_member.team_platform[2]
@@ -517,7 +509,6 @@ Plan: 0 to add, 0 to change, 1 to destroy.`,
 				HasDestroy:         true,
 				HasNoChanges:       false,
 				HasPlanError:       false,
-				ExitCode:           0,
 				Error:              nil,
 				ChangedResult: `
   + google_compute_global_address.my_another_project
@@ -542,7 +533,6 @@ Plan: 1 to add, 0 to change, 1 to destroy.`,
 				HasDestroy:         false,
 				HasNoChanges:       false,
 				HasPlanError:       false,
-				ExitCode:           0,
 				Error:              nil,
 				ChangedResult: `
   + google_compute_global_address.my_another_project
@@ -583,7 +573,6 @@ func TestApplyParserParse(t *testing.T) {
 			body: "",
 			result: ParseResult{
 				Result:        "",
-				ExitCode:      1,
 				HasParseError: true,
 				Error:         errors.New("cannot parse apply result"),
 			},
@@ -592,9 +581,8 @@ func TestApplyParserParse(t *testing.T) {
 			name: "apply ok pattern",
 			body: applySuccessResult,
 			result: ParseResult{
-				Result:   "Apply complete! Resources: 0 added, 0 changed, 0 destroyed.",
-				ExitCode: 0,
-				Error:    nil,
+				Result: "Apply complete! Resources: 0 added, 0 changed, 0 destroyed.",
+				Error:  nil,
 			},
 		},
 		{
@@ -607,8 +595,8 @@ func TestApplyParserParse(t *testing.T) {
    6: resource "google_project_service" "gcp_api_service" {
 
 `,
-				ExitCode: 1,
-				Error:    nil,
+				Error:        nil,
+				HasPlanError: true,
 			},
 		},
 	}

@@ -14,7 +14,6 @@ func TestNotifyApply(t *testing.T) {
 		name      string
 		config    Config
 		ok        bool
-		exitCode  int
 		paramExec notifier.ParamExec
 	}{
 		{
@@ -36,8 +35,7 @@ func TestNotifyApply(t *testing.T) {
 				Stdout:   "Apply complete!",
 				ExitCode: 0,
 			},
-			ok:       true,
-			exitCode: 0,
+			ok: true,
 		},
 		{
 			name: "case 9",
@@ -59,8 +57,7 @@ func TestNotifyApply(t *testing.T) {
 				Stdout:   "Apply complete!",
 				ExitCode: 0,
 			},
-			ok:       true,
-			exitCode: 0,
+			ok: true,
 		},
 	}
 
@@ -77,12 +74,8 @@ func TestNotifyApply(t *testing.T) {
 			}
 			api := newFakeAPI()
 			client.API = &api
-			exitCode, err := client.Notify.Apply(context.Background(), &testCase.paramExec)
-			if (err == nil) != testCase.ok {
+			if err := client.Notify.Apply(context.Background(), &testCase.paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
-			}
-			if exitCode != testCase.exitCode {
-				t.Errorf("got %d but want %d", exitCode, testCase.exitCode)
 			}
 		})
 	}
@@ -296,12 +289,9 @@ func TestNotifyPlan(t *testing.T) {
 			}
 			api := newFakeAPI()
 			client.API = &api
-			exitCode, err := client.Notify.Plan(context.Background(), &testCase.paramExec)
-			if (err == nil) != testCase.ok {
+
+			if err := client.Notify.Plan(context.Background(), &testCase.paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
-			}
-			if exitCode != testCase.exitCode {
-				t.Errorf("got %d but want %d", exitCode, testCase.exitCode)
 			}
 		})
 	}

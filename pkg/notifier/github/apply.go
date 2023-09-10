@@ -9,7 +9,7 @@ import (
 )
 
 // Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (int, error) {
+func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) error {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -22,15 +22,14 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 	}
 
 	result := parser.Parse(param.CombinedOutput)
-	result.ExitCode = param.ExitCode
 	if result.HasParseError {
 		template = g.client.Config.ParseErrorTemplate
 	} else {
 		if result.Error != nil {
-			return result.ExitCode, result.Error
+			return result.Error
 		}
 		if result.Result == "" {
-			return result.ExitCode, result.Error
+			return result.Error
 		}
 	}
 
@@ -40,6 +39,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 		ChangeOutsideTerraform: result.OutsideTerraform,
 		Warning:                result.Warning,
 		HasDestroy:             result.HasDestroy,
+		HasError:               result.HasPlanError,
 		Link:                   cfg.CI,
 		UseRawOutput:           cfg.UseRawOutput,
 		Vars:                   cfg.Vars,
@@ -56,7 +56,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 	})
 	body, err := template.Execute()
 	if err != nil {
-		return result.ExitCode, err
+		return err
 	}
 
 	logE := logrus.WithFields(logrus.Fields{
@@ -65,7 +65,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 
 	embeddedComment, err := getEmbeddedComment(cfg, param.CIName, false)
 	if err != nil {
-		return result.ExitCode, err
+		return err
 	}
 	logE.WithFields(logrus.Fields{
 		"comment": embeddedComment,
@@ -78,7 +78,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) (i
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}); err != nil {
-		return result.ExitCode, err
+		return err
 	}
-	return result.ExitCode, nil
+	return nil
 }
