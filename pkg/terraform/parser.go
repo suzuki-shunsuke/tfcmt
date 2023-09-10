@@ -35,6 +35,7 @@ type ParseResult struct {
 type PlanParser struct {
 	Pass           *regexp.Regexp
 	Fail           *regexp.Regexp
+	Warning        *regexp.Regexp
 	OutputsChanges *regexp.Regexp
 	HasDestroy     *regexp.Regexp
 	HasNoChanges   *regexp.Regexp
@@ -58,6 +59,7 @@ func NewPlanParser() *PlanParser {
 	return &PlanParser{
 		Pass:           regexp.MustCompile(`(?m)^(Plan: \d|No changes.)`),
 		Fail:           regexp.MustCompile(`(?m)^([│|] )?(Error: )`),
+		Warning:        regexp.MustCompile(`(?m)^([│|] )?(Warning: )`),
 		OutputsChanges: regexp.MustCompile(`(?m)^Changes to Outputs:`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
@@ -136,7 +138,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		if line == "Changes to Outputs:" && startChangeOutput == -1 {
 			startChangeOutput = i
 		}
-		if strings.HasPrefix(line, "Warning:") && startWarning == -1 {
+		if p.Warning.MatchString(line) && startWarning == -1 {
 			startWarning = i
 		}
 		// Terraform uses two types of rules.
@@ -210,9 +212,9 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	warnings := ""
 	if startWarning != -1 {
 		if endWarning == -1 {
-			warnings = strings.Join(lines[startWarning:], "\n")
+			warnings = strings.Join(trimBars(lines[startWarning:]), "\n")
 		} else {
-			warnings = strings.Join(lines[startWarning:endWarning], "\n")
+			warnings = strings.Join(trimBars(lines[startWarning:endWarning]), "\n")
 		}
 	}
 
@@ -220,7 +222,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		Result:             strings.TrimSpace(result),
 		ChangedResult:      changeResult,
 		OutsideTerraform:   outsideTerraform,
-		Warning:            warnings,
+		Warning:            strings.TrimSpace(warnings),
 		HasAddOrUpdateOnly: HasAddOrUpdateOnly,
 		HasDestroy:         hasDestroy,
 		HasNoChanges:       hasNoChanges,
