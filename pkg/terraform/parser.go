@@ -22,7 +22,6 @@ type ParseResult struct {
 	HasNoChanges       bool
 	HasPlanError       bool
 	HasParseError      bool
-	ExitCode           int
 	Error              error
 	CreatedResources   []string
 	UpdatedResources   []string
@@ -98,17 +97,13 @@ func extractMovedResource(pattern *regexp.Regexp, line string) *MovedResource {
 
 // Parse returns ParseResult related with terraform plan
 func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
-	var exitCode int
 	switch {
 	case p.Pass.MatchString(body):
-		exitCode = ExitPass
 	case p.Fail.MatchString(body):
-		exitCode = ExitFail
 	default:
 		return ParseResult{
 			Result:        "",
 			HasParseError: true,
-			ExitCode:      ExitFail,
 			Error:         errors.New("cannot parse plan result"),
 		}
 	}
@@ -217,7 +212,6 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		HasDestroy:         hasDestroy,
 		HasNoChanges:       hasNoChanges,
 		HasPlanError:       hasPlanError,
-		ExitCode:           exitCode,
 		Error:              nil,
 		CreatedResources:   createdResources,
 		UpdatedResources:   updatedResources,
@@ -244,16 +238,12 @@ type MovedResource struct {
 
 // Parse returns ParseResult related with terraform apply
 func (p *ApplyParser) Parse(body string) ParseResult {
-	var exitCode int
 	switch {
 	case p.Pass.MatchString(body):
-		exitCode = ExitPass
 	case p.Fail.MatchString(body):
-		exitCode = ExitFail
 	default:
 		return ParseResult{
 			Result:        "",
-			ExitCode:      ExitFail,
 			HasParseError: true,
 			Error:         errors.New("cannot parse apply result"),
 		}
@@ -273,9 +263,8 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 		result = strings.Join(trimLastNewline(lines[i:]), "\n")
 	}
 	return ParseResult{
-		Result:   result,
-		ExitCode: exitCode,
-		Error:    nil,
+		Result: result,
+		Error:  nil,
 	}
 }
 
