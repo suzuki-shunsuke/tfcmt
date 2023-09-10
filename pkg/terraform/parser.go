@@ -169,11 +169,12 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	}
 	var hasPlanError bool
 	switch {
-	case p.Pass.MatchString(firstMatchLine):
-		result = lines[firstMatchLineIndex]
 	case p.Fail.MatchString(firstMatchLine):
+		// Fail should be checked before Pass
 		hasPlanError = true
 		result = strings.Join(trimBars(trimLastNewline(lines[firstMatchLineIndex:])), "\n")
+	case p.Pass.MatchString(firstMatchLine):
+		result = lines[firstMatchLineIndex]
 	}
 
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
@@ -257,10 +258,11 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 		}
 	}
 	switch {
+	case p.Fail.MatchString(line):
+		// Fail should be checked before Pass
+		result = strings.Join(trimBars(trimLastNewline(lines[i:])), "\n")
 	case p.Pass.MatchString(line):
 		result = lines[i]
-	case p.Fail.MatchString(line):
-		result = strings.Join(trimBars(trimLastNewline(lines[i:])), "\n")
 	}
 	return ParseResult{
 		Result: strings.TrimSpace(result),
