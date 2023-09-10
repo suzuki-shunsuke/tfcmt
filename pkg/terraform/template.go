@@ -201,6 +201,7 @@ func (t *Template) Execute() (string, error) {
 		"Stderr":                 t.Stderr,
 		"CombinedOutput":         t.CombinedOutput,
 		"ExitCode":               t.ExitCode,
+		"HasError":               t.HasError,
 		"ErrorMessages":          t.ErrorMessages,
 		"CreatedResources":       t.CreatedResources,
 		"UpdatedResources":       t.UpdatedResources,
