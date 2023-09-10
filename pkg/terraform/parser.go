@@ -239,9 +239,11 @@ type MovedResource struct {
 
 // Parse returns ParseResult related with terraform apply
 func (p *ApplyParser) Parse(body string) ParseResult {
+	var hasError bool
 	switch {
-	case p.Pass.MatchString(body):
 	case p.Fail.MatchString(body):
+		hasError = true
+	case p.Pass.MatchString(body):
 	default:
 		return ParseResult{
 			Result:        "",
@@ -265,8 +267,9 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 		result = lines[i]
 	}
 	return ParseResult{
-		Result: strings.TrimSpace(result),
-		Error:  nil,
+		Result:   strings.TrimSpace(result),
+		HasError: hasError,
+		Error:    nil,
 	}
 }
 
