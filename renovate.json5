@@ -2,7 +2,7 @@
   extends: [
     "config:base",
     "helpers:pinGitHubActionDigests",
-    "github>aquaproj/aqua-renovate-config#1.8.0",
+    "github>aquaproj/aqua-renovate-config#1.9.0",
     "github>aquaproj/aqua-renovate-config:file#1.9.0(aqua/.*\\.ya?ml)",
     "github>suzuki-shunsuke/renovate-config#2.1.0",
     "github>suzuki-shunsuke/renovate-config:nolimit#2.1.0",
