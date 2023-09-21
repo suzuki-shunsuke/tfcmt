@@ -507,7 +507,7 @@ Error: Batch "project/tfcmt-jp-tfcmt-prod/services:batchEnable" for request "Ena
 
 `
 
-func TestPlanParserParse(t *testing.T) {
+func TestPlanParserParse(t *testing.T) { //nolint:maintidx
 	t.Parallel()
 	testCases := []struct {
 		name   string
