@@ -180,12 +180,18 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		} else if rsc := extractResource(p.Import, line); rsc != "" {
 			importedResources = append(importedResources, rsc)
 		} else if rsc := extractResource(p.ImportedFrom, line); rsc != "" {
+			if i == 0 {
+				continue
+			}
 			if rsc := p.changedResources(lines[i-1]); rsc != "" {
 				importedResources = append(importedResources, rsc)
 			}
 		} else if rsc := extractMovedResource(p.Move, line); rsc != nil {
 			movedResources = append(movedResources, rsc)
 		} else if fromRsc := extractResource(p.MovedFrom, line); fromRsc != "" {
+			if i == 0 {
+				continue
+			}
 			if toRsc := p.changedResources(lines[i-1]); toRsc != "" {
 				movedResources = append(movedResources, &MovedResource{
 					Before: fromRsc,
