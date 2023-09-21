@@ -46,6 +46,8 @@ type PlanParser struct {
 	ReplaceOption  *regexp.Regexp
 	Move           *regexp.Regexp
 	Import         *regexp.Regexp
+	ImportedFrom   *regexp.Regexp
+	MovedFrom      *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -71,6 +73,8 @@ func NewPlanParser() *PlanParser {
 		ReplaceOption: regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
 		Move:          regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
 		Import:        regexp.MustCompile(`^ *# (.*?) will be imported$`),
+		ImportedFrom:  regexp.MustCompile(`^ *# \(imported from (.*?)\)$`),
+		MovedFrom:     regexp.MustCompile(`^ *# \(moved from (.*?)\)$`),
 	}
 }
 
@@ -175,8 +179,25 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 			replacedResources = append(replacedResources, rsc)
 		} else if rsc := extractResource(p.Import, line); rsc != "" {
 			importedResources = append(importedResources, rsc)
+		} else if rsc := extractResource(p.ImportedFrom, line); rsc != "" {
+			if i == 0 {
+				continue
+			}
+			if rsc := p.changedResources(lines[i-1]); rsc != "" {
+				importedResources = append(importedResources, rsc)
+			}
 		} else if rsc := extractMovedResource(p.Move, line); rsc != nil {
 			movedResources = append(movedResources, rsc)
+		} else if fromRsc := extractResource(p.MovedFrom, line); fromRsc != "" {
+			if i == 0 {
+				continue
+			}
+			if toRsc := p.changedResources(lines[i-1]); toRsc != "" {
+				movedResources = append(movedResources, &MovedResource{
+					Before: fromRsc,
+					After:  toRsc,
+				})
+			}
 		}
 	}
 	var hasPlanError bool
@@ -235,6 +256,17 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 		MovedResources:     movedResources,
 		ImportedResources:  importedResources,
 	}
+}
+
+func (p *PlanParser) changedResources(line string) string {
+	if rsc := extractResource(p.Update, line); rsc != "" {
+		return rsc
+	} else if rsc := extractResource(p.Replace, line); rsc != "" {
+		return rsc
+	} else if rsc := extractResource(p.ReplaceOption, line); rsc != "" {
+		return rsc
+	}
+	return ""
 }
 
 type MovedResource struct {

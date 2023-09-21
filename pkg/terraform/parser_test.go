@@ -303,6 +303,153 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 `
 
+const planImportedMovedResourceChanged = `
+null_resource.bar: Refreshing state... [id=7822522400686116714]
+github_repository.tfcmt: Preparing import... [id=tfcmt]
+github_repository.tfcmt: Refreshing state... [id=tfcmt]
+github_issue.test-2: Refreshing state... [id=tfaction:902]
+github_repository.tfaction-2: Refreshing state... [id=tfaction]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+  ~ update in-place
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # github_issue.test-2 must be replaced
+  # (moved from github_issue.test)
+-/+ resource "github_issue" "test-2" {
+      - assignees        = [] -> null
+      ~ etag             = "W/\"e14116be2014dddd5d766ba8d69e59524491648d626917f4dbe8d5422ef32ba3\"" -> (known after apply)
+      ~ id               = "tfaction:902" -> (known after apply)
+      ~ issue_id         = 1685922946 -> (known after apply)
+      - labels           = [
+          - "enhancement",
+        ] -> null
+      - milestone_number = 0 -> null
+      ~ number           = 902 -> (known after apply)
+      ~ repository       = "tfaction" -> "tfcmt" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
+
+  # github_repository.tfaction-2 will be updated in-place
+  # (moved from github_repository.tfaction)
+  ~ resource "github_repository" "tfaction-2" {
+      ~ allow_auto_merge            = true -> false
+      - allow_update_branch         = true -> null
+      ~ delete_branch_on_merge      = true -> false
+      - description                 = "Framework for Monorepo to build high level Terraform Workflows by GitHub Actions" -> null
+      ~ full_name                   = "suzuki-shunsuke/tfaction" -> (known after apply)
+      - has_discussions             = true -> null
+      - has_downloads               = true -> null
+      - has_issues                  = true -> null
+      - has_projects                = true -> null
+      - homepage_url                = "https://suzuki-shunsuke.github.io/tfaction/docs/" -> null
+        id                          = "tfaction"
+      ~ name                        = "tfaction" -> "action"
+      - vulnerability_alerts        = true -> null
+        # (24 unchanged attributes hidden)
+
+      - pages {
+          - build_type = "legacy" -> null
+          - custom_404 = false -> null
+          - html_url   = "https://suzuki-shunsuke.github.io/tfaction/" -> null
+          - status     = "built" -> null
+          - url        = "https://api.github.com/repos/suzuki-shunsuke/tfaction/pages" -> null
+
+          - source {
+              - branch = "gh-pages" -> null
+              - path   = "/" -> null
+            }
+        }
+
+        # (1 unchanged block hidden)
+    }
+
+  # github_repository.tfcmt will be updated in-place
+  # (imported from "tfcmt")
+  ~ resource "github_repository" "tfcmt" {
+        allow_auto_merge            = true
+        allow_merge_commit          = true
+        allow_rebase_merge          = true
+        allow_squash_merge          = true
+        allow_update_branch         = true
+        archived                    = false
+        auto_init                   = false
+        default_branch              = "main"
+        delete_branch_on_merge      = true
+      ~ description                 = "Fork of mercari/tfnotify. tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and advanced formatting options" -> "Fork of mercari/tfnotify. tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and advanced formatting"
+        etag                        = "W/\"21702d2afca222d0defb0331feed3ed1fabd9c2626844a280a27c4375c4b0903\""
+        full_name                   = "suzuki-shunsuke/tfcmt"
+        git_clone_url               = "git://github.com/suzuki-shunsuke/tfcmt.git"
+        has_discussions             = true
+        has_downloads               = true
+        has_issues                  = true
+        has_projects                = false
+        has_wiki                    = false
+        homepage_url                = "https://suzuki-shunsuke.github.io/tfcmt/"
+        html_url                    = "https://github.com/suzuki-shunsuke/tfcmt"
+        http_clone_url              = "https://github.com/suzuki-shunsuke/tfcmt.git"
+        id                          = "tfcmt"
+        is_template                 = false
+        merge_commit_message        = "PR_TITLE"
+        merge_commit_title          = "MERGE_MESSAGE"
+        name                        = "tfcmt"
+        node_id                     = "MDEwOlJlcG9zaXRvcnkzMjYzNDcyNzc="
+        primary_language            = "Go"
+        private                     = false
+        repo_id                     = 326347277
+        squash_merge_commit_message = "COMMIT_MESSAGES"
+        squash_merge_commit_title   = "COMMIT_OR_PR_TITLE"
+        ssh_clone_url               = "git@github.com:suzuki-shunsuke/tfcmt.git"
+        svn_url                     = "https://github.com/suzuki-shunsuke/tfcmt"
+        topics                      = []
+        visibility                  = "public"
+        vulnerability_alerts        = false
+
+        pages {
+            build_type = "legacy"
+            custom_404 = false
+            html_url   = "https://suzuki-shunsuke.github.io/tfcmt/"
+            status     = "built"
+            url        = "https://api.github.com/repos/suzuki-shunsuke/tfcmt/pages"
+
+            source {
+                branch = "gh-pages"
+                path   = "/docs"
+            }
+        }
+
+        security_and_analysis {
+            secret_scanning {
+                status = "disabled"
+            }
+            secret_scanning_push_protection {
+                status = "disabled"
+            }
+        }
+    }
+
+  # null_resource.foo has moved to null_resource.bar
+    resource "null_resource" "bar" {
+        id = "7822522400686116714"
+    }
+
+  # null_resource.zoo will be created
+  + resource "null_resource" "zoo" {
+      + id = (known after apply)
+    }
+
+Plan: 1 to import, 2 to add, 2 to change, 1 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.
+`
+
 const applySuccessResult = `
 data.terraform_remote_state.teams_platform_development: Refreshing state...
 google_project.my_service: Refreshing state...
@@ -360,7 +507,7 @@ Error: Batch "project/tfcmt-jp-tfcmt-prod/services:batchEnable" for request "Ena
 
 `
 
-func TestPlanParserParse(t *testing.T) {
+func TestPlanParserParse(t *testing.T) { //nolint:maintidx
 	t.Parallel()
 	testCases := []struct {
 		name   string
@@ -530,10 +677,6 @@ Plan: 1 to add, 0 to change, 1 to destroy.`,
 			result: ParseResult{
 				Result:             "Plan: 1 to add, 1 to change, 0 to destroy.",
 				HasAddOrUpdateOnly: true,
-				HasDestroy:         false,
-				HasNoChanges:       false,
-				HasError:           false,
-				Error:              nil,
 				ChangedResult: `
   + google_compute_global_address.my_another_project
       id:         <computed>
@@ -546,6 +689,171 @@ Plan: 1 to add, 0 to change, 1 to destroy.`,
   ~ google_project_iam_member.team_platform[2]
 
 Plan: 1 to add, 1 to change, 0 to destroy.`,
+			},
+		},
+		{
+			name: "imported and moved resources are changed",
+			body: planImportedMovedResourceChanged,
+			result: ParseResult{
+				Result:             "Plan: 1 to import, 2 to add, 2 to change, 1 to destroy.",
+				HasAddOrUpdateOnly: false,
+				HasDestroy:         true,
+				HasNoChanges:       false,
+				HasError:           false,
+				Error:              nil,
+				CreatedResources: []string{
+					"null_resource.zoo",
+				},
+				UpdatedResources: []string{
+					"github_repository.tfaction-2",
+					"github_repository.tfcmt",
+				},
+				ReplacedResources: []string{
+					"github_issue.test-2",
+				},
+				MovedResources: []*MovedResource{
+					{
+						Before: "github_issue.test",
+						After:  "github_issue.test-2",
+					},
+					{
+						Before: "github_repository.tfaction",
+						After:  "github_repository.tfaction-2",
+					},
+					{
+						Before: "null_resource.foo",
+						After:  "null_resource.bar",
+					},
+				},
+				ImportedResources: []string{
+					"github_repository.tfcmt",
+				},
+				ChangedResult: `
+  # github_issue.test-2 must be replaced
+  # (moved from github_issue.test)
+-/+ resource "github_issue" "test-2" {
+      - assignees        = [] -> null
+      ~ etag             = "W/\"e14116be2014dddd5d766ba8d69e59524491648d626917f4dbe8d5422ef32ba3\"" -> (known after apply)
+      ~ id               = "tfaction:902" -> (known after apply)
+      ~ issue_id         = 1685922946 -> (known after apply)
+      - labels           = [
+          - "enhancement",
+        ] -> null
+      - milestone_number = 0 -> null
+      ~ number           = 902 -> (known after apply)
+      ~ repository       = "tfaction" -> "tfcmt" # forces replacement
+        # (1 unchanged attribute hidden)
+    }
+
+  # github_repository.tfaction-2 will be updated in-place
+  # (moved from github_repository.tfaction)
+  ~ resource "github_repository" "tfaction-2" {
+      ~ allow_auto_merge            = true -> false
+      - allow_update_branch         = true -> null
+      ~ delete_branch_on_merge      = true -> false
+      - description                 = "Framework for Monorepo to build high level Terraform Workflows by GitHub Actions" -> null
+      ~ full_name                   = "suzuki-shunsuke/tfaction" -> (known after apply)
+      - has_discussions             = true -> null
+      - has_downloads               = true -> null
+      - has_issues                  = true -> null
+      - has_projects                = true -> null
+      - homepage_url                = "https://suzuki-shunsuke.github.io/tfaction/docs/" -> null
+        id                          = "tfaction"
+      ~ name                        = "tfaction" -> "action"
+      - vulnerability_alerts        = true -> null
+        # (24 unchanged attributes hidden)
+
+      - pages {
+          - build_type = "legacy" -> null
+          - custom_404 = false -> null
+          - html_url   = "https://suzuki-shunsuke.github.io/tfaction/" -> null
+          - status     = "built" -> null
+          - url        = "https://api.github.com/repos/suzuki-shunsuke/tfaction/pages" -> null
+
+          - source {
+              - branch = "gh-pages" -> null
+              - path   = "/" -> null
+            }
+        }
+
+        # (1 unchanged block hidden)
+    }
+
+  # github_repository.tfcmt will be updated in-place
+  # (imported from "tfcmt")
+  ~ resource "github_repository" "tfcmt" {
+        allow_auto_merge            = true
+        allow_merge_commit          = true
+        allow_rebase_merge          = true
+        allow_squash_merge          = true
+        allow_update_branch         = true
+        archived                    = false
+        auto_init                   = false
+        default_branch              = "main"
+        delete_branch_on_merge      = true
+      ~ description                 = "Fork of mercari/tfnotify. tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and advanced formatting options" -> "Fork of mercari/tfnotify. tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and advanced formatting"
+        etag                        = "W/\"21702d2afca222d0defb0331feed3ed1fabd9c2626844a280a27c4375c4b0903\""
+        full_name                   = "suzuki-shunsuke/tfcmt"
+        git_clone_url               = "git://github.com/suzuki-shunsuke/tfcmt.git"
+        has_discussions             = true
+        has_downloads               = true
+        has_issues                  = true
+        has_projects                = false
+        has_wiki                    = false
+        homepage_url                = "https://suzuki-shunsuke.github.io/tfcmt/"
+        html_url                    = "https://github.com/suzuki-shunsuke/tfcmt"
+        http_clone_url              = "https://github.com/suzuki-shunsuke/tfcmt.git"
+        id                          = "tfcmt"
+        is_template                 = false
+        merge_commit_message        = "PR_TITLE"
+        merge_commit_title          = "MERGE_MESSAGE"
+        name                        = "tfcmt"
+        node_id                     = "MDEwOlJlcG9zaXRvcnkzMjYzNDcyNzc="
+        primary_language            = "Go"
+        private                     = false
+        repo_id                     = 326347277
+        squash_merge_commit_message = "COMMIT_MESSAGES"
+        squash_merge_commit_title   = "COMMIT_OR_PR_TITLE"
+        ssh_clone_url               = "git@github.com:suzuki-shunsuke/tfcmt.git"
+        svn_url                     = "https://github.com/suzuki-shunsuke/tfcmt"
+        topics                      = []
+        visibility                  = "public"
+        vulnerability_alerts        = false
+
+        pages {
+            build_type = "legacy"
+            custom_404 = false
+            html_url   = "https://suzuki-shunsuke.github.io/tfcmt/"
+            status     = "built"
+            url        = "https://api.github.com/repos/suzuki-shunsuke/tfcmt/pages"
+
+            source {
+                branch = "gh-pages"
+                path   = "/docs"
+            }
+        }
+
+        security_and_analysis {
+            secret_scanning {
+                status = "disabled"
+            }
+            secret_scanning_push_protection {
+                status = "disabled"
+            }
+        }
+    }
+
+  # null_resource.foo has moved to null_resource.bar
+    resource "null_resource" "bar" {
+        id = "7822522400686116714"
+    }
+
+  # null_resource.zoo will be created
+  + resource "null_resource" "zoo" {
+      + id = (known after apply)
+    }
+
+Plan: 1 to import, 2 to add, 2 to change, 1 to destroy.`,
 			},
 		},
 	}
