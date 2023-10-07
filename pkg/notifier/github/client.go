@@ -95,7 +95,7 @@ func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
 	}
 	if baseURL != "" {
 		var err error
-		client, err = github.NewEnterpriseClient(baseURL, baseURL, tc)
+		client, err = github.NewClient(tc).WithEnterpriseURLs(baseURL, baseURL)
 		if err != nil {
 			return &Client{}, errors.New("failed to create a new github api client")
 		}
