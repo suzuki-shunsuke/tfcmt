@@ -5,8 +5,8 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/suzuki-shunsuke/tfcmt/pkg/apperr"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/cli"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/apperr"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/cli"
 )
 
 var (

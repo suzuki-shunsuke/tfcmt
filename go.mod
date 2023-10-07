@@ -1,4 +1,4 @@
-module github.com/suzuki-shunsuke/tfcmt
+module github.com/suzuki-shunsuke/tfcmt/v4
 
 go 1.19
 

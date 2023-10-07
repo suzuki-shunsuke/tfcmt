@@ -6,7 +6,7 @@ import (
 	"strings"
 	texttemplate "text/template"
 
-	tmpl "github.com/suzuki-shunsuke/tfcmt/pkg/template"
+	tmpl "github.com/suzuki-shunsuke/tfcmt/v4/pkg/template"
 )
 
 const (

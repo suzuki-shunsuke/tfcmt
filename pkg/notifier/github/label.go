@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/go-github/v53/github"
 	"github.com/sirupsen/logrus"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string { //nolint:cyclop
