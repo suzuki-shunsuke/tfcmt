@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/google/go-github/v53/github"
+	"github.com/google/go-github/v55/github"
 	"github.com/shurcooL/githubv4"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 	"golang.org/x/oauth2"
@@ -95,7 +95,7 @@ func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
 	}
 	if baseURL != "" {
 		var err error
-		client, err = github.NewEnterpriseClient(baseURL, baseURL, tc)
+		client, err = github.NewClient(tc).WithEnterpriseURLs(baseURL, baseURL)
 		if err != nil {
 			return &Client{}, errors.New("failed to create a new github api client")
 		}
