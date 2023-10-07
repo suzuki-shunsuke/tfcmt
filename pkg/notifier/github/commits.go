@@ -20,10 +20,7 @@ const (
 )
 
 func (g *CommitsService) PRNumber(ctx context.Context, sha string, state PullRequestState) (int, error) {
-	prs, _, err := g.client.API.PullRequestsListPullRequestsWithCommit(ctx, sha, &github.PullRequestListOptions{
-		State: string(state),
-		Sort:  "updated",
-	})
+	prs, _, err := g.client.API.PullRequestsListPullRequestsWithCommit(ctx, sha, &github.ListOptions{})
 	if err != nil {
 		return 0, err
 	}

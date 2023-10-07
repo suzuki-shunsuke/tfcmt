@@ -16,7 +16,7 @@ type fakeAPI struct {
 	FakeRepositoriesCreateComment              func(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error)
 	FakeRepositoriesListCommits                func(ctx context.Context, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error)
 	FakeRepositoriesGetCommit                  func(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error)
-	FakePullRequestsListPullRequestsWithCommit func(ctx context.Context, sha string, opt *github.PullRequestListOptions) ([]*github.PullRequest, *github.Response, error)
+	FakePullRequestsListPullRequestsWithCommit func(ctx context.Context, sha string, opt *github.ListOptions) ([]*github.PullRequest, *github.Response, error)
 }
 
 func (g *fakeAPI) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
@@ -47,7 +47,7 @@ func (g *fakeAPI) RepositoriesGetCommit(ctx context.Context, sha string) (*githu
 	return g.FakeRepositoriesGetCommit(ctx, sha)
 }
 
-func (g *fakeAPI) PullRequestsListPullRequestsWithCommit(ctx context.Context, sha string, opt *github.PullRequestListOptions) ([]*github.PullRequest, *github.Response, error) {
+func (g *fakeAPI) PullRequestsListPullRequestsWithCommit(ctx context.Context, sha string, opt *github.ListOptions) ([]*github.PullRequest, *github.Response, error) {
 	return g.FakePullRequestsListPullRequestsWithCommit(ctx, sha, opt)
 }
 
@@ -107,7 +107,7 @@ func newFakeAPI() fakeAPI {
 				},
 			}, nil, nil
 		},
-		FakePullRequestsListPullRequestsWithCommit: func(ctx context.Context, sha string, opt *github.PullRequestListOptions) ([]*github.PullRequest, *github.Response, error) {
+		FakePullRequestsListPullRequestsWithCommit: func(ctx context.Context, sha string, opt *github.ListOptions) ([]*github.PullRequest, *github.Response, error) {
 			return []*github.PullRequest{
 				{
 					State:  github.String("open"),
