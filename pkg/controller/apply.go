@@ -9,9 +9,9 @@ import (
 	"os/exec"
 
 	"github.com/mattn/go-colorable"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/apperr"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/platform"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/apperr"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/platform"
 )
 
 // Apply sends the notification with notifier

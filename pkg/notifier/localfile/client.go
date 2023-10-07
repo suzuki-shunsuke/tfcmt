@@ -3,7 +3,7 @@ package localfile
 import (
 	"context"
 
-	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // Client is a fake API client for write to local file

@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/suzuki-shunsuke/go-ci-env/v3/cienv"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 )
 
 func Complement(cfg *config.Config) error {

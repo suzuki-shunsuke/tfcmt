@@ -3,8 +3,8 @@ package cli
 import (
 	"os"
 
-	"github.com/suzuki-shunsuke/tfcmt/pkg/controller"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/controller"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 	"github.com/urfave/cli/v2"
 )
 

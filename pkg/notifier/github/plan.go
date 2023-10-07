@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/sirupsen/logrus"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // Plan posts comment optimized for notifications

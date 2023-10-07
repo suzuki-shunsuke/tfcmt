@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"text/template"
 
-	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/github"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/notifier/localfile"
-	tmpl "github.com/suzuki-shunsuke/tfcmt/pkg/template"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier/github"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier/localfile"
+	tmpl "github.com/suzuki-shunsuke/tfcmt/v4/pkg/template"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 type Controller struct {

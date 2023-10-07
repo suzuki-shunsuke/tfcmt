@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/go-github/v53/github"
 	"github.com/shurcooL/githubv4"
-	"github.com/suzuki-shunsuke/tfcmt/pkg/terraform"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 	"golang.org/x/oauth2"
 )
 

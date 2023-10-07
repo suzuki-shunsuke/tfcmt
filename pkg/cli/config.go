@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/suzuki-shunsuke/tfcmt/pkg/config"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 	"github.com/urfave/cli/v2"
 )
 
