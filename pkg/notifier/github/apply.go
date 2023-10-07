@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
@@ -16,7 +17,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) er
 	var errMsgs []string
 
 	if cfg.PR.Number == 0 {
-		if prNumber, err := g.client.Commits.PRNumber(ctx, cfg.PR.Revision, PullRequestStateClosed); err == nil {
+		if prNumber, err := g.client.Commits.PRNumber(ctx, cfg.PR.Revision); err == nil {
 			cfg.PR.Number = prNumber
 		}
 	}
@@ -78,7 +79,7 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) er
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}); err != nil {
-		return err
+		return fmt.Errorf("post a comment: %w", err)
 	}
 	return nil
 }

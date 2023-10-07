@@ -1,8 +1,6 @@
 package localfile
 
 import (
-	"context"
-
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
@@ -37,7 +35,7 @@ type service struct {
 }
 
 // NewClient returns Client initialized with Config
-func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
+func NewClient(cfg *Config) (*Client, error) {
 	c := &Client{
 		Config: cfg,
 	}

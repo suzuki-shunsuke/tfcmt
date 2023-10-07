@@ -2,7 +2,6 @@ package github
 
 import (
 	"context"
-	"os"
 	"testing"
 )
 
@@ -10,62 +9,66 @@ func TestNewClient(t *testing.T) { //nolint:paralleltest
 	t.Setenv(EnvToken, "")
 
 	testCases := []struct {
+		name     string
 		config   Config
 		envToken string
 		expect   string
 	}{
 		{
-			// specify directly
+			name:     "specify directly",
 			config:   Config{Token: "abcdefg"},
 			envToken: "",
 			expect:   "",
 		},
 		{
-			// specify via env but not to be set env (part 1)
+			name:     "specify via env but not to be set env (part 1)",
 			config:   Config{Token: "GITHUB_TOKEN"},
 			envToken: "",
 			expect:   "github token is missing",
 		},
 		{
-			// specify via env (part 1)
+			name:     "specify via env (part 1)",
 			config:   Config{Token: "GITHUB_TOKEN"},
 			envToken: "abcdefg",
 			expect:   "",
 		},
 		{
-			// specify via env but not to be set env (part 2)
+			name:     "specify via env but not to be set env (part 2)",
 			config:   Config{Token: "$GITHUB_TOKEN"},
 			envToken: "",
 			expect:   "github token is missing",
 		},
 		{
-			// specify via env (part 2)
+			name:     "specify via env (part 2)",
 			config:   Config{Token: "$GITHUB_TOKEN"},
 			envToken: "abcdefg",
 			expect:   "",
 		},
 		{
-			// no specification (part 1)
+			name:     "no specification (part 1)",
 			config:   Config{},
 			envToken: "",
 			expect:   "github token is missing",
 		},
 		{
-			// no specification (part 2)
+			name:     "no specification (part 2)",
 			config:   Config{},
 			envToken: "abcdefg",
 			expect:   "github token is missing",
 		},
 	}
-	for _, testCase := range testCases {
-		os.Setenv(EnvToken, testCase.envToken)
-		_, err := NewClient(context.Background(), &testCase.config)
-		if err == nil {
-			continue
-		}
-		if err.Error() != testCase.expect {
-			t.Errorf("got %q but want %q", err.Error(), testCase.expect)
-		}
+	for _, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Setenv(EnvToken, testCase.envToken)
+			_, err := NewClient(context.Background(), &testCase.config)
+			if err == nil {
+				return
+			}
+			if err.Error() != testCase.expect {
+				t.Errorf("got %q but want %q", err.Error(), testCase.expect)
+			}
+		})
 	}
 }
 
@@ -73,12 +76,13 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 	t.Setenv(EnvBaseURL, "")
 
 	testCases := []struct {
+		name       string
 		config     Config
 		envBaseURL string
 		expect     string
 	}{
 		{
-			// specify directly
+			name: "specify directly",
 			config: Config{
 				Token:   "abcdefg",
 				BaseURL: "https://git.example.com/api/v3/",
@@ -87,7 +91,7 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 			expect:     "https://git.example.com/api/v3/",
 		},
 		{
-			// specify via env but not to be set env (part 1)
+			name: "specify via env but not to be set env (part 1)",
 			config: Config{
 				Token:   "abcdefg",
 				BaseURL: "GITHUB_BASE_URL",
@@ -96,7 +100,7 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 			expect:     "https://api.github.com/",
 		},
 		{
-			// specify via env (part 1)
+			name: "specify via env (part 1)",
 			config: Config{
 				Token:   "abcdefg",
 				BaseURL: "GITHUB_BASE_URL",
@@ -105,7 +109,7 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 			expect:     "https://git.example.com/api/v3/",
 		},
 		{
-			// specify via env but not to be set env (part 2)
+			name: "specify via env but not to be set env (part 2)",
 			config: Config{
 				Token:   "abcdefg",
 				BaseURL: "$GITHUB_BASE_URL",
@@ -114,7 +118,7 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 			expect:     "https://api.github.com/",
 		},
 		{
-			// specify via env (part 2)
+			name: "specify via env (part 2)",
 			config: Config{
 				Token:   "abcdefg",
 				BaseURL: "$GITHUB_BASE_URL",
@@ -123,28 +127,31 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 			expect:     "https://git.example.com/api/v3/",
 		},
 		{
-			// no specification (part 1)
+			name:       "no specification (part 1)",
 			config:     Config{Token: "abcdefg"},
 			envBaseURL: "",
 			expect:     "https://api.github.com/",
 		},
 		{
-			// no specification (part 2)
+			name:       "no specification (part 2)",
 			config:     Config{Token: "abcdefg"},
 			envBaseURL: "https://git.example.com/api/v3/",
 			expect:     "https://api.github.com/",
 		},
 	}
-	for _, testCase := range testCases {
-		os.Setenv(EnvBaseURL, testCase.envBaseURL)
-		c, err := NewClient(context.Background(), &testCase.config)
-		if err != nil {
-			continue
-		}
-		url := c.Client.BaseURL.String()
-		if url != testCase.expect {
-			t.Errorf("got %q but want %q", url, testCase.expect)
-		}
+	for _, testCase := range testCases { //nolint:paralleltest
+		testCase := testCase
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Setenv(EnvBaseURL, testCase.envBaseURL)
+			c, err := NewClient(context.Background(), &testCase.config)
+			if err != nil {
+				t.Fatal(err)
+			}
+			url := c.Client.BaseURL.String()
+			if url != testCase.expect {
+				t.Errorf("got %q but want %q", url, testCase.expect)
+			}
+		})
 	}
 }
 

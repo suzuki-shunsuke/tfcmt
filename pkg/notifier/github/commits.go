@@ -11,15 +11,7 @@ import (
 // methods of GitHub API
 type CommitsService service
 
-type PullRequestState string
-
-const (
-	PullRequestStateOpen   = "open"
-	PullRequestStateClosed = "closed"
-	PullRequestStateAll    = "all"
-)
-
-func (g *CommitsService) PRNumber(ctx context.Context, sha string, state PullRequestState) (int, error) {
+func (g *CommitsService) PRNumber(ctx context.Context, sha string) (int, error) {
 	prs, _, err := g.client.API.PullRequestsListPullRequestsWithCommit(ctx, sha, &github.ListOptions{})
 	if err != nil {
 		return 0, err

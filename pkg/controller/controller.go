@@ -133,7 +133,7 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 	}
 	// Write output to file instead of github comment
 	if ctrl.Config.Output != "" {
-		client, err := localfile.NewClient(ctx, &localfile.Config{
+		client, err := localfile.NewClient(&localfile.Config{
 			OutputFile:         ctrl.Config.Output,
 			Parser:             ctrl.Parser,
 			UseRawOutput:       ctrl.Config.Terraform.UseRawOutput,
