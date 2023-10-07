@@ -17,11 +17,11 @@ func Complement(cfg *config.Config) error {
 		cfg.CI.Repo = cfg.RepoName
 	}
 	if err := complementWithCIEnv(&cfg.CI); err != nil {
-		return err
+		return fmt.Errorf("complement parameters with CI specific environment variables: %w", err)
 	}
 
 	if err := complementCIInfo(&cfg.CI); err != nil {
-		return err
+		return fmt.Errorf("complement parameters with ci-info's environment variables: %w", err)
 	}
 
 	return nil

@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
@@ -16,7 +17,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	var errMsgs []string
 
 	if cfg.PR.Number == 0 && cfg.PR.Revision != "" {
-		if prNumber, err := g.client.Commits.PRNumber(ctx, cfg.PR.Revision, PullRequestStateOpen); err == nil {
+		if prNumber, err := g.client.Commits.PRNumber(ctx, cfg.PR.Revision); err == nil {
 			cfg.PR.Number = prNumber
 		}
 	}
@@ -84,11 +85,12 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		comments, err := g.client.Comment.List(ctx, cfg.Owner, cfg.Repo, cfg.PR.Number)
 		if err != nil {
 			logE.WithError(err).Debug("list comments")
+			// Post a new comment instead of patching an existing comment
 			if err := g.client.Comment.Post(ctx, body, &PostOptions{
 				Number:   cfg.PR.Number,
 				Revision: cfg.PR.Revision,
 			}); err != nil {
-				return err
+				return fmt.Errorf("post a comment: %w", err)
 			}
 			return nil
 		}
@@ -101,7 +103,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 			}
 			logE.WithField("comment_id", comment.DatabaseID).Debug("patch a comment")
 			if err := g.client.Comment.Patch(ctx, body, int64(comment.DatabaseID)); err != nil {
-				return err
+				return fmt.Errorf("patch a comment: %w", err)
 			}
 			return nil
 		}
@@ -117,7 +119,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,
 	}); err != nil {
-		return err
+		return fmt.Errorf("post a comment: %w", err)
 	}
 	return nil
 }

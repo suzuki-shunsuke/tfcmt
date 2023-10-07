@@ -10,7 +10,7 @@ import (
 )
 
 // Plan posts comment optimized for notifications
-func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) error {
+func (g *NotifyService) Plan(_ context.Context, param *notifier.ParamExec) error {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -61,7 +61,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	})
 
 	logE.Debug("write a plan output to a file")
-	if err := g.client.Output.WriteToFile(ctx, body, cfg.OutputFile); err != nil {
+	if err := g.client.Output.WriteToFile(body, cfg.OutputFile); err != nil {
 		return fmt.Errorf("write a plan output to a file: %w", err)
 	}
 	return nil

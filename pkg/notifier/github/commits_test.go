@@ -27,7 +27,7 @@ func TestPRNumber(t *testing.T) {
 		}
 		api := newFakeAPI()
 		client.API = &api
-		prNumber, err := client.Commits.PRNumber(context.Background(), testCase.revision, PullRequestStateOpen)
+		prNumber, err := client.Commits.PRNumber(context.Background(), testCase.revision)
 		if (err == nil) != testCase.ok {
 			t.Errorf("got error %q", err)
 		}

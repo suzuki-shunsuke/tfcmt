@@ -20,6 +20,7 @@ linters:
     - exhaustivestruct
     - varnamelen
     - ireturn
+    - depguard
     # TODO
     - dupl
     - wrapcheck
