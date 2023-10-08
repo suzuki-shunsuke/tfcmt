@@ -104,7 +104,7 @@ func extractMovedResource(pattern *regexp.Regexp, line string) *MovedResource {
 }
 
 // Parse returns ParseResult related with terraform plan
-func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
+func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop,maintidx
 	switch {
 	case p.Fail.MatchString(body):
 	case p.Pass.MatchString(body) || p.OutputsChanges.MatchString(body):
