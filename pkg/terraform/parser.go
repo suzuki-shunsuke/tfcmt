@@ -128,13 +128,13 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop
 	endWarning := -1
 	startErrorIndex := -1
 	for i, line := range lines {
-		if line == "Note: Objects have changed outside of Terraform" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L403
+		if line == "Note: Objects have changed outside of Terraform" || line == "Note: Objects have changed outside of OpenTofu" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L403
 			startOutsideTerraform = i + 1
 		}
 		if startOutsideTerraform != -1 && endOutsideTerraform == -1 && strings.HasPrefix(line, "Unless you have made equivalent changes to your configuration") { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L110
 			endOutsideTerraform = i + 1
 		}
-		if line == "Terraform will perform the following actions:" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L252
+		if line == "Terraform will perform the following actions:" || line == "OpenTofu will perform the following actions:" { // https://github.com/hashicorp/terraform/blob/332045a4e4b1d256c45f98aac74e31102ace7af7/internal/command/views/plan.go#L252
 			startChangeOutput = i + 1
 		}
 		// If we have output changes but not resource changes, Terraform
