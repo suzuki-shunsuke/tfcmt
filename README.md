@@ -18,11 +18,11 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 
 ### License of original code
 
-This is a fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), so about the origincal license, please see https://github.com/mercari/tfnotify#license .
+This is a fork of [mercari/tfnotify](https://github.com/mercari/tfnotify) v0.7.0 [licensed under MIT License terms](https://github.com/mercari/tfnotify/tree/57494ec80c926a12967c8634226ef60e834b3dfd#license).
 
-Copyright 2018 Mercari, Inc.
-
-Licensed under the MIT License.
+> Copyright 2018 Mercari, Inc.
+> 
+> Licensed under the MIT License.
 
 ### License of code which we wrote
 
