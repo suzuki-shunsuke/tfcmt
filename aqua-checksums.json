@@ -31,28 +31,28 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v1.21.2/goreleaser_Darwin_all.tar.gz",
-      "checksum": "FE3254B09245143A345204252FB3E37D40B97ECA0F489FAE6976763DAD50BA3C",
+      "id": "github_release/github.com/goreleaser/goreleaser/v1.22.1/goreleaser_Darwin_all.tar.gz",
+      "checksum": "C1B163E3A501551C9CAB58D820BE2DB372FF5CBE7CD3C14527DB1C16849E6225",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v1.21.2/goreleaser_Linux_arm64.tar.gz",
-      "checksum": "1F762E7AADA4C5A6634BE1A72CF89D763CAD2E213B1394EB046CC0C3854533BD",
+      "id": "github_release/github.com/goreleaser/goreleaser/v1.22.1/goreleaser_Linux_arm64.tar.gz",
+      "checksum": "A0E21BEEA6C555D51C75A57301E576F4E35F4AE852E61888C79E0C6845D2E7DC",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v1.21.2/goreleaser_Linux_x86_64.tar.gz",
-      "checksum": "B669DBE65C3EEB99CE9A014D4115C6050CD100EDC1E74C1569B1DF6B175E5D0F",
+      "id": "github_release/github.com/goreleaser/goreleaser/v1.22.1/goreleaser_Linux_x86_64.tar.gz",
+      "checksum": "62FC48004E9D7726E6756AE858846C69651463AC6DCA5A934152072FDF0C1713",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v1.21.2/goreleaser_Windows_arm64.zip",
-      "checksum": "20320E0FDB697895B00B595F60B0896A10018A9B85BBA8399136D9301C530D6B",
+      "id": "github_release/github.com/goreleaser/goreleaser/v1.22.1/goreleaser_Windows_arm64.zip",
+      "checksum": "3D40A27007464DA04E7D6F57133608154FA08BAEF06BBC2F1873C70D53B2EFBD",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v1.21.2/goreleaser_Windows_x86_64.zip",
-      "checksum": "F3624FE15419B022389060FD4778657968531941AE3756EDB7418467C14E580B",
+      "id": "github_release/github.com/goreleaser/goreleaser/v1.22.1/goreleaser_Windows_x86_64.zip",
+      "checksum": "81BBCEB79B788C70FE0C8B57B15F894A6612340DF5B50A1DCB73D8E1ACF3AF8B",
       "algorithm": "sha256"
     },
     {
@@ -131,93 +131,93 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/sigstore/cosign/v1.13.1/cosign-darwin-amd64",
-      "checksum": "1d164b8b1fcfef1e1870d809edbb9862afd5995cab63687a440b84cca5680ecf",
+      "id": "github_release/github.com/sigstore/cosign/v1.13.2/cosign-darwin-amd64",
+      "checksum": "5A77CF6F5411AC8038F3DD2EB96E54E879026F6038A5D6A385DE2351E17F34EF",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/sigstore/cosign/v1.13.1/cosign-darwin-arm64",
-      "checksum": "02bef878916be048fd7dcf742105639f53706a59b5b03f4e4eaccc01d05bc7ab",
+      "id": "github_release/github.com/sigstore/cosign/v1.13.2/cosign-darwin-arm64",
+      "checksum": "68703D61A1E8006E4EBEF4222B82C1214DF446795FF39CD081CA5D59384A5A60",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/sigstore/cosign/v1.13.1/cosign-linux-amd64",
-      "checksum": "a50651a67b42714d6f1a66eb6773bf214dacae321f04323c0885f6a433051f95",
+      "id": "github_release/github.com/sigstore/cosign/v1.13.2/cosign-linux-amd64",
+      "checksum": "9B0F52ABB2E6D79529F37646E524A35A409DC811D2CDEC7EF5BE2DC5130489C0",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/sigstore/cosign/v1.13.1/cosign-linux-arm64",
-      "checksum": "a7a79a52c7747e2c21554cad4600e6c7130c0429017dd258f9c558d957fa9090",
+      "id": "github_release/github.com/sigstore/cosign/v1.13.2/cosign-linux-arm64",
+      "checksum": "3C109B66788686DD81F3E445439215532A8BB3E14A54EFB6B65382B0E3578F5E",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/sigstore/cosign/v1.13.1/cosign-windows-amd64.exe",
-      "checksum": "78a2774b68b995cc698944f6c235b1c93dcb6d57593a58a565ee7a56d64e4b85",
+      "id": "github_release/github.com/sigstore/cosign/v1.13.2/cosign-windows-amd64.exe",
+      "checksum": "F16868B69C85BBA30CBAF023885398A2A258002BAABB0709CCE1D60491171765",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.3/cmdx_darwin_amd64.tar.gz",
-      "checksum": "F4BB5584C390AC64603F002AADC61451E6794BC33304AB324D78C5CC351428FA",
+      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.4/cmdx_darwin_amd64.tar.gz",
+      "checksum": "94C2CCFC4330DBF8D587A1127E0CF6BABC618506CBA0D89BF0975620FAF26E60",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.3/cmdx_darwin_arm64.tar.gz",
-      "checksum": "361B47215B2ECD20DA9F9F4A8D05A2E90BA0A60213438C6106B93804C7FB0944",
+      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.4/cmdx_darwin_arm64.tar.gz",
+      "checksum": "EAB029A0ABC4B33228853BF9B6CDEC1A42284326AD6F6B96BF1CAA6CDAFEA407",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.3/cmdx_linux_amd64.tar.gz",
-      "checksum": "0CB43B4654B5116D38019799215F80B13265127474939020911948555520AC3C",
+      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.4/cmdx_linux_amd64.tar.gz",
+      "checksum": "CF6B642829175BDC64DF16D04B7FAA953B684F4290557ADE4BEF9B661F3F4452",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.3/cmdx_linux_arm64.tar.gz",
-      "checksum": "28CA84A4C035BE8D9394D2289F2A7F349F2ADE2D8378CC51314E8F7B62569BC9",
+      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.4/cmdx_linux_arm64.tar.gz",
+      "checksum": "2FD795E2E91BD60A9B8DA4328850B655DE7D7E7BAF8826DDAD4BEAF97291AB25",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.3/cmdx_windows_amd64.tar.gz",
-      "checksum": "A16CF63B755914EFECA4DC3DF12E7EEB962D77F6FC35E795502A86EA803E2ACC",
+      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.4/cmdx_windows_amd64.tar.gz",
+      "checksum": "AF287C68213B1C29CEDE06A0308003D6EE0A015FF89A455858DF5D3E4838BCCB",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.3/cmdx_windows_arm64.tar.gz",
-      "checksum": "1955124A6F0AD0E6191A9CC9CB7622F6B4E9BC36CFAF3B0B07ABB3B2D967D303",
+      "id": "github_release/github.com/suzuki-shunsuke/cmdx/v1.7.4/cmdx_windows_arm64.tar.gz",
+      "checksum": "40F31B6E5926B949148A30957D5DD8761F3579433161EB9AA2627AD1009DB46E",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.2/ghalint_0.2.2_darwin_amd64.tar.gz",
-      "checksum": "2F520D13DB10EF8ABD3942DEC2CEA1792B0A7289F7466219B252169AA8124177",
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.7/ghalint_0.2.7_darwin_amd64.tar.gz",
+      "checksum": "9B4EF4783A6C1918CEBC90BF03C5C22A4C0E882008758F31067C23EA7167FCD1",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.2/ghalint_0.2.2_darwin_arm64.tar.gz",
-      "checksum": "3BF497D0C62B70DBC4379418D7009689937D9B5499A59E2B0B8D29A4941B81A7",
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.7/ghalint_0.2.7_darwin_arm64.tar.gz",
+      "checksum": "69821A2CCB2E04EA4AAA30DF9A4C0FFF9291B757086159CE30A0C5E60AAB1E90",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.2/ghalint_0.2.2_linux_amd64.tar.gz",
-      "checksum": "A74B5A64A18BCA0077593D21E9DADBD01657D05EE6DB95467A285B1E4A904CA5",
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.7/ghalint_0.2.7_linux_amd64.tar.gz",
+      "checksum": "184A1A61E5B79F2C2D3B95DBE7E67CEDEEE50FA16E4A34E454F1115C665162EE",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.2/ghalint_0.2.2_linux_arm64.tar.gz",
-      "checksum": "6A68353872D10DAD8CDC7F4F9592D887F127D064511BA89FF89FAFC1DDCB7492",
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.7/ghalint_0.2.7_linux_arm64.tar.gz",
+      "checksum": "2516F49A92243ED30A4C5D02D0E1625848F33845832FFE5984C4384363D913A3",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.2/ghalint_0.2.2_windows_amd64.tar.gz",
-      "checksum": "D83BAFC44A5F218D42533140EBE924EFF483357718CE784C6E19010C553C0A0A",
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.7/ghalint_0.2.7_windows_amd64.tar.gz",
+      "checksum": "079DFF897B46682D339CD556662DEE0FDB30429CFF3654708FE34FD14460D625",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.2/ghalint_0.2.2_windows_arm64.tar.gz",
-      "checksum": "3B733BC72D27C83E73C4F8D7691BF7781DCC5E3BF2378C441A70AA44202D83F2",
+      "id": "github_release/github.com/suzuki-shunsuke/ghalint/v0.2.7/ghalint_0.2.7_windows_arm64.tar.gz",
+      "checksum": "D38EC5FDEDB06FB20A485C3DB0B44C3127B01A05141E5701DB6A70201CE2D701",
       "algorithm": "sha256"
     },
     {
-      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.70.0/registry.yaml",
-      "checksum": "89EAA6290BE62A363709410C0185C58772CFFB55D12A6072929476F215C1288802AD014D7C4A0C8B58A0FA16F99125925780BC9AD4C9941A9B3B6FDD20CC1BCA",
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.99.0/registry.yaml",
+      "checksum": "D729AAA3CA93DBCAEDCE976B2D0082D1506830C9E5921A94150F937A2979C59CDC7707EA9E009D84D49193D7D979B2D53B43A61074D41A33AFB1208614E81170",
       "algorithm": "sha512"
     }
   ]

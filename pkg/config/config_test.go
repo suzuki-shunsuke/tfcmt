@@ -37,7 +37,7 @@ func TestLoadFile(t *testing.T) {
 				Terraform: Terraform{
 					Plan: Plan{
 						Template: `{{if .HasDestroy}}
-## :warning: WARNING: Resource Deletion will happen :warning:
+## :warning: WARNING: Resource Deletion will happen
 
 This plan contains **resource deletion**. Please check the plan result very carefully!
 {{else}}
