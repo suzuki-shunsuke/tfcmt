@@ -242,7 +242,7 @@ func (t *Template) Execute() (string, error) {
   * {{.Before}} => {{.After}}
 {{- end}}{{end}}`,
 		"deletion_warning": `{{if .HasDestroy}}
-### :warning: Resource Deletion will happen :warning:
+### :warning: Resource Deletion will happen
 This plan contains resource delete operation. Please check the plan result very carefully!
 {{end}}`,
 		"changed_result": `{{if .ChangedResult}}
@@ -258,7 +258,7 @@ _This feature was introduced from [Terraform v0.15.4](https://github.com/hashico
 </details>
 {{end}}`,
 		"warning": `{{if .Warning}}
-## :warning: Warnings :warning:
+## :warning: Warnings
 {{wrapCode .Warning}}
 {{end}}`,
 		"error_messages": `{{if .ErrorMessages}}
