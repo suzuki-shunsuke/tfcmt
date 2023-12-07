@@ -42,7 +42,7 @@ func (ee *ExitError) Error() string {
 	if ee.err == nil {
 		return ""
 	}
-	return fmt.Sprintf("%v", ee.err)
+	return ee.err.Error()
 }
 
 // ExitCode returns the exit code, fulfilling the interface required by `ExitCoder`
