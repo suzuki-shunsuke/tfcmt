@@ -154,7 +154,7 @@ func wrapCode(text string) interface{} {
 	}
 	if strings.Contains(text, "```") {
 		if strings.Contains(text, "~~~") {
-			return htmltemplate.HTML(`<pre><code>` + htmltemplate.HTMLEscapeString(text) + `</code></pre>`)
+			return htmltemplate.HTML(`<pre><code>` + htmltemplate.HTMLEscapeString(text) + `</code></pre>`) //nolint:gosec
 		}
 		return htmltemplate.HTML("\n~~~hcl\n" + text + "\n~~~\n") //nolint:gosec
 	}
