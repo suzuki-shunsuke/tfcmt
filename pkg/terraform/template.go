@@ -153,7 +153,7 @@ func wrapCode(text string) interface{} {
 ` + text[len(text)-20000:]
 	}
 	if strings.Contains(text, "```") {
-		return `<pre><code>` + text + `</code></pre>`
+		return htmltemplate.HTML(`<pre><code>` + htmltemplate.HTMLEscapeString(text) + `</code></pre>`)
 	}
 	return htmltemplate.HTML("\n```hcl\n" + text + "\n```\n") //nolint:gosec
 }
