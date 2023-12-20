@@ -21,6 +21,7 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 
 - Recruit Co., Ltd. - [StudySapuri](https://brand.studysapuri.jp/) and [Quipper](https://www.quipper.com/) product team
 - [Cybozu Inc / Engineering Productivity Team](https://cybozu.co.jp/)
+- [READYFOR INC. / Platform Team](https://corp.readyfor.jp/)
 
 ## License
 
