@@ -3,16 +3,6 @@ description: If something isn't working as expected.
 labels:
   - bug
 body:
-  - type: markdown
-    attributes:
-      value: |
-        ## :warning: Please create a GitHub Discussion instead of GitHub Issue
-
-        https://github.com/suzuki-shunsuke/tfcmt/discussions
-
-        Only maintainers can create new Issues. If needed, a maintainer will create an Issue after your Discussion been triaged and confirmed.
-        This way we keep Issues actionable, and free of duplicates or wrong bug reports.
-
   - type: textarea
     id: tfcmt-version
     attributes:
@@ -87,28 +77,23 @@ body:
     id: expected-behaviour
     attributes:
       label: Expected behaviour
-      value:
     validations:
       required: true
   - type: textarea
     id: actual-behaviour
     attributes:
       label: Actual behaviour
-      value:
     validations:
       required: true
   - type: textarea
     id: important-factoid
     attributes:
       label: Important Factoids
-      value:
     validations:
       required: false
   - type: textarea
-    id: reference
+    id: note
     attributes:
-      label: Reference
-      value: |
-        *
+      label: Note
     validations:
       required: false
