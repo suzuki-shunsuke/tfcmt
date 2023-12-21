@@ -38,10 +38,8 @@ body:
     validations:
       required: false
   - type: textarea
-    id: reference
+    id: note
     attributes:
-      label: Reference
-      value: |
-        *
+      label: Note
     validations:
       required: false
