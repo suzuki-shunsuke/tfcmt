@@ -8,7 +8,7 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
-func TestNotifyApply(t *testing.T) {
+func TestNotifyApply(t *testing.T) { //nolint:paralleltest,tparallel
 	t.Setenv("GITHUB_TOKEN", "xxx")
 	testCases := []struct {
 		name      string
