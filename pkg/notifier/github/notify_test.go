@@ -9,7 +9,7 @@ import (
 )
 
 func TestNotifyApply(t *testing.T) {
-	t.Parallel()
+	t.Setenv("GITHUB_TOKEN", "xxx")
 	testCases := []struct {
 		name      string
 		config    Config
