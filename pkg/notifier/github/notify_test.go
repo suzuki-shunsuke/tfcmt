@@ -20,7 +20,6 @@ func TestNotifyApply(t *testing.T) {
 			name: "case 8",
 			// apply case without merge commit
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -42,7 +41,6 @@ func TestNotifyApply(t *testing.T) {
 			// apply case as merge commit
 			// TODO(drlau): validate cfg.PR.Number = 123
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -94,7 +92,6 @@ func TestNotifyPlan(t *testing.T) {
 			name: "case 0",
 			// invalid body (cannot parse)
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -115,7 +112,6 @@ func TestNotifyPlan(t *testing.T) {
 			name: "case 1",
 			// invalid pr
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -136,7 +132,6 @@ func TestNotifyPlan(t *testing.T) {
 			name: "case 2",
 			// valid, error
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -157,7 +152,6 @@ func TestNotifyPlan(t *testing.T) {
 			name: "case 3",
 			// valid, and isPR
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -178,7 +172,6 @@ func TestNotifyPlan(t *testing.T) {
 			name: "case 4",
 			// valid, and isRevision
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -200,7 +193,6 @@ func TestNotifyPlan(t *testing.T) {
 			// valid, and contains destroy
 			// TODO(dtan4): check two comments were made actually
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -222,7 +214,6 @@ func TestNotifyPlan(t *testing.T) {
 			// valid with no changes
 			// TODO(drlau): check that the label was actually added
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{
@@ -249,7 +240,6 @@ func TestNotifyPlan(t *testing.T) {
 			name: "case 7",
 			// valid, contains destroy, but not to notify
 			config: Config{
-				Token: "token",
 				Owner: "owner",
 				Repo:  "repo",
 				PR: PullRequest{

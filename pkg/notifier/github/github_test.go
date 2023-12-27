@@ -124,7 +124,6 @@ func newFakeAPI() fakeAPI {
 
 func newFakeConfig() Config {
 	return Config{
-		Token: "token",
 		Owner: "owner",
 		Repo:  "repo",
 		PR: PullRequest{

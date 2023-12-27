@@ -12,9 +12,6 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// EnvToken is GitHub API Token
-const EnvToken = "GITHUB_TOKEN" //nolint:gosec
-
 // EnvBaseURL is GitHub base URL. This can be set to a domain endpoint to use with GitHub Enterprise.
 const EnvBaseURL = "GITHUB_BASE_URL"
 
@@ -38,7 +35,6 @@ type Client struct {
 
 // Config is a configuration for GitHub client
 type Config struct {
-	Token           string
 	BaseURL         string
 	GraphQLEndpoint string
 	Owner           string
@@ -69,14 +65,7 @@ type service struct {
 	client *Client
 }
 
-func getToken(cfg *Config) (string, error) {
-	token := strings.TrimPrefix(cfg.Token, "$")
-	if token == EnvToken {
-		return os.Getenv(EnvToken), nil
-	}
-	if token != "" {
-		return token, nil
-	}
+func getToken() (string, error) {
 	if token := os.Getenv("TFCMT_GITHUB_TOKEN"); token != "" {
 		return token, nil
 	}
@@ -88,7 +77,7 @@ func getToken(cfg *Config) (string, error) {
 
 // NewClient returns Client initialized with Config
 func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
-	token, err := getToken(cfg)
+	token, err := getToken()
 	if err != nil {
 		return nil, err
 	}

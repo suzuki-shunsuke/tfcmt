@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewClient(t *testing.T) { //nolint:paralleltest
-	t.Setenv(EnvToken, "")
+	t.Setenv("GITHUB_TOKEN", "")
 
 	testCases := []struct {
 		name     string
@@ -15,32 +15,26 @@ func TestNewClient(t *testing.T) { //nolint:paralleltest
 		expect   string
 	}{
 		{
-			name:     "specify directly",
-			config:   Config{Token: "abcdefg"},
-			envToken: "",
-			expect:   "",
-		},
-		{
 			name:     "specify via env but not to be set env (part 1)",
-			config:   Config{Token: "GITHUB_TOKEN"},
+			config:   Config{},
 			envToken: "",
 			expect:   "github token is missing",
 		},
 		{
 			name:     "specify via env (part 1)",
-			config:   Config{Token: "GITHUB_TOKEN"},
+			config:   Config{},
 			envToken: "abcdefg",
 			expect:   "",
 		},
 		{
 			name:     "specify via env but not to be set env (part 2)",
-			config:   Config{Token: "$GITHUB_TOKEN"},
+			config:   Config{},
 			envToken: "",
 			expect:   "github token is missing",
 		},
 		{
 			name:     "specify via env (part 2)",
-			config:   Config{Token: "$GITHUB_TOKEN"},
+			config:   Config{},
 			envToken: "abcdefg",
 			expect:   "",
 		},
@@ -60,7 +54,7 @@ func TestNewClient(t *testing.T) { //nolint:paralleltest
 	for _, testCase := range testCases { //nolint:paralleltest
 		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
-			t.Setenv(EnvToken, testCase.envToken)
+			t.Setenv("GITHUB_TOKEN", testCase.envToken)
 			_, err := NewClient(context.Background(), &testCase.config)
 			if err == nil {
 				return
@@ -84,7 +78,6 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 		{
 			name: "specify directly",
 			config: Config{
-				Token:   "abcdefg",
 				BaseURL: "https://git.example.com/api/v3/",
 			},
 			envBaseURL: "",
@@ -93,7 +86,6 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 		{
 			name: "specify via env but not to be set env (part 1)",
 			config: Config{
-				Token:   "abcdefg",
 				BaseURL: "GITHUB_BASE_URL",
 			},
 			envBaseURL: "",
@@ -102,7 +94,6 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 		{
 			name: "specify via env (part 1)",
 			config: Config{
-				Token:   "abcdefg",
 				BaseURL: "GITHUB_BASE_URL",
 			},
 			envBaseURL: "https://git.example.com/api/v3/",
@@ -111,7 +102,6 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 		{
 			name: "specify via env but not to be set env (part 2)",
 			config: Config{
-				Token:   "abcdefg",
 				BaseURL: "$GITHUB_BASE_URL",
 			},
 			envBaseURL: "",
@@ -120,7 +110,6 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 		{
 			name: "specify via env (part 2)",
 			config: Config{
-				Token:   "abcdefg",
 				BaseURL: "$GITHUB_BASE_URL",
 			},
 			envBaseURL: "https://git.example.com/api/v3/",
@@ -128,13 +117,13 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 		},
 		{
 			name:       "no specification (part 1)",
-			config:     Config{Token: "abcdefg"},
+			config:     Config{},
 			envBaseURL: "",
 			expect:     "https://api.github.com/",
 		},
 		{
 			name:       "no specification (part 2)",
-			config:     Config{Token: "abcdefg"},
+			config:     Config{},
 			envBaseURL: "https://git.example.com/api/v3/",
 			expect:     "https://api.github.com/",
 		},
