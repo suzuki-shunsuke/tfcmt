@@ -12,7 +12,7 @@ require (
 	github.com/suzuki-shunsuke/github-comment-metadata v0.1.0
 	github.com/suzuki-shunsuke/go-ci-env/v3 v3.0.1
 	github.com/suzuki-shunsuke/go-findconfig v1.2.0
-	github.com/urfave/cli/v2 v2.26.0
+	github.com/urfave/cli/v2 v2.27.0
 	golang.org/x/oauth2 v0.15.0
 	gopkg.in/yaml.v2 v2.4.0
 )
