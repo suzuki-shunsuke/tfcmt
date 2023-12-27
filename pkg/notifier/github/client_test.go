@@ -67,6 +67,7 @@ func TestNewClient(t *testing.T) { //nolint:paralleltest
 }
 
 func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
+	t.Setenv("GITHUB_TOKEN", "xxx")
 	t.Setenv(EnvBaseURL, "")
 
 	testCases := []struct {
