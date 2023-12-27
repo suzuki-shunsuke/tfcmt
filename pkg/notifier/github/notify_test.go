@@ -80,8 +80,8 @@ func TestNotifyApply(t *testing.T) { //nolint:paralleltest,tparallel
 	}
 }
 
-func TestNotifyPlan(t *testing.T) {
-	t.Parallel()
+func TestNotifyPlan(t *testing.T) { //nolint:paralleltest,tparallel
+	t.Setenv("GITHUB_TOKEN", "xxx")
 	testCases := []struct {
 		name      string
 		config    Config
