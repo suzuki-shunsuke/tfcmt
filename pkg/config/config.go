@@ -19,7 +19,6 @@ type Config struct {
 	Log                Log
 	GHEBaseURL         string `yaml:"ghe_base_url"`
 	GHEGraphQLEndpoint string `yaml:"ghe_graphql_endpoint"`
-	GitHubToken        string `yaml:"-"`
 	PlanPatch          bool   `yaml:"plan_patch"`
 	RepoOwner          string `yaml:"repo_owner"`
 	RepoName           string `yaml:"repo_name"`

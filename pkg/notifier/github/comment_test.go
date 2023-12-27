@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func TestCommentPost(t *testing.T) {
-	t.Parallel()
+func TestCommentPost(t *testing.T) { //nolint:paralleltest,tparallel
+	t.Setenv("GITHUB_TOKEN", "xxx")
 	testCases := []struct {
 		name   string
 		config Config

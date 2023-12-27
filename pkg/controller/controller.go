@@ -150,7 +150,6 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		return client.Notify, nil
 	}
 	client, err := github.NewClient(ctx, &github.Config{
-		Token:           ctrl.Config.GitHubToken,
 		BaseURL:         ctrl.Config.GHEBaseURL,
 		GraphQLEndpoint: ctrl.Config.GHEGraphQLEndpoint,
 		Owner:           ctrl.Config.CI.Owner,
