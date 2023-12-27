@@ -69,19 +69,30 @@ type service struct {
 	client *Client
 }
 
+func getToken(cfg *Config) (string, error) {
+	token := strings.TrimPrefix(cfg.Token, "$")
+	if token == EnvToken {
+		return os.Getenv(EnvToken), nil
+	}
+	if token != "" {
+		return token, nil
+	}
+	if token := os.Getenv("TFCMT_GITHUB_TOKEN"); token != "" {
+		return token, nil
+	}
+	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
+		return token, nil
+	}
+	return "", errors.New("github token is missing")
+}
+
 // NewClient returns Client initialized with Config
 func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
-	token := cfg.Token
-	token = strings.TrimPrefix(token, "$")
-	if token == EnvToken {
-		token = os.Getenv(EnvToken)
+	token, err := getToken(cfg)
+	if err != nil {
+		return nil, err
 	}
-	if token == "" {
-		token = os.Getenv("GITHUB_TOKEN")
-		if token == "" {
-			return &Client{}, errors.New("github token is missing")
-		}
-	}
+
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	)
