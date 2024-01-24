@@ -23,6 +23,7 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 - [Cybozu Inc / Engineering Productivity Team](https://cybozu.co.jp/)
 - [READYFOR INC. / Platform Team](https://corp.readyfor.jp/)
 - [CADDi Inc.](https://caddi.com/)
+- [ZOZO Inc.](https://corp.zozo.com/)
 
 ## License
 
