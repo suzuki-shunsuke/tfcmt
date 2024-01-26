@@ -21,7 +21,7 @@ func ParseMasks(maskStr, maskSep string) ([]*config.Mask, error) {
 		return nil, nil
 	}
 	if maskSep == "" {
-		maskSep = ";" // default separator
+		maskSep = "," // default separator
 	}
 	maskStrs := strings.Split(maskStr, maskSep)
 	masks := make([]*config.Mask, 0, len(maskStrs))
