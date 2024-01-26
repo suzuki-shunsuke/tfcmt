@@ -54,7 +54,7 @@ func parseMask(maskStr string) (*config.Mask, error) {
 			}, nil
 		}
 		// the environment variable is missing
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	case "regexp":
 		p, err := regexp.Compile(value)
 		if err != nil {

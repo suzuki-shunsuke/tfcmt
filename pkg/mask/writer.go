@@ -24,7 +24,7 @@ func NewWriter(w io.Writer, patterns []*config.Mask) *Writer {
 	}
 }
 
-func (w *Writer) Write(p []byte) (n int, err error) {
+func (w *Writer) Write(p []byte) (int, error) {
 	a := p
 	for _, pattern := range w.patterns {
 		switch pattern.Type {
@@ -34,9 +34,7 @@ func (w *Writer) Write(p []byte) (n int, err error) {
 			a = pattern.Regexp.ReplaceAll(a, []byte("***"))
 		}
 	}
-	if _, err := w.w.Write(a); err != nil {
-		return len(p), err
-	}
+	_, err := w.w.Write(a)
 	return len(p), err
 }
 
@@ -45,7 +43,7 @@ func Mask(s string, patterns []*config.Mask) string {
 	for _, pattern := range patterns {
 		switch pattern.Type {
 		case typeEqual:
-			a = strings.ReplaceAll(string(a), pattern.Value, "***")
+			a = strings.ReplaceAll(a, pattern.Value, "***")
 		case typeRegexp:
 			a = pattern.Regexp.ReplaceAllString(a, "***")
 		}

@@ -34,7 +34,7 @@ func parseVarEnvs(envs []string, m map[string]string) {
 	}
 }
 
-func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error {
+func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error { //nolint:cyclop
 	if owner := ctx.String("owner"); owner != "" {
 		cfg.CI.Owner = owner
 	}
