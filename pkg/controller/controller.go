@@ -143,6 +143,7 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 			Vars:               ctrl.Config.Vars,
 			EmbeddedVarNames:   ctrl.Config.EmbeddedVarNames,
 			Templates:          ctrl.Config.Templates,
+			Masks:              ctrl.Config.Masks,
 		})
 		if err != nil {
 			return nil, err
@@ -169,6 +170,7 @@ func (ctrl *Controller) getNotifier(ctx context.Context) (notifier.Notifier, err
 		Templates:          ctrl.Config.Templates,
 		Patch:              ctrl.Config.PlanPatch,
 		SkipNoChanges:      ctrl.Config.Terraform.Plan.WhenNoChanges.DisableComment,
+		Masks:              ctrl.Config.Masks,
 	})
 	if err != nil {
 		return nil, err

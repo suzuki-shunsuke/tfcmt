@@ -11,6 +11,7 @@ import (
 
 	"github.com/mattn/go-colorable"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/apperr"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/platform"
 )
@@ -42,8 +43,8 @@ func (ctrl *Controller) Plan(ctx context.Context, command Command) error {
 	uncolorizedStdout := colorable.NewNonColorable(stdout)
 	uncolorizedStderr := colorable.NewNonColorable(stderr)
 	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
-	cmd.Stdout = io.MultiWriter(os.Stdout, uncolorizedStdout, uncolorizedCombinedOutput)
-	cmd.Stderr = io.MultiWriter(os.Stderr, uncolorizedStderr, uncolorizedCombinedOutput)
+	cmd.Stdout = io.MultiWriter(mask.NewWriter(os.Stdout, ctrl.Config.Masks), uncolorizedStdout, uncolorizedCombinedOutput)
+	cmd.Stderr = io.MultiWriter(mask.NewWriter(os.Stderr, ctrl.Config.Masks), uncolorizedStderr, uncolorizedCombinedOutput)
 	setCancel(cmd)
 	_ = cmd.Run()
 

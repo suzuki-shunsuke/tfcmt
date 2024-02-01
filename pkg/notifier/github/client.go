@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/go-github/v58/github"
 	"github.com/shurcooL/githubv4"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 	"golang.org/x/oauth2"
 )
@@ -53,6 +54,7 @@ type Config struct {
 	UseRawOutput     bool
 	Patch            bool
 	SkipNoChanges    bool
+	Masks            []*config.Mask
 }
 
 // PullRequest represents GitHub Pull Request metadata

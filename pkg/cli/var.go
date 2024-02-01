@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/urfave/cli/v2"
 )
 
@@ -33,7 +34,7 @@ func parseVarEnvs(envs []string, m map[string]string) {
 	}
 }
 
-func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error {
+func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error { //nolint:cyclop
 	if owner := ctx.String("owner"); owner != "" {
 		cfg.CI.Owner = owner
 	}
@@ -72,6 +73,13 @@ func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error {
 		return err
 	}
 	cfg.Vars = vm
+
+	// Mask https://github.com/suzuki-shunsuke/tfcmt/discussions/1083
+	masks, err := mask.ParseMasksFromEnv()
+	if err != nil {
+		return err
+	}
+	cfg.Masks = masks
 
 	return nil
 }

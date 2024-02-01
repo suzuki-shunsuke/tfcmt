@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
+	"github.com/suzuki-shunsuke/logrus-error/logerr"
 )
 
 // Exit codes are int values for the exit code that shell interpreter can interpret
@@ -58,17 +59,19 @@ func HandleExit(err error) int {
 		return ExitCodeOK
 	}
 
+	logE := logrus.NewEntry(logrus.New())
+
 	if exitErr, ok := err.(ExitCoder); ok { //nolint:errorlint
 		if err.Error() != "" {
 			if _, ok := exitErr.(ErrorFormatter); ok {
 				logrus.Errorf("%+v", err)
 			} else {
-				logrus.Error(err)
+				logerr.WithError(logE, err).Error("tfcmt failed")
 			}
 		}
 		return exitErr.ExitCode()
 	}
 
-	logrus.Error(err)
+	logerr.WithError(logE, err).Error("tfcmt failed")
 	return ExitCodeError
 }

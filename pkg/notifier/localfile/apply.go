@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
@@ -57,6 +58,8 @@ func (g *NotifyService) Apply(_ context.Context, param *notifier.ParamExec) erro
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
 	})
+
+	body = mask.Mask(body, g.client.Config.Masks)
 
 	logE.Debug("writing the apply result to a file")
 	if err := g.client.Output.WriteToFile(body, cfg.OutputFile); err != nil {

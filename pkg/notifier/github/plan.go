@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
@@ -79,6 +80,8 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	}).Debug("embedded HTML comment")
 	// embed HTML tag to hide old comments
 	body += embeddedComment
+
+	body = mask.Mask(body, g.client.Config.Masks)
 
 	if cfg.Patch && cfg.PR.Number != 0 {
 		logE.Debug("try patching")
