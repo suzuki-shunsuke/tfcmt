@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestPRNumber(t *testing.T) { //nolint:paralleltest
+func TestPRNumber(t *testing.T) {
 	t.Setenv("GITHUB_TOKEN", "xxx")
 	testCases := []struct {
 		prNumber int

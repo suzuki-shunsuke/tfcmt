@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewClient(t *testing.T) { //nolint:paralleltest
+func TestNewClient(t *testing.T) {
 	t.Setenv("GITHUB_TOKEN", "")
 
 	testCases := []struct {
@@ -51,7 +51,7 @@ func TestNewClient(t *testing.T) { //nolint:paralleltest
 			expect:   "github token is missing",
 		},
 	}
-	for _, testCase := range testCases { //nolint:paralleltest
+	for _, testCase := range testCases {
 		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Setenv("GITHUB_TOKEN", testCase.envToken)
@@ -66,7 +66,7 @@ func TestNewClient(t *testing.T) { //nolint:paralleltest
 	}
 }
 
-func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
+func TestNewClientWithBaseURL(t *testing.T) {
 	t.Setenv("GITHUB_TOKEN", "xxx")
 	t.Setenv(EnvBaseURL, "")
 
@@ -129,7 +129,7 @@ func TestNewClientWithBaseURL(t *testing.T) { //nolint:paralleltest
 			expect:     "https://api.github.com/",
 		},
 	}
-	for _, testCase := range testCases { //nolint:paralleltest
+	for _, testCase := range testCases {
 		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Setenv(EnvBaseURL, testCase.envBaseURL)
