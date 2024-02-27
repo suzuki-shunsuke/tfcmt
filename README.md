@@ -24,6 +24,7 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 - [READYFOR INC. / Platform Team](https://corp.readyfor.jp/)
 - [CADDi Inc.](https://caddi.com/)
 - [ZOZO Inc.](https://corp.zozo.com/)
+- [SAKURA internet Inc.](https://www.sakura.ad.jp/)
 
 ## License
 
