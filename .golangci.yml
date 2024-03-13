@@ -33,3 +33,4 @@ linters:
     - exhaustruct
     - execinquery
     - dupword
+    - musttag
