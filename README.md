@@ -26,6 +26,7 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 - [ZOZO Inc.](https://corp.zozo.com/)
 - [SAKURA internet Inc.](https://www.sakura.ad.jp/)
 - [Unipos Inc.](https://www.unipos.co.jp/)
+- [paild, Inc.](https://www.paild.co.jp/)
 
 ## License
 
