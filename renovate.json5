@@ -1,11 +1,9 @@
 {
   extends: [
-    'config:recommended',
-    'helpers:pinGitHubActionDigests',
-    'github>aquaproj/aqua-renovate-config#2.2.0',
-    'github>aquaproj/aqua-renovate-config:file#2.2.0(aqua/.*\\.ya?ml)',
-    'github>suzuki-shunsuke/renovate-config#2.3.0',
-    'github>suzuki-shunsuke/renovate-config:nolimit#2.3.0',
-    'github>suzuki-shunsuke/renovate-config:action-go-version#2.3.0',
+    'github>aquaproj/aqua-renovate-config#2.2.1',
+    'github>aquaproj/aqua-renovate-config:file#2.2.1(aqua/.*\\.ya?ml)',
+    'github>suzuki-shunsuke/renovate-config#2.4.0',
+    'github>suzuki-shunsuke/renovate-config:nolimit#2.4.0',
+    'github>suzuki-shunsuke/renovate-config:action-go-version#2.4.0',
   ],
 }
