@@ -62,14 +62,21 @@ func HandleExit(err error) int {
 	logE := logrus.NewEntry(logrus.New())
 
 	if exitErr, ok := err.(ExitCoder); ok { //nolint:errorlint
-		if err.Error() != "" {
+		errMsg := err.Error()
+		if errMsg != "" {
 			if _, ok := exitErr.(ErrorFormatter); ok {
 				logrus.Errorf("%+v", err)
 			} else {
 				logerr.WithError(logE, err).Error("tfcmt failed")
 			}
 		}
-		return exitErr.ExitCode()
+		if code := exitErr.ExitCode(); code != 0 {
+			return code
+		}
+		if errMsg == "" {
+			return ExitCodeOK
+		}
+		return ExitCodeError
 	}
 
 	logerr.WithError(logE, err).Error("tfcmt failed")

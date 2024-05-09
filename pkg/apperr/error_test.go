@@ -20,7 +20,7 @@ func TestHandleError(t *testing.T) {
 		{
 			name:     "case 1",
 			err:      NewExitError(0, errors.New("error")),
-			exitCode: 0,
+			exitCode: 1,
 		},
 		{
 			name:     "case 2",
