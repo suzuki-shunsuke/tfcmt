@@ -143,7 +143,7 @@ func avoidHTMLEscape(text string) htmltemplate.HTML {
 }
 
 func wrapCode(text string) interface{} {
-	if len(text) > 60000 { //nolint:gomnd
+	if len(text) > 60000 { //nolint:mnd
 		text = text[:20000] + `
 
 # ...

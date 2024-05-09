@@ -87,14 +87,14 @@ func NewApplyParser() *ApplyParser {
 }
 
 func extractResource(pattern *regexp.Regexp, line string) string {
-	if arr := pattern.FindStringSubmatch(line); len(arr) == 2 { //nolint:gomnd
+	if arr := pattern.FindStringSubmatch(line); len(arr) == 2 { //nolint:mnd
 		return arr[1]
 	}
 	return ""
 }
 
 func extractMovedResource(pattern *regexp.Regexp, line string) *MovedResource {
-	if arr := pattern.FindStringSubmatch(line); len(arr) == 3 { //nolint:gomnd
+	if arr := pattern.FindStringSubmatch(line); len(arr) == 3 { //nolint:mnd
 		return &MovedResource{
 			Before: arr[1],
 			After:  arr[2],
