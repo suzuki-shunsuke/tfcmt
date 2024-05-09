@@ -858,7 +858,6 @@ Plan: 1 to import, 2 to add, 2 to change, 1 to destroy.`,
 		},
 	}
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
 			result := NewPlanParser().Parse(testCase.body)
@@ -907,7 +906,6 @@ func TestApplyParserParse(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
 			result := NewApplyParser().Parse(testCase.body)
