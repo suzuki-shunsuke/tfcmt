@@ -69,7 +69,11 @@ func HandleExit(err error) int {
 				logerr.WithError(logE, err).Error("tfcmt failed")
 			}
 		}
-		return exitErr.ExitCode()
+		code := exitErr.ExitCode()
+		if code == 0 {
+			return ExitCodeError
+		}
+		return code
 	}
 
 	logerr.WithError(logE, err).Error("tfcmt failed")
