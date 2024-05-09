@@ -19,7 +19,7 @@ func New(flags *LDFlags) *cli.App {
 	app.Name = "tfcmt"
 	app.Usage = "Notify the execution result of terraform command"
 	app.Version = flags.AppVersion()
-	app.ExitErrHandler = func(cCtx *cli.Context, err error) {}
+	app.ExitErrHandler = func(*cli.Context, error) {}
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
 			Name:    "owner",
