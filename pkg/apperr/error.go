@@ -62,7 +62,8 @@ func HandleExit(err error) int {
 	logE := logrus.NewEntry(logrus.New())
 
 	if exitErr, ok := err.(ExitCoder); ok { //nolint:errorlint
-		if err.Error() != "" {
+		errMsg := err.Error()
+		if errMsg != "" {
 			if _, ok := exitErr.(ErrorFormatter); ok {
 				logrus.Errorf("%+v", err)
 			} else {
@@ -71,6 +72,9 @@ func HandleExit(err error) int {
 		}
 		if code := exitErr.ExitCode(); code != 0 {
 			return code
+		}
+		if errMsg == "" {
+			return ExitCodeOK
 		}
 		return ExitCodeError
 	}
