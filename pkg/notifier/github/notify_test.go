@@ -60,20 +60,20 @@ func TestNotifyApply(t *testing.T) { //nolint:tparallel
 	}
 
 	for i, testCase := range testCases {
-		testCase := testCase
 		if testCase.name == "" {
 			t.Fatalf("testCase.name is required: index: %d", i)
 		}
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			client, err := NewClient(context.Background(), &testCase.config)
+			cfg := testCase.config
+			client, err := NewClient(context.Background(), &cfg)
 			if err != nil {
 				t.Fatal(err)
 			}
 			api := newFakeAPI()
 			client.API = &api
-
-			if err := client.Notify.Apply(context.Background(), &testCase.paramExec); (err == nil) != testCase.ok {
+			paramExec := testCase.paramExec
+			if err := client.Notify.Apply(context.Background(), &paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
 		})
@@ -259,19 +259,20 @@ func TestNotifyPlan(t *testing.T) { //nolint:tparallel
 	}
 
 	for i, testCase := range testCases {
-		testCase := testCase
 		if testCase.name == "" {
 			t.Fatalf("testCase.name is required: index: %d", i)
 		}
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			client, err := NewClient(context.Background(), &testCase.config)
+			cfg := testCase.config
+			client, err := NewClient(context.Background(), &cfg)
 			if err != nil {
 				t.Fatal(err)
 			}
 			api := newFakeAPI()
 			client.API = &api
-			if err := client.Notify.Plan(context.Background(), &testCase.paramExec); (err == nil) != testCase.ok {
+			paramExec := testCase.paramExec
+			if err := client.Notify.Plan(context.Background(), &paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
 		})

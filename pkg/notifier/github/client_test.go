@@ -52,10 +52,10 @@ func TestNewClient(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Setenv("GITHUB_TOKEN", testCase.envToken)
-			_, err := NewClient(context.Background(), &testCase.config)
+			cfg := testCase.config
+			_, err := NewClient(context.Background(), &cfg)
 			if err == nil {
 				return
 			}
@@ -130,10 +130,10 @@ func TestNewClientWithBaseURL(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Setenv(EnvBaseURL, testCase.envBaseURL)
-			c, err := NewClient(context.Background(), &testCase.config)
+			cfg := testCase.config
+			c, err := NewClient(context.Background(), &cfg)
 			if err != nil {
 				t.Fatal(err)
 			}

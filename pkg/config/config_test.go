@@ -91,7 +91,6 @@ This plan contains **resource deletion**. Please check the plan result very care
 	}
 
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run(testCase.file, func(t *testing.T) {
 			t.Parallel()
 			var cfg Config
@@ -191,7 +190,6 @@ func TestFind(t *testing.T) { //nolint:paralleltest
 	}
 	var cfg Config
 	for _, testCase := range testCases { //nolint:paralleltest
-		testCase := testCase
 		t.Run(testCase.file, func(t *testing.T) {
 			createDummy(testCase.file)
 			actual, err := cfg.Find(testCase.file)

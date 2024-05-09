@@ -47,16 +47,17 @@ func TestCommentPost(t *testing.T) { //nolint:tparallel
 	}
 
 	for _, testCase := range testCases {
-		testCase := testCase
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
-			client, err := NewClient(context.Background(), &testCase.config)
+			cfg := testCase.config
+			client, err := NewClient(context.Background(), &cfg)
 			if err != nil {
 				t.Fatal(err)
 			}
 			api := newFakeAPI()
 			client.API = &api
-			err = client.Comment.Post(context.Background(), testCase.body, &testCase.opt)
+			opt := testCase.opt
+			err = client.Comment.Post(context.Background(), testCase.body, &opt)
 			if (err == nil) != testCase.ok {
 				t.Errorf("got error %q", err)
 			}
