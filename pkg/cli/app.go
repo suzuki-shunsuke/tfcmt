@@ -56,11 +56,11 @@ func New(flags *LDFlags) *cli.App {
 		},
 		&cli.StringSliceFlag{
 			Name:  "var",
-			Usage: "template variables. The format of value is '<name>:<value>'",
+			Usage: "template variables. The format of value is '<name>:<value>'. You can refer to the variable in the comment and label template using {{.Vars.<variable name>}}.",
 		},
 		&cli.StringFlag{
 			Name:  "output",
-			Usage: "specify file to output result instead of post comment",
+			Usage: "specify file to output result instead of posting a comment",
 		},
 	}
 	app.Commands = []*cli.Command{
