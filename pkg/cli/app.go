@@ -81,6 +81,11 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 					Name:  "skip-no-changes",
 					Usage: "If there is no change tfcmt updates a label but doesn't post a comment",
 				},
+				&cli.BoolFlag{
+					Name:    "disable-label",
+					Usage:   "Disable to add or update a label",
+					EnvVars: []string{"TFCMT_DISABLE_LABEL"},
+				},
 			},
 		},
 		{

@@ -81,5 +81,9 @@ func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error { //no
 	}
 	cfg.Masks = masks
 
+	if ctx.IsSet("disable-label") {
+		cfg.Terraform.Plan.DisableLabel = ctx.Bool("disable-label")
+	}
+
 	return nil
 }
