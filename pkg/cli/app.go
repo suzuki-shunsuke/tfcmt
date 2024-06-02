@@ -65,8 +65,12 @@ func New(flags *LDFlags) *cli.App {
 	}
 	app.Commands = []*cli.Command{
 		{
-			Name:   "plan",
-			Usage:  "Run terraform plan and post a comment to GitHub commit or pull request",
+			Name:      "plan",
+			ArgsUsage: " <command> <args>...",
+			Usage:     "Run terraform plan and post a comment to GitHub commit, pull request, or issue",
+			Description: `Run terraform plan and post a comment to GitHub commit, pull request, or issue.
+
+$ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<terraform plan options>]`,
 			Action: cmdPlan,
 			Flags: []cli.Flag{
 				&cli.BoolFlag{
@@ -80,8 +84,12 @@ func New(flags *LDFlags) *cli.App {
 			},
 		},
 		{
-			Name:   "apply",
-			Usage:  "Run terraform apply and post a comment to GitHub commit or pull request",
+			Name:      "apply",
+			ArgsUsage: " <command> <args>...",
+			Usage:     "Run terraform apply and post a comment to GitHub commit, pull request, or issue",
+			Description: `Run terraform apply and post a comment to GitHub commit, pull request, or issue.
+
+$ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`,
 			Action: cmdApply,
 		},
 		{
