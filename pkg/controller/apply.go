@@ -17,6 +17,9 @@ import (
 
 // Apply sends the notification with notifier
 func (ctrl *Controller) Apply(ctx context.Context, command Command) error {
+	if command.Cmd == "" {
+		return errors.New("no command specified")
+	}
 	if err := platform.Complement(&ctrl.Config); err != nil {
 		return err
 	}
