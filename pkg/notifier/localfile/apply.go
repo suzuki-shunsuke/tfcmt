@@ -15,6 +15,7 @@ func (g *NotifyService) Apply(_ context.Context, param *notifier.ParamExec) erro
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
+	template.IsLocal = true
 	var errMsgs []string
 
 	result := parser.Parse(param.CombinedOutput)
