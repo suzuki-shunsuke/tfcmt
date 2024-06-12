@@ -96,6 +96,7 @@ type CommonTemplate struct {
 
 // Template is a default template for terraform commands
 type Template struct {
+	IsLocal  bool
 	Template string
 	CommonTemplate
 }
@@ -142,16 +143,7 @@ func avoidHTMLEscape(text string) htmltemplate.HTML {
 	return htmltemplate.HTML(text) //nolint:gosec
 }
 
-func wrapCode(text string) interface{} {
-	if len(text) > 60000 { //nolint:mnd
-		text = text[:20000] + `
-
-# ...
-# ... The maximum length of GitHub Comment is 65536, so the content is omitted by tfcmt.
-# ...
-
-` + text[len(text)-20000:]
-	}
+func wrapCodeWithoutTrim(text string) interface{} {
 	if strings.Contains(text, "```") {
 		if strings.Contains(text, "~~~") {
 			return htmltemplate.HTML(`<pre><code>` + htmltemplate.HTMLEscapeString(text) + `</code></pre>`) //nolint:gosec
@@ -161,10 +153,31 @@ func wrapCode(text string) interface{} {
 	return htmltemplate.HTML("\n```hcl\n" + text + "\n```\n") //nolint:gosec
 }
 
-func generateOutput(kind, template string, data map[string]interface{}, useRawOutput bool) (string, error) {
-	var b bytes.Buffer
+func trim(text string) string {
+	if len(text) <= 60000 { //nolint:mnd
+		return text
+	}
+	return text[:20000] + `
 
-	if useRawOutput {
+# ...
+# ... The maximum length of GitHub Comment is 65536, so the content is omitted by tfcmt.
+# ...
+
+` + text[len(text)-20000:]
+}
+
+func wrapCode(text string) interface{} {
+	return wrapCodeWithoutTrim(trim(text))
+}
+
+func (t *Template) generateOutput(kind, template string, data map[string]interface{}) (string, error) {
+	var b bytes.Buffer
+	wrapCode := wrapCode
+	if t.IsLocal {
+		wrapCode = wrapCodeWithoutTrim
+	}
+
+	if t.UseRawOutput {
 		tpl, err := texttemplate.New(kind).Funcs(texttemplate.FuncMap{
 			"avoidHTMLEscape": avoidHTMLEscape,
 			"wrapCode":        wrapCode,
@@ -277,7 +290,7 @@ _This feature was introduced from [Terraform v0.15.4](https://github.com/hashico
 		templates[k] = v
 	}
 
-	resp, err := generateOutput("default", addTemplates(t.Template, templates), data, t.UseRawOutput)
+	resp, err := t.generateOutput("default", addTemplates(t.Template, templates), data)
 	if err != nil {
 		return "", err
 	}
