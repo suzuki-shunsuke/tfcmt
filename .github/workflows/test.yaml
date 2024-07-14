@@ -9,7 +9,7 @@ jobs:
   test:
     uses: suzuki-shunsuke/go-test-full-workflow/.github/workflows/test.yaml@23aa902bce3eb45e7c0b80c34e63c572af5209ce # v1.0.1
     with:
-      aqua_version: v2.29.0
+      aqua_version: v2.29.1
       go-version: 1.22.5
       golangci-lint-timeout: 120s
     secrets:
