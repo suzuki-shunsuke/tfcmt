@@ -57,8 +57,8 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/suzuki-shunsuke/github-comment-metadata v0.1.0 h1:89uGvBINoWZ4p2dGj7S695bm/L1H175eMp/D47ltSPs=
 github.com/suzuki-shunsuke/github-comment-metadata v0.1.0/go.mod h1:GNDhEmWAJ6Bbk9rIds0mAMF4noyPV3EqwqLetnEoNLg=
-github.com/suzuki-shunsuke/go-ci-env/v3 v3.0.1 h1:deCm9of48iwRq0Axg3ne8mx/26h3ok9QSipt3kdM6U0=
-github.com/suzuki-shunsuke/go-ci-env/v3 v3.0.1/go.mod h1:VmLj5u0w7Yf/IJIzZ+TWiB7mVT3pRKPMeb0Jssk7YsA=
+github.com/suzuki-shunsuke/go-ci-env/v3 v3.1.0 h1:WHVT7TZTVITrKiIvW7i5+4vr8ebxD6oXGRffixIXNJU=
+github.com/suzuki-shunsuke/go-ci-env/v3 v3.1.0/go.mod h1:qnHYP5fJLLNKqOwxCfix7XVzQGfbF72vbGgLhl8X2vA=
 github.com/suzuki-shunsuke/go-findconfig v1.2.0 h1:PWHIyKZEsVmZVh6+K+rHVw0/XjTFmQEYfa8ZIzIJd0c=
 github.com/suzuki-shunsuke/go-findconfig v1.2.0/go.mod h1:lXzJUZQXrgsMmpHxXMVrWUAQpE4EopgDEJbwslvKbzs=
 github.com/suzuki-shunsuke/logrus-error v0.1.4 h1:nWo98uba1fANHdZ9Y5pJ2RKs/PpVjrLzRp5m+mRb9KE=
