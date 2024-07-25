@@ -7,7 +7,7 @@ permissions: {}
 
 jobs:
   test:
-    uses: suzuki-shunsuke/go-test-full-workflow/.github/workflows/test.yaml@23aa902bce3eb45e7c0b80c34e63c572af5209ce # v1.0.1
+    uses: suzuki-shunsuke/go-test-full-workflow/.github/workflows/test.yaml@cdb855906b55b11a56edc7268ab613cf36b3505c # v1.1.0
     with:
       aqua_version: v2.30.0
       go-version: 1.22.5
