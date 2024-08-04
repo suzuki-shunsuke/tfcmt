@@ -2,6 +2,7 @@ package cli
 
 import (
 	"errors"
+	"os"
 	"strings"
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
@@ -83,6 +84,13 @@ func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error { //no
 
 	if ctx.IsSet("disable-label") {
 		cfg.Terraform.Plan.DisableLabel = ctx.Bool("disable-label")
+	}
+
+	if cfg.GHEBaseURL == "" {
+		cfg.GHEBaseURL = os.Getenv("GITHUB_API_URL")
+	}
+	if cfg.GHEGraphQLEndpoint == "" {
+		cfg.GHEGraphQLEndpoint = os.Getenv("GITHUB_GRAPHQL_URL")
 	}
 
 	return nil
