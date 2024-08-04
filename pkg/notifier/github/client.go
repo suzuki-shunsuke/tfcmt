@@ -84,10 +84,9 @@ func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
 		return nil, err
 	}
 
-	ts := oauth2.StaticTokenSource(
+	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
-	)
-	tc := oauth2.NewClient(ctx, ts)
+	))
 	client := github.NewClient(tc)
 
 	baseURL := cfg.BaseURL
