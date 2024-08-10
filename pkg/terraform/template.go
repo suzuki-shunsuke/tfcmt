@@ -143,7 +143,11 @@ func avoidHTMLEscape(text string) htmltemplate.HTML {
 }
 
 func wrapCode(text string) interface{} {
+	header := ""
 	if len(text) > 60000 { //nolint:mnd
+		header = `> [!WARNING]  
+> The content is too long, so it is omitted by tfcmt.
+`
 		text = text[:20000] + `
 
 # ...
@@ -154,11 +158,11 @@ func wrapCode(text string) interface{} {
 	}
 	if strings.Contains(text, "```") {
 		if strings.Contains(text, "~~~") {
-			return htmltemplate.HTML(`<pre><code>` + htmltemplate.HTMLEscapeString(text) + `</code></pre>`) //nolint:gosec
+			return htmltemplate.HTML(header + `<pre><code>` + htmltemplate.HTMLEscapeString(text) + `</code></pre>`) //nolint:gosec
 		}
-		return htmltemplate.HTML("\n~~~hcl\n" + text + "\n~~~\n") //nolint:gosec
+		return htmltemplate.HTML(header + "\n~~~hcl\n" + text + "\n~~~\n") //nolint:gosec
 	}
-	return htmltemplate.HTML("\n```hcl\n" + text + "\n```\n") //nolint:gosec
+	return htmltemplate.HTML(header + "\n```hcl\n" + text + "\n```\n") //nolint:gosec
 }
 
 func generateOutput(kind, template string, data map[string]interface{}, useRawOutput bool) (string, error) {
