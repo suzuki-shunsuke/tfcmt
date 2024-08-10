@@ -145,9 +145,8 @@ func avoidHTMLEscape(text string) htmltemplate.HTML {
 func wrapCode(text string) interface{} {
 	header := ""
 	if len(text) > 60000 { //nolint:mnd
-		header = `> [!WARNING]  
-> The content is too long, so it is omitted by tfcmt.
-`
+		header = ":warning: **The content is too long, so it is omitted by tfcmt.** :warning:\n"
+
 		text = text[:20000] + `
 
 # ...
