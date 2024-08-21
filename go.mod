@@ -7,7 +7,7 @@ toolchain go1.22.6
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/google/go-cmp v0.6.0
-	github.com/google/go-github/v63 v63.0.0
+	github.com/google/go-github/v64 v64.0.0
 	github.com/mattn/go-colorable v0.1.13
 	github.com/shurcooL/githubv4 v0.0.0-20240429030203-be2daab69064
 	github.com/sirupsen/logrus v1.9.3
