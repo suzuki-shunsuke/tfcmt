@@ -16,19 +16,19 @@ import (
 )
 
 // Apply sends the notification with notifier
-func (ctrl *Controller) Apply(ctx context.Context, command Command) error {
+func (c *Controller) Apply(ctx context.Context, command Command) error {
 	if command.Cmd == "" {
 		return errors.New("no command specified")
 	}
-	if err := platform.Complement(&ctrl.Config); err != nil {
+	if err := platform.Complement(&c.Config); err != nil {
 		return err
 	}
 
-	if err := ctrl.Config.Validate(); err != nil {
+	if err := c.Config.Validate(); err != nil {
 		return err
 	}
 
-	ntf, err := ctrl.getNotifier(ctx)
+	ntf, err := c.getNotifier(ctx)
 	if err != nil {
 		return err
 	}
@@ -45,8 +45,8 @@ func (ctrl *Controller) Apply(ctx context.Context, command Command) error {
 	uncolorizedStdout := colorable.NewNonColorable(stdout)
 	uncolorizedStderr := colorable.NewNonColorable(stderr)
 	uncolorizedCombinedOutput := colorable.NewNonColorable(combinedOutput)
-	cmd.Stdout = io.MultiWriter(mask.NewWriter(os.Stdout, ctrl.Config.Masks), uncolorizedStdout, uncolorizedCombinedOutput)
-	cmd.Stderr = io.MultiWriter(mask.NewWriter(os.Stderr, ctrl.Config.Masks), uncolorizedStderr, uncolorizedCombinedOutput)
+	cmd.Stdout = io.MultiWriter(mask.NewWriter(os.Stdout, c.Config.Masks), uncolorizedStdout, uncolorizedCombinedOutput)
+	cmd.Stderr = io.MultiWriter(mask.NewWriter(os.Stderr, c.Config.Masks), uncolorizedStderr, uncolorizedCombinedOutput)
 	setCancel(cmd)
 	_ = cmd.Run()
 
@@ -54,7 +54,7 @@ func (ctrl *Controller) Apply(ctx context.Context, command Command) error {
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
-		CIName:         ctrl.Config.CI.Name,
+		CIName:         c.Config.CI.Name,
 		ExitCode:       cmd.ProcessState.ExitCode(),
 	}))
 }
