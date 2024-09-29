@@ -76,10 +76,10 @@ func (g *CommentService) listIssueComment(ctx context.Context, owner, repo strin
 			} `graphql:"issue(number: $issueNumber)"`
 		} `graphql:"repository(owner: $repositoryOwner, name: $repositoryName)"`
 	}
-	variables := map[string]interface{}{
+	variables := map[string]any{
 		"repositoryOwner": githubv4.String(owner),
 		"repositoryName":  githubv4.String(repo),
-		"issueNumber":     githubv4.Int(number),
+		"issueNumber":     githubv4.Int(number),    //nolint:gosec
 		"commentsCursor":  (*githubv4.String)(nil), // Null after argument to get first page.
 	}
 
@@ -115,7 +115,7 @@ func (g *CommentService) listPRComment(ctx context.Context, owner, repo string, 
 	variables := map[string]interface{}{
 		"repositoryOwner": githubv4.String(owner),
 		"repositoryName":  githubv4.String(repo),
-		"issueNumber":     githubv4.Int(number),
+		"issueNumber":     githubv4.Int(number),    //nolint:gosec
 		"commentsCursor":  (*githubv4.String)(nil), // Null after argument to get first page.
 	}
 
