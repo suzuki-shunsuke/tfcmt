@@ -106,35 +106,35 @@ type Apply struct {
 }
 
 // LoadFile binds the config file to Config structure
-func (cfg *Config) LoadFile(path string) error {
+func (c *Config) LoadFile(path string) error {
 	if _, err := os.Stat(path); err != nil {
 		return fmt.Errorf("%s: no config file", path)
 	}
 	raw, _ := os.ReadFile(path)
-	return yaml.Unmarshal(raw, cfg)
+	return yaml.Unmarshal(raw, c)
 }
 
 // Validate validates config file
-func (cfg *Config) Validate() error {
-	if cfg.Output != "" {
+func (c *Config) Validate() error {
+	if c.Output != "" {
 		return nil
 	}
-	if cfg.CI.Owner == "" {
+	if c.CI.Owner == "" {
 		return errors.New("repository owner is missing")
 	}
 
-	if cfg.CI.Repo == "" {
+	if c.CI.Repo == "" {
 		return errors.New("repository name is missing")
 	}
 
-	if cfg.CI.SHA == "" && cfg.CI.PRNumber <= 0 {
+	if c.CI.SHA == "" && c.CI.PRNumber <= 0 {
 		return errors.New("pull request number or SHA (revision) is needed")
 	}
 	return nil
 }
 
 // Find returns config path
-func (cfg *Config) Find(file string) (string, error) {
+func (c *Config) Find(file string) (string, error) {
 	if file != "" {
 		if _, err := os.Stat(file); err == nil {
 			return file, nil

@@ -10,8 +10,8 @@ type LDFlags struct {
 	Date    string
 }
 
-func (flags *LDFlags) AppVersion() string {
-	return flags.Version + " (" + flags.Commit + ")"
+func (f *LDFlags) AppVersion() string {
+	return f.Version + " (" + f.Commit + ")"
 }
 
 func New(flags *LDFlags) *cli.App {
