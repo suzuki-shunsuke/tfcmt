@@ -4,6 +4,5 @@
     'github>aquaproj/aqua-renovate-config:file#2.3.1(aqua/.*\\.ya?ml)',
     'github>suzuki-shunsuke/renovate-config#2.4.0',
     'github>suzuki-shunsuke/renovate-config:nolimit#2.4.0',
-    'github>suzuki-shunsuke/renovate-config:action-go-version#2.4.0',
   ],
 }
