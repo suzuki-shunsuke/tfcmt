@@ -950,7 +950,7 @@ func TestTrimLastNewline(t *testing.T) {
 	for _, testCase := range testCases {
 		actual := trimLastNewline(testCase.data)
 		if diff := cmp.Diff(actual, testCase.expected); diff != "" {
-			t.Errorf(diff)
+			t.Error(diff)
 		}
 	}
 }

@@ -1,8 +1,6 @@
 module github.com/suzuki-shunsuke/tfcmt/v4
 
-go 1.22
-
-toolchain go1.22.6
+go 1.23.1
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
