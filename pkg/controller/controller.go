@@ -170,6 +170,7 @@ func (c *Controller) getNotifier(ctx context.Context) (notifier.Notifier, error)
 		Templates:          c.Config.Templates,
 		Patch:              c.Config.PlanPatch,
 		SkipNoChanges:      c.Config.Terraform.Plan.WhenNoChanges.DisableComment,
+		IgnoreWarning:      c.Config.Terraform.Plan.IgnoreWarning,
 		Masks:              c.Config.Masks,
 	})
 	if err != nil {

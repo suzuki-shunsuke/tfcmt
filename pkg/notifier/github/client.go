@@ -54,6 +54,7 @@ type Config struct {
 	UseRawOutput     bool
 	Patch            bool
 	SkipNoChanges    bool
+	IgnoreWarning    bool
 	Masks            []*config.Mask
 }
 

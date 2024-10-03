@@ -39,6 +39,10 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		errMsgs = append(errMsgs, g.updateLabels(ctx, result)...)
 	}
 
+	if cfg.IgnoreWarning {
+		result.Warning = ""
+	}
+
 	template.SetValue(terraform.CommonTemplate{
 		Result:                 result.Result,
 		ChangedResult:          result.ChangedResult,
