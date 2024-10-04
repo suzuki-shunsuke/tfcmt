@@ -63,6 +63,7 @@ type Plan struct {
 	WhenPlanError       WhenPlanError       `yaml:"when_plan_error"`
 	WhenParseError      WhenParseError      `yaml:"when_parse_error"`
 	DisableLabel        bool                `yaml:"disable_label"`
+	IgnoreWarning       bool                `yaml:"ignore_warning"`
 }
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
