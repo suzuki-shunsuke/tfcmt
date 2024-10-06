@@ -4,7 +4,7 @@ package github
 import (
 	"context"
 
-	"github.com/google/go-github/v65/github"
+	"github.com/google/go-github/v66/github"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
