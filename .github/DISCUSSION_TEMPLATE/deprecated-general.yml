@@ -3,12 +3,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## :warning: Please use the issue template instead
+        # :warning: Please create an Issue instead
 
-        We don't accept new discussions anymore.
+        [We don't accept new discussions anymore](https://github.com/suzuki-shunsuke/tfcmt/issues/1506).
         We keep this discussion category only for existing discussions.
 
-        [Please create an issue](https://github.com/suzuki-shunsuke/tfcmt/issues/new).
+        [Please create an issue](https://github.com/suzuki-shunsuke/tfcmt/issues/new?assignees=&labels=no-fit-template&projects=&template=general.yml).
   # At least one input item is required, so we add a dummy checkbox.
   - type: checkboxes
     attributes:

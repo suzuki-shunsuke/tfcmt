@@ -38,6 +38,6 @@ body:
   - type: textarea
     id: note
     attributes:
-      label: note
+      label: Note
     validations:
       required: false
