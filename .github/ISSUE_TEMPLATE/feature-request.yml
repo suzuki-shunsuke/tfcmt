@@ -7,7 +7,6 @@ body:
     id: feature-overview
     attributes:
       label: Feature Overview
-      value:
     validations:
       required: true
   - type: textarea
