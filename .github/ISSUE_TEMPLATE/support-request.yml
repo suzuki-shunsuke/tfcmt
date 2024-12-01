@@ -1,9 +1,9 @@
-name: Bug Report
+name: Support Request
 description: |
-  Please report the bug of tfcmt.
-  If you're not sure if it's a bug or not, please use the template `Support Request` instead.
+  Please use this template when you face any problem (not bug) and need our help.
+  If you're not sure if it's a bug or not, please use this template.
 labels:
-  - bug
+  - support-request
 body:
   - type: textarea
     id: tfcmt-version
