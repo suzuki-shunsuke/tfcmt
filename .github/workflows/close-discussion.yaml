@@ -16,5 +16,5 @@ jobs:
           message: |
             This discussion is closed because we stopped using GitHub Discussions.
             We don't accept new discussions anymore.
-            Please create an issue instead.
+            [Please create an issue instead.](https://github.com/suzuki-shunsuke/tfcmt/issues/new/choose)
             For details, please see https://github.com/suzuki-shunsuke/tfcmt/issues/1506
