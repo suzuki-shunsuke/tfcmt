@@ -3,9 +3,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## :warning: Please use the issue template instead
+        # :warning: Please create an Issue instead
 
-        We don't accept new discussions anymore.
+        [We don't accept new discussions anymore](https://github.com/suzuki-shunsuke/tfcmt/issues/1506).
         We keep this discussion category only for existing discussions.
 
         [Please create an issue](https://github.com/suzuki-shunsuke/tfcmt/issues/new?assignees=&labels=bug&projects=&template=bug-report.yml).
