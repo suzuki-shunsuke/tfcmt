@@ -57,18 +57,18 @@ func newFakeAPI() fakeAPI {
 		FakeIssuesCreateComment: func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
 			return &github.IssueComment{
 				ID:   github.Int64(371748792),
-				Body: github.String("comment 1"),
+				Body: github.Ptr("comment 1"),
 			}, nil, nil
 		},
 		FakeIssuesListLabels: func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error) {
 			labels := []*github.Label{
 				{
 					ID:   github.Int64(371748792),
-					Name: github.String("label 1"),
+					Name: github.Ptr("label 1"),
 				},
 				{
 					ID:   github.Int64(371765743),
-					Name: github.String("label 2"),
+					Name: github.Ptr("label 2"),
 				},
 			}
 			return labels, nil, nil
@@ -82,40 +82,40 @@ func newFakeAPI() fakeAPI {
 		FakeRepositoriesCreateComment: func(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error) {
 			return &github.RepositoryComment{
 				ID:       github.Int64(28427394),
-				CommitID: github.String("04e0917e448b662c2b16330fad50e97af16ff27a"),
-				Body:     github.String("comment 1"),
+				CommitID: github.Ptr("04e0917e448b662c2b16330fad50e97af16ff27a"),
+				Body:     github.Ptr("comment 1"),
 			}, nil, nil
 		},
 		FakeRepositoriesListCommits: func(ctx context.Context, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error) {
 			commits := []*github.RepositoryCommit{
 				{
-					SHA: github.String("04e0917e448b662c2b16330fad50e97af16ff27a"),
+					SHA: github.Ptr("04e0917e448b662c2b16330fad50e97af16ff27a"),
 				},
 				{
-					SHA: github.String("04e0917e448b662c2b16330fad50e97af16ff27b"),
+					SHA: github.Ptr("04e0917e448b662c2b16330fad50e97af16ff27b"),
 				},
 				{
-					SHA: github.String("04e0917e448b662c2b16330fad50e97af16ff27c"),
+					SHA: github.Ptr("04e0917e448b662c2b16330fad50e97af16ff27c"),
 				},
 			}
 			return commits, nil, nil
 		},
 		FakeRepositoriesGetCommit: func(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error) {
 			return &github.RepositoryCommit{
-				SHA: github.String(sha),
+				SHA: github.Ptr(sha),
 				Commit: &github.Commit{
-					Message: github.String(sha),
+					Message: github.Ptr(sha),
 				},
 			}, nil, nil
 		},
 		FakePullRequestsListPullRequestsWithCommit: func(ctx context.Context, sha string, opt *github.ListOptions) ([]*github.PullRequest, *github.Response, error) {
 			return []*github.PullRequest{
 				{
-					State:  github.String("open"),
+					State:  github.Ptr("open"),
 					Number: github.Int(1),
 				},
 				{
-					State:  github.String("closed"),
+					State:  github.Ptr("closed"),
 					Number: github.Int(2),
 				},
 			}, nil, nil
