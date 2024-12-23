@@ -56,18 +56,18 @@ func newFakeAPI() fakeAPI {
 	return fakeAPI{
 		FakeIssuesCreateComment: func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
 			return &github.IssueComment{
-				ID:   github.Int64(371748792),
+				ID:   github.Ptr(int64(371748792)),
 				Body: github.Ptr("comment 1"),
 			}, nil, nil
 		},
 		FakeIssuesListLabels: func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error) {
 			labels := []*github.Label{
 				{
-					ID:   github.Int64(371748792),
+					ID:   github.Ptr(int64(371748792)),
 					Name: github.Ptr("label 1"),
 				},
 				{
-					ID:   github.Int64(371765743),
+					ID:   github.Ptr(int64(371765743)),
 					Name: github.Ptr("label 2"),
 				},
 			}
@@ -81,7 +81,7 @@ func newFakeAPI() fakeAPI {
 		},
 		FakeRepositoriesCreateComment: func(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error) {
 			return &github.RepositoryComment{
-				ID:       github.Int64(28427394),
+				ID:       github.Ptr(int64(28427394)),
 				CommitID: github.Ptr("04e0917e448b662c2b16330fad50e97af16ff27a"),
 				Body:     github.Ptr("comment 1"),
 			}, nil, nil
@@ -112,11 +112,11 @@ func newFakeAPI() fakeAPI {
 			return []*github.PullRequest{
 				{
 					State:  github.Ptr("open"),
-					Number: github.Int(1),
+					Number: github.Ptr(1),
 				},
 				{
 					State:  github.Ptr("closed"),
-					Number: github.Int(2),
+					Number: github.Ptr(2),
 				},
 			}, nil, nil
 		},
