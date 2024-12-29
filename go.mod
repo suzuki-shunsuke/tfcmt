@@ -1,15 +1,15 @@
 module github.com/suzuki-shunsuke/tfcmt/v4
 
-go 1.23.1
+go 1.23.4
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/google/go-cmp v0.6.0
 	github.com/google/go-github/v68 v68.0.0
-	github.com/invopop/jsonschema v0.12.0
 	github.com/mattn/go-colorable v0.1.13
 	github.com/shurcooL/githubv4 v0.0.0-20240429030203-be2daab69064
 	github.com/sirupsen/logrus v1.9.3
+	github.com/suzuki-shunsuke/gen-go-jsonschema v0.1.0
 	github.com/suzuki-shunsuke/github-comment-metadata v0.1.0
 	github.com/suzuki-shunsuke/go-ci-env/v3 v3.1.0
 	github.com/suzuki-shunsuke/go-findconfig v1.2.0
@@ -29,6 +29,7 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
+	github.com/invopop/jsonschema v0.12.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect

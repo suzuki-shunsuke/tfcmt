@@ -65,6 +65,8 @@ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKsk=
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
+github.com/suzuki-shunsuke/gen-go-jsonschema v0.1.0 h1:g7askc+nskCkKRWTVOdsAT8nMhwiaVT6Dmlnh6uvITM=
+github.com/suzuki-shunsuke/gen-go-jsonschema v0.1.0/go.mod h1:yFO7h5wwFejxi6jbtazqmk7b/JSBxHcit8DGwb1bhg0=
 github.com/suzuki-shunsuke/github-comment-metadata v0.1.0 h1:89uGvBINoWZ4p2dGj7S695bm/L1H175eMp/D47ltSPs=
 github.com/suzuki-shunsuke/github-comment-metadata v0.1.0/go.mod h1:GNDhEmWAJ6Bbk9rIds0mAMF4noyPV3EqwqLetnEoNLg=
 github.com/suzuki-shunsuke/go-ci-env/v3 v3.1.0 h1:WHVT7TZTVITrKiIvW7i5+4vr8ebxD6oXGRffixIXNJU=
