@@ -34,3 +34,7 @@ tasks:
     description: go install
     usage: go install
     script: go install ./cmd/tfcmt
+  - name: js
+    description: Generate JSON Schema
+    usage: Generate JSON Schema
+    script: "go run ./cmd/gen-jsonschema"
