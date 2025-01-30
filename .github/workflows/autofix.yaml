@@ -20,6 +20,6 @@ jobs:
     permissions: {}
     timeout-minutes: 15
     steps:
-      - uses: suzuki-shunsuke/go-autofix-action@feat-install-gofumpt
+      - uses: suzuki-shunsuke/go-autofix-action@73cda30b328683149eda09e2540006ca76e37bb9 # v0.1.1
         with:
           aqua_version: v2.43.0
