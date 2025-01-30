@@ -1,0 +1,25 @@
+---
+name: autofix.ci
+on: pull_request
+permissions: {}
+jobs:
+  autofix-status-check:
+    # This job is used for main branch's branch protection rule's status check.
+    # If all dependent jobs succeed or are skipped this job succeeds.
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    permissions: {}
+    if: failure()
+    steps:
+      - run: exit 1
+    needs:
+      - fix
+
+  fix:
+    runs-on: ubuntu-24.04
+    permissions: {}
+    timeout-minutes: 15
+    steps:
+      - uses: suzuki-shunsuke/go-autofix-action@73cda30b328683149eda09e2540006ca76e37bb9 # v0.1.1
+        with:
+          aqua_version: v2.43.0
