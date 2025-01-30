@@ -28,4 +28,5 @@ func core() int {
 		Date:    date,
 	})
 	return apperr.HandleExit(app.RunContext(ctx, os.Args))
+
 }

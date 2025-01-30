@@ -1,11 +1,6 @@
 {
   "checksums": [
     {
-      "id": "github_release/github.com/golangci/golangci-lint/v1.63.4/golangci-lint-1.63.4-darwin-amd64.tar.gz",
-      "checksum": "878D017CC360E4FB19510D39852C8189852E3C48E7CE0337577DF73507C97D68",
-      "algorithm": "sha256"
-    },
-    {
       "id": "github_release/github.com/golangci/golangci-lint/v1.63.4/golangci-lint-1.63.4-darwin-arm64.tar.gz",
       "checksum": "A2B630C2AC8466393F0CCBBEDE4462387B6C190697A70BC2298C6D2123F21BBF",
       "algorithm": "sha256"
