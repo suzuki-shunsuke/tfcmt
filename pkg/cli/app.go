@@ -113,5 +113,6 @@ $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`
 			},
 		},
 	}
+	app.Commands = append(app.Commands, newHelpAll(app))
 	return app
 }
