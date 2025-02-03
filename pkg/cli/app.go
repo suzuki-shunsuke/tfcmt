@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"github.com/suzuki-shunsuke/urfave-cli-help-all/helpall"
 	"github.com/urfave/cli/v2"
 )
 
@@ -113,6 +114,6 @@ $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`
 			},
 		},
 	}
-	app.Commands = append(app.Commands, newHelpAll(app))
+	app.Commands = append(app.Commands, helpall.New(app, nil))
 	return app
 }
