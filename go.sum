@@ -77,6 +77,8 @@ github.com/suzuki-shunsuke/logrus-error v0.1.4 h1:nWo98uba1fANHdZ9Y5pJ2RKs/PpVjr
 github.com/suzuki-shunsuke/logrus-error v0.1.4/go.mod h1:WsVvvw6SKSt08/fB2qbnsKIMJA4K1MYCUprqsBJbMiM=
 github.com/suzuki-shunsuke/urfave-cli-help-all v0.0.2 h1:5MQhRCdZz4AbXxZOXjmMFK4PurBJ+h7emFrau9TZaRY=
 github.com/suzuki-shunsuke/urfave-cli-help-all v0.0.2/go.mod h1:sSi6xaUaHfaqu32ECLeyE7NTMv+ZM5dW0JikhllaalY=
+github.com/suzuki-shunsuke/urfave-cli-help-all v0.0.3 h1:T4sxm+cXfIX+4XHvC47ObJKaOU0oQenI70XCU1yParA=
+github.com/suzuki-shunsuke/urfave-cli-help-all v0.0.3/go.mod h1:sSi6xaUaHfaqu32ECLeyE7NTMv+ZM5dW0JikhllaalY=
 github.com/urfave/cli/v2 v2.27.5 h1:WoHEJLdsXr6dDWoJgMq/CboDmyY/8HMMH1fTECbih+w=
 github.com/urfave/cli/v2 v2.27.5/go.mod h1:3Sevf16NykTbInEnD0yKkjDAeZDS0A6bzhBH5hrMvTQ=
 github.com/wk8/go-ordered-map/v2 v2.1.8 h1:5h/BUHu93oj4gIdvHHHGsScSTMijfx5PeYkE/fJgbpc=
