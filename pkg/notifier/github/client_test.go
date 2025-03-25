@@ -137,7 +137,7 @@ func TestNewClientWithBaseURL(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			url := c.Client.BaseURL.String()
+			url := c.BaseURL.String()
 			if url != testCase.expect {
 				t.Errorf("got %q but want %q", url, testCase.expect)
 			}
