@@ -27,40 +27,40 @@ type GitHub struct {
 
 // IssuesCreateComment is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.CreateComment
 func (g *GitHub) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
-	return g.Client.Issues.CreateComment(ctx, g.owner, g.repo, number, comment)
+	return g.Issues.CreateComment(ctx, g.owner, g.repo, number, comment)
 }
 
 func (g *GitHub) IssuesEditComment(ctx context.Context, commentID int64, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
-	return g.Client.Issues.EditComment(ctx, g.owner, g.repo, commentID, comment)
+	return g.Issues.EditComment(ctx, g.owner, g.repo, commentID, comment)
 }
 
 // IssuesAddLabels is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.AddLabelsToIssue
 func (g *GitHub) IssuesAddLabels(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error) {
-	return g.Client.Issues.AddLabelsToIssue(ctx, g.owner, g.repo, number, labels)
+	return g.Issues.AddLabelsToIssue(ctx, g.owner, g.repo, number, labels)
 }
 
 // IssuesListLabels is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.ListLabelsByIssue
 func (g *GitHub) IssuesListLabels(ctx context.Context, number int, opt *github.ListOptions) ([]*github.Label, *github.Response, error) {
-	return g.Client.Issues.ListLabelsByIssue(ctx, g.owner, g.repo, number, opt)
+	return g.Issues.ListLabelsByIssue(ctx, g.owner, g.repo, number, opt)
 }
 
 // IssuesRemoveLabel is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.RemoveLabelForIssue
 func (g *GitHub) IssuesRemoveLabel(ctx context.Context, number int, label string) (*github.Response, error) {
-	return g.Client.Issues.RemoveLabelForIssue(ctx, g.owner, g.repo, number, label)
+	return g.Issues.RemoveLabelForIssue(ctx, g.owner, g.repo, number, label)
 }
 
 // IssuesUpdateLabel is a wrapper of https://pkg.go.dev/github.com/google/go-github/github#IssuesService.EditLabel
 func (g *GitHub) IssuesUpdateLabel(ctx context.Context, label, color string) (*github.Label, *github.Response, error) {
-	return g.Client.Issues.EditLabel(ctx, g.owner, g.repo, label, &github.Label{
+	return g.Issues.EditLabel(ctx, g.owner, g.repo, label, &github.Label{
 		Color: &color,
 	})
 }
 
 // RepositoriesCreateComment is a wrapper of https://godoc.org/github.com/google/go-github/github#RepositoriesService.CreateComment
 func (g *GitHub) RepositoriesCreateComment(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error) {
-	return g.Client.Repositories.CreateComment(ctx, g.owner, g.repo, sha, comment)
+	return g.Repositories.CreateComment(ctx, g.owner, g.repo, sha, comment)
 }
 
 func (g *GitHub) PullRequestsListPullRequestsWithCommit(ctx context.Context, sha string, opt *github.ListOptions) ([]*github.PullRequest, *github.Response, error) {
-	return g.Client.PullRequests.ListPullRequestsWithCommit(ctx, g.owner, g.repo, sha, opt)
+	return g.PullRequests.ListPullRequestsWithCommit(ctx, g.owner, g.repo, sha, opt)
 }
