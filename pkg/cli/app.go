@@ -2,7 +2,7 @@ package cli
 
 import (
 	"github.com/suzuki-shunsuke/urfave-cli-help-all/helpall"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 type LDFlags struct {

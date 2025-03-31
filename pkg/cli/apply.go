@@ -5,7 +5,7 @@ import (
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/controller"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func cmdApply(ctx *cli.Context) error {

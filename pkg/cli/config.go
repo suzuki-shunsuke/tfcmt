@@ -2,7 +2,7 @@ package cli
 
 import (
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func newConfig(ctx *cli.Context) (config.Config, error) {

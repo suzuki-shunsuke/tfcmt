@@ -7,7 +7,7 @@ import (
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func parseVars(vars []string, envs []string, varsM map[string]string) error {
