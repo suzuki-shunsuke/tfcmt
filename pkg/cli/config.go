@@ -5,9 +5,9 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func newConfig(ctx *cli.Context) (config.Config, error) {
+func newConfig(cmd *cli.Command) (config.Config, error) {
 	cfg := config.Config{}
-	confPath, err := cfg.Find(ctx.String("config"))
+	confPath, err := cfg.Find(cmd.String("config"))
 	if err != nil {
 		return cfg, err
 	}

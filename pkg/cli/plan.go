@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"context"
 	"os"
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/controller"
@@ -8,11 +9,11 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func cmdPlan(ctx *cli.Context) error {
-	logLevel := ctx.String("log-level")
+func cmdPlan(ctx context.Context, cmd *cli.Command) error {
+	logLevel := cmd.String("log-level")
 	setLogLevel(logLevel)
 
-	cfg, err := newConfig(ctx)
+	cfg, err := newConfig(cmd)
 	if err != nil {
 		return err
 	}
@@ -21,7 +22,7 @@ func cmdPlan(ctx *cli.Context) error {
 		setLogLevel(logLevel)
 	}
 
-	if err := parseOpts(ctx, &cfg, os.Environ()); err != nil {
+	if err := parseOpts(cmd, &cfg, os.Environ()); err != nil {
 		return err
 	}
 
@@ -31,9 +32,9 @@ func cmdPlan(ctx *cli.Context) error {
 		Template:           terraform.NewPlanTemplate(cfg.Terraform.Plan.Template),
 		ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(cfg.Terraform.Plan.WhenParseError.Template),
 	}
-	args := ctx.Args()
+	args := cmd.Args()
 
-	return t.Plan(ctx.Context, controller.Command{
+	return t.Plan(ctx, controller.Command{
 		Cmd:  args.First(),
 		Args: args.Tail(),
 	})

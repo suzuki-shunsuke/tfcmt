@@ -1,7 +1,9 @@
 package cli
 
 import (
-	"github.com/suzuki-shunsuke/urfave-cli-help-all/helpall"
+	"context"
+
+	"github.com/suzuki-shunsuke/urfave-cli-v3-help-all/helpall"
 	"github.com/urfave/cli/v3"
 )
 
@@ -15,27 +17,27 @@ func (f *LDFlags) AppVersion() string {
 	return f.Version + " (" + f.Commit + ")"
 }
 
-func New(flags *LDFlags) *cli.App {
-	app := cli.NewApp()
+func New(flags *LDFlags) *cli.Command {
+	app := &cli.Command{}
 	app.Name = "tfcmt"
 	app.Usage = "Notify the execution result of terraform command"
 	app.Version = flags.AppVersion()
-	app.ExitErrHandler = func(*cli.Context, error) {}
+	app.ExitErrHandler = func(context.Context, *cli.Command, error) {}
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
 			Name:    "owner",
 			Usage:   "GitHub Repository owner name",
-			EnvVars: []string{"TFCMT_REPO_OWNER"},
+			Sources: cli.EnvVars("TFCMT_REPO_OWNER"),
 		},
 		&cli.StringFlag{
 			Name:    "repo",
 			Usage:   "GitHub Repository name",
-			EnvVars: []string{"TFCMT_REPO_NAME"},
+			Sources: cli.EnvVars("TFCMT_REPO_NAME"),
 		},
 		&cli.StringFlag{
 			Name:    "sha",
 			Usage:   "commit SHA (revision)",
-			EnvVars: []string{"TFCMT_SHA"},
+			Sources: cli.EnvVars("TFCMT_SHA"),
 		},
 		&cli.StringFlag{
 			Name:  "build-url",
@@ -48,12 +50,12 @@ func New(flags *LDFlags) *cli.App {
 		&cli.IntFlag{
 			Name:    "pr",
 			Usage:   "pull request number",
-			EnvVars: []string{"TFCMT_PR_NUMBER"},
+			Sources: cli.EnvVars("TFCMT_PR_NUMBER"),
 		},
 		&cli.StringFlag{
 			Name:    "config",
 			Usage:   "config path",
-			EnvVars: []string{"TFCMT_CONFIG"},
+			Sources: cli.EnvVars("TFCMT_CONFIG"),
 		},
 		&cli.StringSliceFlag{
 			Name:  "var",
@@ -77,22 +79,22 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 				&cli.BoolFlag{
 					Name:    "patch",
 					Usage:   "update an existing comment instead of creating a new comment. If there is no existing comment, a new comment is created.",
-					EnvVars: []string{"TFCMT_PLAN_PATCH"},
+					Sources: cli.EnvVars("TFCMT_PLAN_PATCH"),
 				},
 				&cli.BoolFlag{
 					Name:    "skip-no-changes",
 					Usage:   "If there is no change tfcmt updates a label but doesn't post a comment",
-					EnvVars: []string{"TFCMT_SKIP_NO_CHANGES"},
+					Sources: cli.EnvVars("TFCMT_SKIP_NO_CHANGES"),
 				},
 				&cli.BoolFlag{
 					Name:    "ignore-warning",
 					Usage:   "If skip-no-changes is enabled, comment is posted even if there is a warning. If skip-no-changes is disabled, warning is removed from the comment.",
-					EnvVars: []string{"TFCMT_IGNORE_WARNING"},
+					Sources: cli.EnvVars("TFCMT_IGNORE_WARNING"),
 				},
 				&cli.BoolFlag{
 					Name:    "disable-label",
 					Usage:   "Disable to add or update a label",
-					EnvVars: []string{"TFCMT_DISABLE_LABEL"},
+					Sources: cli.EnvVars("TFCMT_DISABLE_LABEL"),
 				},
 			},
 		},
@@ -108,12 +110,11 @@ $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`
 		{
 			Name:  "version",
 			Usage: "Show version",
-			Action: func(ctx *cli.Context) error {
+			Action: func(_ context.Context, ctx *cli.Command) error {
 				cli.ShowVersion(ctx)
 				return nil
 			},
 		},
-		helpall.New(nil),
 	}
-	return app
+	return helpall.With(app, nil)
 }
