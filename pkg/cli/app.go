@@ -18,12 +18,12 @@ func (f *LDFlags) AppVersion() string {
 }
 
 func New(flags *LDFlags) *cli.Command {
-	app := &cli.Command{}
-	app.Name = "tfcmt"
-	app.Usage = "Notify the execution result of terraform command"
-	app.Version = flags.AppVersion()
-	app.ExitErrHandler = func(context.Context, *cli.Command, error) {}
-	app.Flags = []cli.Flag{
+	cmd := &cli.Command{}
+	cmd.Name = "tfcmt"
+	cmd.Usage = "Notify the execution result of terraform command"
+	cmd.Version = flags.AppVersion()
+	cmd.ExitErrHandler = func(context.Context, *cli.Command, error) {}
+	cmd.Flags = []cli.Flag{
 		&cli.StringFlag{
 			Name:    "owner",
 			Usage:   "GitHub Repository owner name",
@@ -66,7 +66,7 @@ func New(flags *LDFlags) *cli.Command {
 			Usage: "specify file to output result instead of posting a comment",
 		},
 	}
-	app.Commands = []*cli.Command{
+	cmd.Commands = []*cli.Command{
 		{
 			Name:      "plan",
 			ArgsUsage: " <command> <args>...",
@@ -116,5 +116,5 @@ $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`
 			},
 		},
 	}
-	return helpall.With(app, nil)
+	return helpall.With(cmd, nil)
 }
