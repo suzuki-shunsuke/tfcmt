@@ -7,7 +7,7 @@ import (
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func parseVars(vars []string, envs []string, varsM map[string]string) error {
@@ -35,44 +35,44 @@ func parseVarEnvs(envs []string, m map[string]string) {
 	}
 }
 
-func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error { //nolint:cyclop
-	if owner := ctx.String("owner"); owner != "" {
+func parseOpts(cmd *cli.Command, cfg *config.Config, envs []string) error { //nolint:cyclop
+	if owner := cmd.String("owner"); owner != "" {
 		cfg.CI.Owner = owner
 	}
 
-	if repo := ctx.String("repo"); repo != "" {
+	if repo := cmd.String("repo"); repo != "" {
 		cfg.CI.Repo = repo
 	}
 
-	if sha := ctx.String("sha"); sha != "" {
+	if sha := cmd.String("sha"); sha != "" {
 		cfg.CI.SHA = sha
 	}
 
-	if pr := ctx.Int("pr"); pr != 0 {
-		cfg.CI.PRNumber = pr
+	if pr := cmd.Int("pr"); pr != 0 {
+		cfg.CI.PRNumber = int(pr)
 	}
 
-	if ctx.IsSet("patch") {
-		cfg.PlanPatch = ctx.Bool("patch")
+	if cmd.IsSet("patch") {
+		cfg.PlanPatch = cmd.Bool("patch")
 	}
 
-	if buildURL := ctx.String("build-url"); buildURL != "" {
+	if buildURL := cmd.String("build-url"); buildURL != "" {
 		cfg.CI.Link = buildURL
 	}
 
-	if output := ctx.String("output"); output != "" {
+	if output := cmd.String("output"); output != "" {
 		cfg.Output = output
 	}
 
-	if ctx.IsSet("skip-no-changes") {
-		cfg.Terraform.Plan.WhenNoChanges.DisableComment = ctx.Bool("skip-no-changes")
+	if cmd.IsSet("skip-no-changes") {
+		cfg.Terraform.Plan.WhenNoChanges.DisableComment = cmd.Bool("skip-no-changes")
 	}
 
-	if ctx.IsSet("ignore-warning") {
-		cfg.Terraform.Plan.IgnoreWarning = ctx.Bool("ignore-warning")
+	if cmd.IsSet("ignore-warning") {
+		cfg.Terraform.Plan.IgnoreWarning = cmd.Bool("ignore-warning")
 	}
 
-	vars := ctx.StringSlice("var")
+	vars := cmd.StringSlice("var")
 	vm := make(map[string]string, len(vars))
 	if err := parseVars(vars, envs, vm); err != nil {
 		return err
@@ -86,8 +86,8 @@ func parseOpts(ctx *cli.Context, cfg *config.Config, envs []string) error { //no
 	}
 	cfg.Masks = masks
 
-	if ctx.IsSet("disable-label") {
-		cfg.Terraform.Plan.DisableLabel = ctx.Bool("disable-label")
+	if cmd.IsSet("disable-label") {
+		cfg.Terraform.Plan.DisableLabel = cmd.Bool("disable-label")
 	}
 
 	if cfg.GHEBaseURL == "" {

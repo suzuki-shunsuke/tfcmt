@@ -27,5 +27,5 @@ func core() int {
 		Commit:  commit,
 		Date:    date,
 	})
-	return apperr.HandleExit(app.RunContext(ctx, os.Args))
+	return apperr.HandleExit(app.Run(ctx, os.Args))
 }

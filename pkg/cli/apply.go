@@ -1,18 +1,19 @@
 package cli
 
 import (
+	"context"
 	"os"
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/controller"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
-func cmdApply(ctx *cli.Context) error {
-	logLevel := ctx.String("log-level")
+func cmdApply(ctx context.Context, cmd *cli.Command) error {
+	logLevel := cmd.String("log-level")
 	setLogLevel(logLevel)
 
-	cfg, err := newConfig(ctx)
+	cfg, err := newConfig(cmd)
 	if err != nil {
 		return err
 	}
@@ -22,7 +23,7 @@ func cmdApply(ctx *cli.Context) error {
 		setLogLevel(logLevel)
 	}
 
-	if err := parseOpts(ctx, &cfg, os.Environ()); err != nil {
+	if err := parseOpts(cmd, &cfg, os.Environ()); err != nil {
 		return err
 	}
 
@@ -33,9 +34,9 @@ func cmdApply(ctx *cli.Context) error {
 		ParseErrorTemplate: terraform.NewApplyParseErrorTemplate(cfg.Terraform.Apply.WhenParseError.Template),
 	}
 
-	args := ctx.Args()
+	args := cmd.Args()
 
-	return t.Apply(ctx.Context, controller.Command{
+	return t.Apply(ctx, controller.Command{
 		Cmd:  args.First(),
 		Args: args.Tail(),
 	})
