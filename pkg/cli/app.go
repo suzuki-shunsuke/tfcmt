@@ -3,7 +3,7 @@ package cli
 import (
 	"context"
 
-	"github.com/suzuki-shunsuke/urfave-cli-v3-help-all/helpall"
+	"github.com/suzuki-shunsuke/urfave-cli-v3-util/helpall"
 	"github.com/urfave/cli/v3"
 )
 
