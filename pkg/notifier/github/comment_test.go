@@ -1,7 +1,6 @@
 package github
 
 import (
-	"context"
 	"testing"
 )
 
@@ -50,14 +49,14 @@ func TestCommentPost(t *testing.T) { //nolint:tparallel
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
 			cfg := testCase.config
-			client, err := NewClient(context.Background(), &cfg)
+			client, err := NewClient(t.Context(), &cfg)
 			if err != nil {
 				t.Fatal(err)
 			}
 			api := newFakeAPI()
 			client.API = &api
 			opt := testCase.opt
-			err = client.Comment.Post(context.Background(), testCase.body, &opt)
+			err = client.Comment.Post(t.Context(), testCase.body, &opt)
 			if (err == nil) != testCase.ok {
 				t.Errorf("got error %q", err)
 			}

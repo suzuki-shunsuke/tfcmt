@@ -1,7 +1,6 @@
 package github
 
 import (
-	"context"
 	"testing"
 )
 
@@ -21,13 +20,13 @@ func TestPRNumber(t *testing.T) {
 
 	for _, testCase := range testCases {
 		cfg := newFakeConfig()
-		client, err := NewClient(context.Background(), &cfg)
+		client, err := NewClient(t.Context(), &cfg)
 		if err != nil {
 			t.Fatal(err)
 		}
 		api := newFakeAPI()
 		client.API = &api
-		prNumber, err := client.Commits.PRNumber(context.Background(), testCase.revision)
+		prNumber, err := client.Commits.PRNumber(t.Context(), testCase.revision)
 		if (err == nil) != testCase.ok {
 			t.Errorf("got error %q", err)
 		}

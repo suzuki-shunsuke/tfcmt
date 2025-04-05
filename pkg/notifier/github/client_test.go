@@ -1,7 +1,6 @@
 package github
 
 import (
-	"context"
 	"testing"
 )
 
@@ -55,7 +54,7 @@ func TestNewClient(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Setenv("GITHUB_TOKEN", testCase.envToken)
 			cfg := testCase.config
-			_, err := NewClient(context.Background(), &cfg)
+			_, err := NewClient(t.Context(), &cfg)
 			if err == nil {
 				return
 			}
@@ -133,7 +132,7 @@ func TestNewClientWithBaseURL(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Setenv(EnvBaseURL, testCase.envBaseURL)
 			cfg := testCase.config
-			c, err := NewClient(context.Background(), &cfg)
+			c, err := NewClient(t.Context(), &cfg)
 			if err != nil {
 				t.Fatal(err)
 			}
