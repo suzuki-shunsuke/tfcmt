@@ -1,7 +1,6 @@
 package github
 
 import (
-	"context"
 	"testing"
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
@@ -66,14 +65,14 @@ func TestNotifyApply(t *testing.T) { //nolint:tparallel
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
 			cfg := testCase.config
-			client, err := NewClient(context.Background(), &cfg)
+			client, err := NewClient(t.Context(), &cfg)
 			if err != nil {
 				t.Fatal(err)
 			}
 			api := newFakeAPI()
 			client.API = &api
 			paramExec := testCase.paramExec
-			if err := client.Notify.Apply(context.Background(), &paramExec); (err == nil) != testCase.ok {
+			if err := client.Notify.Apply(t.Context(), &paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
 		})
@@ -265,14 +264,14 @@ func TestNotifyPlan(t *testing.T) { //nolint:tparallel
 		t.Run(testCase.name, func(t *testing.T) {
 			t.Parallel()
 			cfg := testCase.config
-			client, err := NewClient(context.Background(), &cfg)
+			client, err := NewClient(t.Context(), &cfg)
 			if err != nil {
 				t.Fatal(err)
 			}
 			api := newFakeAPI()
 			client.API = &api
 			paramExec := testCase.paramExec
-			if err := client.Notify.Plan(context.Background(), &paramExec); (err == nil) != testCase.ok {
+			if err := client.Notify.Plan(t.Context(), &paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
 		})
