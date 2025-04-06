@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: suzuki-shunsuke/release-doc-action@560efc02c732149c268ddd7d285e6ab667a80165 # v0.0.1
+      - uses: suzuki-shunsuke/release-doc-action@fix-action_status
         with:
           repository: suzuki-shunsuke/tfcmt-docs
           issue_number: 1724
