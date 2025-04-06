@@ -17,3 +17,5 @@ jobs:
         with:
           repository: suzuki-shunsuke/tfcmt-docs
           issue_number: 1724
+          publish_dir: build
+          destination_dir: docs
