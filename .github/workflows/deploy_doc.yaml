@@ -1,0 +1,18 @@
+---
+name: Deploy GitHub Pages
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: "*/30 * * * *"
+permissions: {}
+jobs:
+  deploy-doc:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: suzuki-shunsuke/release-doc-action@560efc02c732149c268ddd7d285e6ab667a80165 # v0.0.1
+        with:
+          repository: suzuki-shunsuke/tfcmt-docs
+          issue_number: 1724
