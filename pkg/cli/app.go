@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/suzuki-shunsuke/urfave-cli-v3-util/helpall"
+	"github.com/suzuki-shunsuke/urfave-cli-v3-util/vcmd"
 	"github.com/urfave/cli/v3"
 )
 
@@ -107,14 +108,11 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`,
 			Action: cmdApply,
 		},
-		{
-			Name:  "version",
-			Usage: "Show version",
-			Action: func(_ context.Context, ctx *cli.Command) error {
-				cli.ShowVersion(ctx)
-				return nil
-			},
-		},
+		vcmd.New(&vcmd.Command{
+			Name:    "tfcmt",
+			Version: flags.Version,
+			SHA:     flags.Commit,
+		}),
 	}
 	return helpall.With(cmd, nil)
 }
