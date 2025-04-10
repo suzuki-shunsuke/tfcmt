@@ -107,14 +107,6 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`,
 			Action: cmdApply,
 		},
-		{
-			Name:  "version",
-			Usage: "Show version",
-			Action: func(_ context.Context, ctx *cli.Command) error {
-				cli.ShowVersion(ctx)
-				return nil
-			},
-		},
 	}
 	return helpall.With(cmd, nil)
 }
