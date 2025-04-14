@@ -71,8 +71,6 @@ github.com/suzuki-shunsuke/go-findconfig v1.2.0 h1:PWHIyKZEsVmZVh6+K+rHVw0/XjTFm
 github.com/suzuki-shunsuke/go-findconfig v1.2.0/go.mod h1:lXzJUZQXrgsMmpHxXMVrWUAQpE4EopgDEJbwslvKbzs=
 github.com/suzuki-shunsuke/logrus-error v0.1.4 h1:nWo98uba1fANHdZ9Y5pJ2RKs/PpVjrLzRp5m+mRb9KE=
 github.com/suzuki-shunsuke/logrus-error v0.1.4/go.mod h1:WsVvvw6SKSt08/fB2qbnsKIMJA4K1MYCUprqsBJbMiM=
-github.com/suzuki-shunsuke/urfave-cli-v3-util v0.0.1 h1:Quq1VFm+Tjuf8e13gwXHHlMWIAT7KUH6b8KyLuyJF4A=
-github.com/suzuki-shunsuke/urfave-cli-v3-util v0.0.1/go.mod h1:hnKvR1IZskaS3isZPuO1Ndw9++o+W66pL2kzBAGsglE=
 github.com/suzuki-shunsuke/urfave-cli-v3-util v0.0.2 h1:sgCdlcfyY/EE7K6bbL5fw1nhxnOv3ETEAQRJsBp1hq8=
 github.com/suzuki-shunsuke/urfave-cli-v3-util v0.0.2/go.mod h1:hnKvR1IZskaS3isZPuO1Ndw9++o+W66pL2kzBAGsglE=
 github.com/urfave/cli/v3 v3.1.1 h1:bNnl8pFI5dxPOjeONvFCDFoECLQsceDG4ejahs4Jtxk=
