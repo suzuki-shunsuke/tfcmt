@@ -21,7 +21,14 @@ tasks:
     short: i
     description: go install
     usage: go install
-    script: go install ./cmd/tfcmt
+    script: |
+      sha=""
+      if git diff --quiet; then
+        sha=$(git rev-parse HEAD)
+      fi
+      go install \
+        -ldflags "-X main.version=v1.0.0-local -X main.commit=$sha -X main.date=$(date +"%Y-%m-%dT%H:%M:%SZ%:z" | tr -d '+')" \
+        ./cmd/tfcmt
   - name: js
     description: Generate JSON Schema
     usage: Generate JSON Schema
