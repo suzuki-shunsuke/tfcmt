@@ -49,16 +49,22 @@ func (g *CommentService) Patch(ctx context.Context, body string, commentID int64
 	return err
 }
 
-type ListOptions struct {
-	PRNumber int
-	Owner    string
-	Repo     string
-}
-
 type IssueComment struct {
 	DatabaseID  int
 	Body        string
 	IsMinimized bool
+}
+
+func (g *CommentService) List(ctx context.Context, owner, repo string, number int) ([]*IssueComment, error) {
+	cmts, prErr := g.listPRComment(ctx, owner, repo, number)
+	if prErr == nil {
+		return cmts, nil
+	}
+	cmts, err := g.listIssueComment(ctx, owner, repo, number)
+	if err == nil {
+		return cmts, nil
+	}
+	return nil, fmt.Errorf("get pull request or issue comments: %w, %v", prErr, err) //nolint:errorlint
 }
 
 func (g *CommentService) listIssueComment(ctx context.Context, owner, repo string, number int) ([]*IssueComment, error) { //nolint:dupl
@@ -131,16 +137,4 @@ func (g *CommentService) listPRComment(ctx context.Context, owner, repo string, 
 		variables["commentsCursor"] = githubv4.NewString(q.Repository.PullRequest.Comments.PageInfo.EndCursor)
 	}
 	return allComments, nil
-}
-
-func (g *CommentService) List(ctx context.Context, owner, repo string, number int) ([]*IssueComment, error) {
-	cmts, prErr := g.listPRComment(ctx, owner, repo, number)
-	if prErr == nil {
-		return cmts, nil
-	}
-	cmts, err := g.listIssueComment(ctx, owner, repo, number)
-	if err == nil {
-		return cmts, nil
-	}
-	return nil, fmt.Errorf("get pull request or issue comments: %w, %v", prErr, err) //nolint:errorlint
 }
