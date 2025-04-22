@@ -30,6 +30,20 @@ type Config struct {
 	CI                 string
 	UseRawOutput       bool
 	Masks              []*config.Mask
+
+	// For labeling
+	DisableLabel      bool
+	GitHubLabelConfig *GitHubLabelConfig
+}
+
+type GitHubLabelConfig struct {
+	BaseURL         string
+	GraphQLEndpoint string
+	Owner           string
+	Repo            string
+	PRNumber        int
+	Revision        string
+	Labels          interface{}
 }
 
 type service struct {
