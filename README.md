@@ -28,6 +28,7 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 - [paild, Inc.](https://www.paild.co.jp/)
 - [HMCTS](https://www.gov.uk/government/organisations/hm-courts-and-tribunals-service)
 - [LayerX Inc.](https://layerx.co.jp/) ([ref](https://tech.layerx.co.jp/entry/2025/03/24/113651))
+- [Section-9](https://sec9.co.jp/)
 
 ## License
 
