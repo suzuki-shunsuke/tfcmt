@@ -11,12 +11,12 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 - https://suzuki-shunsuke.github.io/tfcmt/
 - https://github.com/suzuki-shunsuke/tfcmt-docs
 
-> tfcmt supports notifying to only GitHub. If you'd like to notify to GitLab, maybe [tfcmt-gitlab](https://github.com/hirosassa/tfcmt-gitlab), which is a fork of tfcmt for GitLab, is useful.
+> tfcmt only supports notifications for GitHub. For GitLab, try [tfcmt-gitlab](https://github.com/hirosassa/tfcmt-gitlab) (fork of tfcmt).
 
 ## Who uses tfcmt?
 
 > [!NOTE]
-> If you want to add your company or organization to the list, please send a pull request or send a comment to the [GitHub Discussion](https://github.com/suzuki-shunsuke/tfcmt/discussions/1032)!
+> If you want to add your company or organization to the list, please send a pull request!
 
 - Recruit Co., Ltd. - [StudySapuri](https://brand.studysapuri.jp/) and [Quipper](https://www.quipper.com/) product team
 - [Cybozu Inc / Engineering Productivity Team](https://cybozu.co.jp/)
