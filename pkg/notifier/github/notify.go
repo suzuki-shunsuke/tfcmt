@@ -1,22 +1,15 @@
 package github
 
 import (
-	"context"
 	"os"
 
 	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/github-comment-metadata/metadata"
-	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // NotifyService handles communication with the notification related
 // methods of GitHub API
 type NotifyService service
-
-// UpdateLabels updates PR labels
-func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.ParseResult) []string {
-	return g.updateLabels(ctx, result)
-}
 
 func (g *NotifyService) getPatchedComment(logE *logrus.Entry, comments []*IssueComment, target string) *IssueComment {
 	var cmt *IssueComment

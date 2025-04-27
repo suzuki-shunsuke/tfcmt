@@ -69,12 +69,11 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	}
 
 	logE.WithFields(logrus.Fields{
-		"output_file":         cfg.OutputFile,
-		"disable_label":       cfg.DisableLabel,
-		"github_label_config": cfg.GitHubLabelConfig,
+		"output_file":   cfg.OutputFile,
+		"disable_label": cfg.DisableLabel,
 	}).Debugf("update labels")
-	if cfg.OutputFile != "" && !cfg.DisableLabel && cfg.GitHubLabelConfig != nil {
-		errMsgs := updateGitHubLabels(ctx, cfg.GitHubLabelConfig, result)
+	if cfg.OutputFile != "" && !cfg.DisableLabel {
+		errMsgs := g.updateLabels(ctx, result)
 		for _, msg := range errMsgs {
 			logE.Error(msg)
 		}

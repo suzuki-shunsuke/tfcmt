@@ -1,6 +1,8 @@
 package localfile
 
 import (
+	"context"
+
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier/github"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
@@ -14,8 +16,9 @@ type Client struct {
 
 	common service
 
-	Notify *NotifyService
-	Output *OutputService
+	Notify  *NotifyService
+	Output  *OutputService
+	labeler Labeler
 }
 
 // Config is a configuration for local file
@@ -33,8 +36,7 @@ type Config struct {
 	Masks              []*config.Mask
 
 	// For labeling
-	DisableLabel      bool
-	GitHubLabelConfig *GitHubLabelConfig
+	DisableLabel bool
 }
 
 type GitHubLabelConfig struct {
@@ -51,10 +53,15 @@ type service struct {
 	client *Client
 }
 
+type Labeler interface {
+	UpdateLabels(ctx context.Context, result terraform.ParseResult) []string
+}
+
 // NewClient returns Client initialized with Config
-func NewClient(cfg *Config) (*Client, error) {
+func NewClient(cfg *Config, labeler Labeler) (*Client, error) {
 	c := &Client{
-		Config: cfg,
+		Config:  cfg,
+		labeler: labeler,
 	}
 
 	c.common.client = c

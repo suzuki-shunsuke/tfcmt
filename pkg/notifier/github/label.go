@@ -9,7 +9,7 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
-func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string { //nolint:cyclop
+func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.ParseResult) []string { //nolint:cyclop
 	cfg := g.client.Config
 	var (
 		labelToAdd string

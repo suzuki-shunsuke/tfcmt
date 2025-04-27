@@ -3,34 +3,10 @@ package localfile
 import (
 	"context"
 
-	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier/github"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // creates a minimal github.NotifyService and updates labels only.
-func updateGitHubLabels(ctx context.Context, cfg *GitHubLabelConfig, result terraform.ParseResult) []string {
-	if cfg == nil {
-		return []string{"GitHubLabelConfig is nil"}
-	}
-
-	ghcfg := &github.Config{
-		BaseURL:         cfg.BaseURL,
-		GraphQLEndpoint: cfg.GraphQLEndpoint,
-		Owner:           cfg.Owner,
-		Repo:            cfg.Repo,
-		PR: github.PullRequest{
-			Revision: cfg.Revision,
-			Number:   cfg.PRNumber,
-		},
-		ResultLabels: cfg.Labels,
-	}
-	client, err := github.NewClient(ctx, ghcfg)
-	if err != nil {
-		return []string{"failed to create GitHub client: " + err.Error()}
-	}
-	if client.Notify == nil {
-		return []string{"GitHub NotifyService is nil"}
-	}
-	// Call the label update logic directly
-	return client.Notify.UpdateLabels(ctx, result)
+func (g *NotifyService) updateLabels(ctx context.Context, result terraform.ParseResult) []string {
+	return g.client.labeler.UpdateLabels(ctx, result)
 }

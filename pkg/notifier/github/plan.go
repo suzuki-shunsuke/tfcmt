@@ -36,7 +36,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	}
 
 	if cfg.PR.IsNumber() && cfg.ResultLabels.HasAnyLabelDefined() {
-		errMsgs = append(errMsgs, g.updateLabels(ctx, result)...)
+		errMsgs = append(errMsgs, g.UpdateLabels(ctx, result)...)
 	}
 
 	if cfg.IgnoreWarning {
