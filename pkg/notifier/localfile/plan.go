@@ -11,7 +11,7 @@ import (
 )
 
 // Plan posts comment optimized for notifications
-func (g *NotifyService) Plan(_ context.Context, param *notifier.ParamExec) error {
+func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) error {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -27,6 +27,14 @@ func (g *NotifyService) Plan(_ context.Context, param *notifier.ParamExec) error
 		if result.Result == "" {
 			return result.Error
 		}
+	}
+
+	logE := logrus.WithFields(logrus.Fields{
+		"program": "tfcmt",
+	})
+	if !cfg.DisableLabel {
+		logE.Debugf("updating labels")
+		errMsgs = append(errMsgs, g.client.labeler.UpdateLabels(ctx, result)...)
 	}
 
 	template.SetValue(terraform.CommonTemplate{
@@ -57,15 +65,12 @@ func (g *NotifyService) Plan(_ context.Context, param *notifier.ParamExec) error
 		return err
 	}
 
-	logE := logrus.WithFields(logrus.Fields{
-		"program": "tfcmt",
-	})
-
 	body = mask.Mask(body, g.client.Config.Masks)
 
 	logE.Debug("write a plan output to a file")
 	if err := g.client.Output.WriteToFile(body, cfg.OutputFile); err != nil {
 		return fmt.Errorf("write a plan output to a file: %w", err)
 	}
+
 	return nil
 }

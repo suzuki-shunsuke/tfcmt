@@ -131,25 +131,6 @@ func (c *Controller) getNotifier(ctx context.Context) (notifier.Notifier, error)
 		}
 		labels = a
 	}
-	// Write output to file instead of github comment
-	if c.Config.Output != "" {
-		client, err := localfile.NewClient(&localfile.Config{
-			OutputFile:         c.Config.Output,
-			Parser:             c.Parser,
-			UseRawOutput:       c.Config.Terraform.UseRawOutput,
-			CI:                 c.Config.CI.Link,
-			Template:           c.Template,
-			ParseErrorTemplate: c.ParseErrorTemplate,
-			Vars:               c.Config.Vars,
-			EmbeddedVarNames:   c.Config.EmbeddedVarNames,
-			Templates:          c.Config.Templates,
-			Masks:              c.Config.Masks,
-		})
-		if err != nil {
-			return nil, err
-		}
-		return client.Notify, nil
-	}
 	client, err := github.NewClient(ctx, &github.Config{
 		BaseURL:         c.Config.GHEBaseURL,
 		GraphQLEndpoint: c.Config.GHEGraphQLEndpoint,
@@ -175,6 +156,26 @@ func (c *Controller) getNotifier(ctx context.Context) (notifier.Notifier, error)
 	})
 	if err != nil {
 		return nil, err
+	}
+	// Write output to file instead of github comment
+	if c.Config.Output != "" {
+		client, err := localfile.NewClient(&localfile.Config{
+			OutputFile:         c.Config.Output,
+			Parser:             c.Parser,
+			UseRawOutput:       c.Config.Terraform.UseRawOutput,
+			CI:                 c.Config.CI.Link,
+			Template:           c.Template,
+			ParseErrorTemplate: c.ParseErrorTemplate,
+			Vars:               c.Config.Vars,
+			EmbeddedVarNames:   c.Config.EmbeddedVarNames,
+			Templates:          c.Config.Templates,
+			Masks:              c.Config.Masks,
+			DisableLabel:       c.Config.Terraform.Plan.DisableLabel,
+		}, client.Notify)
+		if err != nil {
+			return nil, err
+		}
+		return client.Notify, nil
 	}
 	return client.Notify, nil
 }
