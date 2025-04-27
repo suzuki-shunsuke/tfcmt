@@ -43,7 +43,7 @@ type GitHubLabelConfig struct {
 	Repo            string
 	PRNumber        int
 	Revision        string
-	Labels          interface{}
+	Labels          any
 }
 
 type service struct {
