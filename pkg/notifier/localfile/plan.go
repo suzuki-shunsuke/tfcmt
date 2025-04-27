@@ -73,7 +73,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		"disable_label": cfg.DisableLabel,
 	}).Debugf("update labels")
 	if cfg.OutputFile != "" && !cfg.DisableLabel {
-		errMsgs := g.updateLabels(ctx, result)
+		errMsgs := g.client.labeler.UpdateLabels(ctx, result)
 		for _, msg := range errMsgs {
 			logE.Error(msg)
 		}
