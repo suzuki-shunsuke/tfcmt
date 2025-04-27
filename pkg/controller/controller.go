@@ -157,7 +157,7 @@ func (c *Controller) getNotifier(ctx context.Context) (notifier.Notifier, error)
 			Templates:          c.Config.Templates,
 			Masks:              c.Config.Masks,
 			DisableLabel:       c.Config.Terraform.Plan.DisableLabel,
-			GitHubLabelConfig: githubLabelConfig,
+			GitHubLabelConfig:  githubLabelConfig,
 		})
 		if err != nil {
 			return nil, err
