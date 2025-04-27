@@ -118,7 +118,7 @@ func (g *CommentService) listPRComment(ctx context.Context, owner, repo string, 
 			} `graphql:"pullRequest(number: $issueNumber)"`
 		} `graphql:"repository(owner: $repositoryOwner, name: $repositoryName)"`
 	}
-	variables := map[string]interface{}{
+	variables := map[string]any{
 		"repositoryOwner": githubv4.String(owner),
 		"repositoryName":  githubv4.String(repo),
 		"issueNumber":     githubv4.Int(number),    //nolint:gosec

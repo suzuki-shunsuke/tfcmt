@@ -142,7 +142,7 @@ func avoidHTMLEscape(text string) htmltemplate.HTML {
 	return htmltemplate.HTML(text) //nolint:gosec
 }
 
-func wrapCode(text string) interface{} {
+func wrapCode(text string) any {
 	header := ""
 	if len(text) > 60000 { //nolint:mnd
 		header = "\n:warning: **The content is omitted as it is too long.** :warning:\n"
@@ -164,7 +164,7 @@ func wrapCode(text string) interface{} {
 	return htmltemplate.HTML(header + "\n```hcl\n" + text + "\n```\n") //nolint:gosec
 }
 
-func generateOutput(kind, template string, data map[string]interface{}, useRawOutput bool) (string, error) {
+func generateOutput(kind, template string, data map[string]any, useRawOutput bool) (string, error) {
 	var b bytes.Buffer
 
 	if useRawOutput {
@@ -196,7 +196,7 @@ func generateOutput(kind, template string, data map[string]interface{}, useRawOu
 
 // Execute binds the execution result of terraform command into template
 func (t *Template) Execute() (string, error) {
-	data := map[string]interface{}{
+	data := map[string]any{
 		"Result":                 t.Result,
 		"ChangedResult":          t.ChangedResult,
 		"ChangeOutsideTerraform": t.ChangeOutsideTerraform,
