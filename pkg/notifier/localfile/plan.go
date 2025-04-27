@@ -12,14 +12,14 @@ import (
 
 // Plan posts comment optimized for notifications
 func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) error {
-	cfg := g.client.Config
-	parser := g.client.Config.Parser
-	template := g.client.Config.Template
+	cfg := g.Config
+	parser := g.Config.Parser
+	template := g.Config.Template
 	var errMsgs []string
 
 	result := parser.Parse(param.CombinedOutput)
 	if result.HasParseError {
-		template = g.client.Config.ParseErrorTemplate
+		template = g.Config.ParseErrorTemplate
 	} else {
 		if result.Error != nil {
 			return result.Error
@@ -34,7 +34,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	})
 	if !cfg.DisableLabel {
 		logE.Debugf("updating labels")
-		errMsgs = append(errMsgs, g.client.labeler.UpdateLabels(ctx, result)...)
+		errMsgs = append(errMsgs, g.Labeler.UpdateLabels(ctx, result)...)
 	}
 
 	template.SetValue(terraform.CommonTemplate{
@@ -65,10 +65,10 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		return err
 	}
 
-	body = mask.Mask(body, g.client.Config.Masks)
+	body = mask.Mask(body, g.Config.Masks)
 
 	logE.Debug("write a plan output to a file")
-	if err := g.client.Output.WriteToFile(body, cfg.OutputFile); err != nil {
+	if err := g.WriteToFile(body, cfg.OutputFile); err != nil {
 		return fmt.Errorf("write a plan output to a file: %w", err)
 	}
 

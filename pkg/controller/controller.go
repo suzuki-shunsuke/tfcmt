@@ -159,23 +159,23 @@ func (c *Controller) getNotifier(ctx context.Context) (notifier.Notifier, error)
 	}
 	// Write output to file instead of github comment
 	if c.Config.Output != "" {
-		client, err := localfile.NewClient(&localfile.Config{
-			OutputFile:         c.Config.Output,
-			Parser:             c.Parser,
-			UseRawOutput:       c.Config.Terraform.UseRawOutput,
-			CI:                 c.Config.CI.Link,
-			Template:           c.Template,
-			ParseErrorTemplate: c.ParseErrorTemplate,
-			Vars:               c.Config.Vars,
-			EmbeddedVarNames:   c.Config.EmbeddedVarNames,
-			Templates:          c.Config.Templates,
-			Masks:              c.Config.Masks,
-			DisableLabel:       c.Config.Terraform.Plan.DisableLabel,
-		}, client.Notify)
-		if err != nil {
-			return nil, err
+		client := &localfile.NotifyService{
+			Config: &localfile.Config{
+				OutputFile:         c.Config.Output,
+				Parser:             c.Parser,
+				UseRawOutput:       c.Config.Terraform.UseRawOutput,
+				CI:                 c.Config.CI.Link,
+				Template:           c.Template,
+				ParseErrorTemplate: c.ParseErrorTemplate,
+				Vars:               c.Config.Vars,
+				EmbeddedVarNames:   c.Config.EmbeddedVarNames,
+				Templates:          c.Config.Templates,
+				Masks:              c.Config.Masks,
+				DisableLabel:       c.Config.Terraform.Plan.DisableLabel,
+			},
+			Labeler: client.Notify,
 		}
-		return client.Notify, nil
+		return client, nil
 	}
 	return client.Notify, nil
 }
