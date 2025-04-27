@@ -2,6 +2,7 @@ package localfile
 
 import (
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier/github"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
@@ -43,7 +44,7 @@ type GitHubLabelConfig struct {
 	Repo            string
 	PRNumber        int
 	Revision        string
-	Labels          any
+	Labels          github.ResultLabels
 }
 
 type service struct {

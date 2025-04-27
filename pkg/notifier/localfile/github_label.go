@@ -13,10 +13,6 @@ func updateGitHubLabels(ctx context.Context, cfg *GitHubLabelConfig, result terr
 		return []string{"GitHubLabelConfig is nil"}
 	}
 
-	labels, ok := cfg.Labels.(github.ResultLabels)
-	if !ok {
-		return []string{"cfg.Labels is not of type github.ResultLabels"}
-	}
 	ghcfg := &github.Config{
 		BaseURL:         cfg.BaseURL,
 		GraphQLEndpoint: cfg.GraphQLEndpoint,
@@ -26,7 +22,7 @@ func updateGitHubLabels(ctx context.Context, cfg *GitHubLabelConfig, result terr
 			Revision: cfg.Revision,
 			Number:   cfg.PRNumber,
 		},
-		ResultLabels: labels,
+		ResultLabels: cfg.Labels,
 	}
 	client, err := github.NewClient(ctx, ghcfg)
 	if err != nil {
