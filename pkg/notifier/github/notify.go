@@ -13,8 +13,8 @@ import (
 // methods of GitHub API
 type NotifyService service
 
-// UpdateLabelsOnly allows updating PR labels without posting comments
-func (g *NotifyService) UpdateLabelsOnly(ctx context.Context, result terraform.ParseResult) []string {
+// UpdateLabels updates PR labels
+func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.ParseResult) []string {
 	return g.updateLabels(ctx, result)
 }
 

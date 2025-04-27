@@ -36,5 +36,5 @@ func updateGitHubLabels(ctx context.Context, cfg *GitHubLabelConfig, result terr
 		return []string{"GitHub NotifyService is nil"}
 	}
 	// Call the label update logic directly
-	return client.Notify.UpdateLabelsOnly(ctx, result)
+	return client.Notify.UpdateLabels(ctx, result)
 }
