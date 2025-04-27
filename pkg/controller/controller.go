@@ -32,7 +32,7 @@ func (c *Controller) renderTemplate(tpl string) (string, error) {
 		return "", err
 	}
 	buf := &bytes.Buffer{}
-	if err := tmpl.Execute(buf, map[string]interface{}{
+	if err := tmpl.Execute(buf, map[string]any{
 		"Vars": c.Config.Vars,
 	}); err != nil {
 		return "", fmt.Errorf("render a label template: %w", err)

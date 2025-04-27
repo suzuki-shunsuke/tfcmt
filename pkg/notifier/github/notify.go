@@ -63,12 +63,12 @@ type Metadata struct {
 }
 
 func getEmbeddedComment(cfg *Config, ciName string, isPlan bool) (string, error) {
-	vars := make(map[string]interface{}, len(cfg.EmbeddedVarNames))
+	vars := make(map[string]any, len(cfg.EmbeddedVarNames))
 	for _, name := range cfg.EmbeddedVarNames {
 		vars[name] = cfg.Vars[name]
 	}
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		"Program":  "tfcmt",
 		"Vars":     vars,
 		"SHA1":     cfg.PR.Revision,
