@@ -32,11 +32,8 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	logE := logrus.WithFields(logrus.Fields{
 		"program": "tfcmt",
 	})
-	logE.WithFields(logrus.Fields{
-		"output_file":   cfg.OutputFile,
-		"disable_label": cfg.DisableLabel,
-	}).Debugf("update labels")
 	if !cfg.DisableLabel {
+		logE.Debugf("updating labels")
 		errMsgs = append(errMsgs, g.client.labeler.UpdateLabels(ctx, result)...)
 	}
 
