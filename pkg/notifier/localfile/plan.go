@@ -29,6 +29,17 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		}
 	}
 
+	logE := logrus.WithFields(logrus.Fields{
+		"program": "tfcmt",
+	})
+	logE.WithFields(logrus.Fields{
+		"output_file":   cfg.OutputFile,
+		"disable_label": cfg.DisableLabel,
+	}).Debugf("update labels")
+	if !cfg.DisableLabel {
+		errMsgs = append(errMsgs, g.client.labeler.UpdateLabels(ctx, result)...)
+	}
+
 	template.SetValue(terraform.CommonTemplate{
 		Result:                 result.Result,
 		ChangedResult:          result.ChangedResult,
@@ -57,26 +68,11 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		return err
 	}
 
-	logE := logrus.WithFields(logrus.Fields{
-		"program": "tfcmt",
-	})
-
 	body = mask.Mask(body, g.client.Config.Masks)
 
 	logE.Debug("write a plan output to a file")
 	if err := g.client.Output.WriteToFile(body, cfg.OutputFile); err != nil {
 		return fmt.Errorf("write a plan output to a file: %w", err)
-	}
-
-	logE.WithFields(logrus.Fields{
-		"output_file":   cfg.OutputFile,
-		"disable_label": cfg.DisableLabel,
-	}).Debugf("update labels")
-	if !cfg.DisableLabel {
-		errMsgs := g.client.labeler.UpdateLabels(ctx, result)
-		for _, msg := range errMsgs {
-			logE.Error(msg)
-		}
 	}
 
 	return nil
