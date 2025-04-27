@@ -49,7 +49,7 @@ func parseOpts(cmd *cli.Command, cfg *config.Config, envs []string) error { //no
 	}
 
 	if pr := cmd.Int("pr"); pr != 0 {
-		cfg.CI.PRNumber = int(pr)
+		cfg.CI.PRNumber = pr
 	}
 
 	if cmd.IsSet("patch") {
