@@ -8,19 +8,6 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
-// Client is a fake API client for write to local file
-type Client struct {
-	Debug bool
-
-	Config *Config
-
-	common service
-
-	Notify  *NotifyService
-	Output  *OutputService
-	labeler Labeler
-}
-
 // Config is a configuration for local file
 type Config struct {
 	OutputFile string
@@ -49,24 +36,6 @@ type GitHubLabelConfig struct {
 	Labels          github.ResultLabels
 }
 
-type service struct {
-	client *Client
-}
-
 type Labeler interface {
 	UpdateLabels(ctx context.Context, result terraform.ParseResult) []string
-}
-
-// NewClient returns Client initialized with Config
-func NewClient(cfg *Config, labeler Labeler) (*Client, error) {
-	c := &Client{
-		Config:  cfg,
-		labeler: labeler,
-	}
-
-	c.common.client = c
-
-	c.Notify = (*NotifyService)(&c.common)
-
-	return c, nil
 }
