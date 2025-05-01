@@ -28,7 +28,7 @@ func (c *Controller) Apply(ctx context.Context, command Command) error {
 		return err
 	}
 
-	ntf, err := c.getNotifier(ctx)
+	ntf, err := c.getApplyNotifier(ctx)
 	if err != nil {
 		return err
 	}
