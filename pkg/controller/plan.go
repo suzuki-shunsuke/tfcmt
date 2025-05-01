@@ -29,7 +29,7 @@ func (c *Controller) Plan(ctx context.Context, command Command) error {
 		return err
 	}
 
-	ntf, err := c.getNotifier(ctx)
+	ntf, err := c.getPlanNotifier(ctx)
 	if err != nil {
 		return err
 	}
