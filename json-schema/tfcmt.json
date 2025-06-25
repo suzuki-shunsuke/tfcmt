@@ -149,14 +149,14 @@
         "disable_label": {
           "type": "boolean"
         },
-        "DisableComment": {
+        "disable_comment": {
           "type": "boolean"
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
-        "DisableComment"
+        "disable_comment"
       ]
     },
     "WhenParseError": {

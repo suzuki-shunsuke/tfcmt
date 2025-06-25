@@ -85,7 +85,7 @@ type WhenNoChanges struct {
 	Label          string `json:"label,omitempty"`
 	Color          string `json:"label_color,omitempty" yaml:"label_color"`
 	DisableLabel   bool   `json:"disable_label,omitempty" yaml:"disable_label"`
-	DisableComment bool   `yaml:"disable_comment"`
+	DisableComment bool   `json:"disable_comment" yaml:"disable_comment"`
 }
 
 // WhenPlanError is a configuration to notify the plan result returns an error
