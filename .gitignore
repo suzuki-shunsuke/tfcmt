@@ -24,3 +24,5 @@ vendor
 dist
 
 .DS_Store
+
+third_party_licenses
