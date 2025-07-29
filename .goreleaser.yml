@@ -21,23 +21,6 @@ builds:
       - amd64
       - arm64
 
-signs:
-  - cmd: cosign
-    artifacts: checksum
-    signature: ${artifact}.sig
-    certificate: ${artifact}.pem
-    output: true
-    args:
-      - sign-blob
-      - "-y"
-      - --output-signature
-      - ${signature}
-      - --output-certificate
-      - ${certificate}
-      - --oidc-provider
-      - github
-      - ${artifact}
-
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     files:
@@ -59,18 +42,13 @@ homebrew_casks:
     # NOTE: make sure the url_template, the token and given repo (github or gitlab) owner and name are from the
     # same kind. We will probably unify this in the next major version like it is done with scoop.
 
-    # GitHub/GitLab repository to push the formula to
     repository:
       owner: suzuki-shunsuke
       name: homebrew-tfcmt
     # The project name and current git tag are used in the format string.
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
-    # Your app's homepage.
-    # Default is empty.
     homepage: https://github.com/suzuki-shunsuke/tfcmt
 
-    # Template of your app's description.
-    # Default is empty.
     description: |
       Fork of mercari/tfnotify. tfcmt enhances tfnotify in many ways, including Terraform >= v0.15 support and advanced formatting options
     license: MIT
