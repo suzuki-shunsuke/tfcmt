@@ -4,7 +4,7 @@ on: pull_request
 permissions: {}
 jobs:
   test:
-    uses: suzuki-shunsuke/go-test-full-workflow/.github/workflows/test.yaml@05399afd417ae28382877ebe5bf7c9288b023df7 # v3.2.1
+    uses: suzuki-shunsuke/go-test-full-workflow/.github/workflows/test.yaml@fbe492a9fd564e62fab528f0f60a7332120056d5 # v3.2.2
     with:
       aqua_version: v2.53.8
       golangci-lint-timeout: 120s
