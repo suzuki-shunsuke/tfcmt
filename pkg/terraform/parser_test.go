@@ -52,6 +52,33 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 `
 
+const planMovedBlockSuccessResult = `
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+
+null_resource.foo: Refreshing state...
+
+------------------------------------------------------------------------
+
+Terraform will perform the following actions:
+
+  # null_resource.bar has moved to null_resource.foo
+    resource "null_resource" "bar" {
+        id = "test" -> null
+
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
+
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+`
+
 const planOnlyOutputChangesSuccessResult0_12 = `
 Refreshing Terraform state in-memory prior to plan...
 The refreshed state will be used to calculate this plan, but will not be
@@ -541,17 +568,46 @@ Plan: 1 to add, 0 to change, 0 to destroy.`,
 			name: "plan output changes only pattern 0.12",
 			body: planOnlyOutputChangesSuccessResult0_12,
 			result: ParseResult{
-				Result:             "Plan: 0 to add, 0 to change, 0 to destroy.",
-				HasAddOrUpdateOnly: false,
-				HasDestroy:         false,
-				HasNoChanges:       true,
-				HasError:           false,
-				Error:              nil,
+				Result:              "Plan: 0 to add, 0 to change, 0 to destroy.",
+				HasAddOrUpdateOnly:  false,
+				HasDestroy:          false,
+				HasNoChanges:        false,
+				HasNoChangesInInfra: true,
+				HasError:            false,
+				Error:               nil,
 				ChangedResult: `
 Plan: 0 to add, 0 to change, 0 to destroy.
 
 Changes to Outputs:
   + aws_instance_name = "my-instance"`,
+			},
+		},
+		{
+			name: "plan moved block only",
+			body: planMovedBlockSuccessResult,
+			result: ParseResult{
+				Result:              "Plan: 0 to add, 0 to change, 0 to destroy.",
+				HasAddOrUpdateOnly:  false,
+				HasDestroy:          false,
+				HasNoChanges:        false,
+				HasNoChangesInInfra: true,
+				HasError:            false,
+				Error:               nil,
+				MovedResources: []*MovedResource{
+					{
+						Before: "null_resource.bar",
+						After:  "null_resource.foo",
+					},
+				},
+				ChangedResult: `
+  # null_resource.bar has moved to null_resource.foo
+    resource "null_resource" "bar" {
+        id = "test" -> null
+
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 0 to change, 0 to destroy.`,
 			},
 		},
 		{

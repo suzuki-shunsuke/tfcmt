@@ -135,19 +135,21 @@ func (pr *PullRequest) IsNumber() bool {
 
 // ResultLabels represents the labels to add to the PR depending on the plan result
 type ResultLabels struct {
-	AddOrUpdateLabel      string
-	DestroyLabel          string
-	NoChangesLabel        string
-	PlanErrorLabel        string
-	AddOrUpdateLabelColor string
-	DestroyLabelColor     string
-	NoChangesLabelColor   string
-	PlanErrorLabelColor   string
+	AddOrUpdateLabel           string
+	DestroyLabel               string
+	NoChangesLabel             string
+	NoChangesInInfraLabel      string
+	PlanErrorLabel             string
+	AddOrUpdateLabelColor      string
+	DestroyLabelColor          string
+	NoChangesLabelColor        string
+	NoChangesInInfraLabelColor string
+	PlanErrorLabelColor        string
 }
 
 // HasAnyLabelDefined returns true if any of the internal labels are set
 func (r *ResultLabels) HasAnyLabelDefined() bool {
-	return r.AddOrUpdateLabel != "" || r.DestroyLabel != "" || r.NoChangesLabel != "" || r.PlanErrorLabel != ""
+	return r.AddOrUpdateLabel != "" || r.DestroyLabel != "" || r.NoChangesLabel != "" || r.NoChangesInInfraLabel != "" || r.PlanErrorLabel != ""
 }
 
 // IsResultLabel returns true if a label matches any of the internal labels
@@ -155,7 +157,7 @@ func (r *ResultLabels) IsResultLabel(label string) bool {
 	switch label {
 	case "":
 		return false
-	case r.AddOrUpdateLabel, r.DestroyLabel, r.NoChangesLabel, r.PlanErrorLabel:
+	case r.AddOrUpdateLabel, r.DestroyLabel, r.NoChangesLabel, r.NoChangesInInfraLabel, r.PlanErrorLabel:
 		return true
 	default:
 		return false
