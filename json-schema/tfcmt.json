@@ -77,6 +77,9 @@
         "when_no_changes": {
           "$ref": "#/$defs/WhenNoChanges"
         },
+        "when_no_changes_in_infra": {
+          "$ref": "#/$defs/WhenNoChangesInInfra"
+        },
         "when_plan_error": {
           "$ref": "#/$defs/WhenPlanError"
         },
@@ -139,6 +142,27 @@
       "type": "object"
     },
     "WhenNoChanges": {
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "label_color": {
+          "type": "string"
+        },
+        "disable_label": {
+          "type": "boolean"
+        },
+        "disable_comment": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "disable_comment"
+      ]
+    },
+    "WhenNoChangesInInfra": {
       "properties": {
         "label": {
           "type": "string"
