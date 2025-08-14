@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: ${{steps.package_json.outputs.prop}}
           cache: npm
+          cache-dependency-path: site/package-lock.json
       - run: npm ci
         working-directory: site
       - run: bash scripts/generate-usage.sh
