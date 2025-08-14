@@ -1,0 +1,19 @@
+---
+name: test (workflow_call)
+on: workflow_call
+permissions: {}
+env:
+  AQUA_LOG_COLOR: always
+jobs:
+  test:
+    uses: suzuki-shunsuke/go-test-full-workflow/.github/workflows/test.yaml@feat-typos
+    with:
+      aqua_version: v2.53.9
+      golangci-lint-timeout: 120s
+    permissions:
+      pull-requests: write
+      contents: read
+
+  test_deploy_doc:
+    uses: ./.github/workflows/workflow_call_deploy_doc.yaml
+    permissions: {}
