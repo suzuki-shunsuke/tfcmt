@@ -10,7 +10,7 @@ jobs:
       contents: write
       issues: write
     steps:
-      - uses: suzuki-shunsuke/release-doc-action@feat-add-source_dir
+      - uses: suzuki-shunsuke/release-doc-action@94de66f739174d7c4ff94db68831b2672a4e4519 # v0.0.6
         with:
           issue_number: 1724
           source_dir: site
