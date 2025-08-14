@@ -16,4 +16,6 @@ jobs:
 
   test_deploy_doc:
     uses: ./.github/workflows/workflow_call_deploy_doc.yaml
-    permissions: {}
+    permissions:
+      contents: write
+      issues: write
