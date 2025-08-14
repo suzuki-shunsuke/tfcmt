@@ -64,7 +64,7 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 		labels.NoChangesLabelColor = "0e8a16" // green
 	}
 	if labels.NoChangesInInfraLabelColor == "" {
-		labels.NoChangesInInfraLabelColor = "1d76db" // blue (same as add-or-update for backward compatibility)
+		labels.NoChangesInInfraLabelColor = "0e8a16" // green
 	}
 
 	if !c.Config.Terraform.Plan.WhenAddOrUpdateOnly.DisableLabel {
@@ -118,9 +118,9 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 	if !c.Config.Terraform.Plan.WhenNoChangesInInfra.DisableLabel {
 		if c.Config.Terraform.Plan.WhenNoChangesInInfra.Label == "" {
 			if target == "" {
-				labels.NoChangesInInfraLabel = "add-or-update" // For backward compatibility set 'add-or-update'
+				labels.NoChangesInInfraLabel = "no-changes"
 			} else {
-				labels.NoChangesInInfraLabel = target + "/add-or-update" // For backward compatibility set 'add-or-update'
+				labels.NoChangesInInfraLabel = target + "/no-changes"
 			}
 		} else {
 			noChangesInInfraLabel, err := c.renderTemplate(c.Config.Terraform.Plan.WhenNoChangesInInfra.Label)
