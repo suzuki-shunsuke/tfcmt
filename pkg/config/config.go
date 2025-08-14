@@ -56,15 +56,14 @@ type Terraform struct {
 
 // Plan is a terraform plan config
 type Plan struct {
-	Template             string               `json:"template,omitempty"`
-	WhenAddOrUpdateOnly  WhenAddOrUpdateOnly  `json:"when_add_or_update_only,omitempty" yaml:"when_add_or_update_only"`
-	WhenDestroy          WhenDestroy          `json:"when_destroy,omitempty" yaml:"when_destroy"`
-	WhenNoChanges        WhenNoChanges        `json:"when_no_changes,omitempty" yaml:"when_no_changes"`
-	WhenNoChangesInInfra WhenNoChangesInInfra `json:"when_no_changes_in_infra,omitempty" yaml:"when_no_changes_in_infra"`
-	WhenPlanError        WhenPlanError        `json:"when_plan_error,omitempty" yaml:"when_plan_error"`
-	WhenParseError       WhenParseError       `json:"when_parse_error,omitempty" yaml:"when_parse_error"`
-	DisableLabel         bool                 `json:"disable_label,omitempty" yaml:"disable_label"`
-	IgnoreWarning        bool                 `json:"ignore_warning,omitempty" yaml:"ignore_warning"`
+	Template            string              `json:"template,omitempty"`
+	WhenAddOrUpdateOnly WhenAddOrUpdateOnly `json:"when_add_or_update_only,omitempty" yaml:"when_add_or_update_only"`
+	WhenDestroy         WhenDestroy         `json:"when_destroy,omitempty" yaml:"when_destroy"`
+	WhenNoChanges       WhenNoChanges       `json:"when_no_changes,omitempty" yaml:"when_no_changes"`
+	WhenPlanError       WhenPlanError       `json:"when_plan_error,omitempty" yaml:"when_plan_error"`
+	WhenParseError      WhenParseError      `json:"when_parse_error,omitempty" yaml:"when_parse_error"`
+	DisableLabel        bool                `json:"disable_label,omitempty" yaml:"disable_label"`
+	IgnoreWarning       bool                `json:"ignore_warning,omitempty" yaml:"ignore_warning"`
 }
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
@@ -83,14 +82,6 @@ type WhenDestroy struct {
 
 // WhenNoChanges is a configuration to add a label when the plan result contains no change
 type WhenNoChanges struct {
-	Label          string `json:"label,omitempty"`
-	Color          string `json:"label_color,omitempty" yaml:"label_color"`
-	DisableLabel   bool   `json:"disable_label,omitempty" yaml:"disable_label"`
-	DisableComment bool   `json:"disable_comment" yaml:"disable_comment"`
-}
-
-// WhenNoChangesInInfra is a configuration to add a label when the plan result shows "0 to add, 0 to change, 0 to destroy"
-type WhenNoChangesInInfra struct {
 	Label          string `json:"label,omitempty"`
 	Color          string `json:"label_color,omitempty" yaml:"label_color"`
 	DisableLabel   bool   `json:"disable_label,omitempty" yaml:"disable_label"`
