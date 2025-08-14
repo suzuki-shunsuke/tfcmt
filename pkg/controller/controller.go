@@ -42,10 +42,11 @@ func (c *Controller) renderTemplate(tpl string) (string, error) {
 
 func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolint:cyclop
 	labels := github.ResultLabels{
-		AddOrUpdateLabelColor: c.Config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
-		DestroyLabelColor:     c.Config.Terraform.Plan.WhenDestroy.Color,
-		NoChangesLabelColor:   c.Config.Terraform.Plan.WhenNoChanges.Color,
-		PlanErrorLabelColor:   c.Config.Terraform.Plan.WhenPlanError.Color,
+		AddOrUpdateLabelColor:      c.Config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
+		DestroyLabelColor:          c.Config.Terraform.Plan.WhenDestroy.Color,
+		NoChangesLabelColor:        c.Config.Terraform.Plan.WhenNoChanges.Color,
+		NoChangesInInfraLabelColor: c.Config.Terraform.Plan.WhenNoChangesInInfra.Color,
+		PlanErrorLabelColor:        c.Config.Terraform.Plan.WhenPlanError.Color,
 	}
 
 	target, ok := c.Config.Vars["target"]
@@ -61,6 +62,9 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 	}
 	if labels.NoChangesLabelColor == "" {
 		labels.NoChangesLabelColor = "0e8a16" // green
+	}
+	if labels.NoChangesInInfraLabelColor == "" {
+		labels.NoChangesInInfraLabelColor = "0e8a16" // green
 	}
 
 	if !c.Config.Terraform.Plan.WhenAddOrUpdateOnly.DisableLabel {
@@ -108,6 +112,22 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 				return labels, err
 			}
 			labels.NoChangesLabel = nochangesLabel
+		}
+	}
+
+	if !c.Config.Terraform.Plan.WhenNoChangesInInfra.DisableLabel {
+		if c.Config.Terraform.Plan.WhenNoChangesInInfra.Label == "" {
+			if target == "" {
+				labels.NoChangesInInfraLabel = "no-changes"
+			} else {
+				labels.NoChangesInInfraLabel = target + "/no-changes"
+			}
+		} else {
+			noChangesInInfraLabel, err := c.renderTemplate(c.Config.Terraform.Plan.WhenNoChangesInInfra.Label)
+			if err != nil {
+				return labels, err
+			}
+			labels.NoChangesInInfraLabel = noChangesInInfraLabel
 		}
 	}
 

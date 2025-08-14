@@ -13,41 +13,43 @@ type Parser interface {
 
 // ParseResult represents the result of parsed terraform execution
 type ParseResult struct {
-	Result             string
-	OutsideTerraform   string
-	ChangedResult      string
-	Warning            string
-	HasAddOrUpdateOnly bool
-	HasDestroy         bool
-	HasNoChanges       bool
-	HasError           bool
-	HasParseError      bool
-	Error              error
-	CreatedResources   []string
-	UpdatedResources   []string
-	DeletedResources   []string
-	ReplacedResources  []string
-	MovedResources     []*MovedResource
-	ImportedResources  []string
+	Result              string
+	OutsideTerraform    string
+	ChangedResult       string
+	Warning             string
+	HasAddOrUpdateOnly  bool
+	HasDestroy          bool
+	HasNoChanges        bool
+	HasNoChangesInInfra bool
+	HasError            bool
+	HasParseError       bool
+	Error               error
+	CreatedResources    []string
+	UpdatedResources    []string
+	DeletedResources    []string
+	ReplacedResources   []string
+	MovedResources      []*MovedResource
+	ImportedResources   []string
 }
 
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
-	Pass           *regexp.Regexp
-	Fail           *regexp.Regexp
-	Warning        *regexp.Regexp
-	OutputsChanges *regexp.Regexp
-	HasDestroy     *regexp.Regexp
-	HasNoChanges   *regexp.Regexp
-	Create         *regexp.Regexp
-	Update         *regexp.Regexp
-	Delete         *regexp.Regexp
-	Replace        *regexp.Regexp
-	ReplaceOption  *regexp.Regexp
-	Move           *regexp.Regexp
-	Import         *regexp.Regexp
-	ImportedFrom   *regexp.Regexp
-	MovedFrom      *regexp.Regexp
+	Pass                *regexp.Regexp
+	Fail                *regexp.Regexp
+	Warning             *regexp.Regexp
+	OutputsChanges      *regexp.Regexp
+	HasDestroy          *regexp.Regexp
+	HasNoChanges        *regexp.Regexp
+	HasNoChangesInInfra *regexp.Regexp
+	Create              *regexp.Regexp
+	Update              *regexp.Regexp
+	Delete              *regexp.Regexp
+	Replace             *regexp.Regexp
+	ReplaceOption       *regexp.Regexp
+	Move                *regexp.Regexp
+	Import              *regexp.Regexp
+	ImportedFrom        *regexp.Regexp
+	MovedFrom           *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -64,17 +66,18 @@ func NewPlanParser() *PlanParser {
 		Warning:        regexp.MustCompile(`(?m)^([│|] )?(Warning: )`),
 		OutputsChanges: regexp.MustCompile(`(?m)^Changes to Outputs:`),
 		// "0 to destroy" should be treated as "no destroy"
-		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
-		HasNoChanges:  regexp.MustCompile(`(?m)^(No changes.)`),
-		Create:        regexp.MustCompile(`^ *# (.*) will be created$`),
-		Update:        regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
-		Delete:        regexp.MustCompile(`^ *# (.*) will be destroyed$`),
-		Replace:       regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
-		ReplaceOption: regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
-		Move:          regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
-		Import:        regexp.MustCompile(`^ *# (.*?) will be imported$`),
-		ImportedFrom:  regexp.MustCompile(`^ *# \(imported from (.*?)\)$`),
-		MovedFrom:     regexp.MustCompile(`^ *# \(moved from (.*?)\)$`),
+		HasDestroy:          regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
+		HasNoChanges:        regexp.MustCompile(`(?m)^(No changes\.)`),
+		HasNoChangesInInfra: regexp.MustCompile(`(?m)^(Plan: 0 to add, 0 to change, 0 to destroy\.)`),
+		Create:              regexp.MustCompile(`^ *# (.*) will be created$`),
+		Update:              regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
+		Delete:              regexp.MustCompile(`^ *# (.*) will be destroyed$`),
+		Replace:             regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
+		ReplaceOption:       regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
+		Move:                regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
+		Import:              regexp.MustCompile(`^ *# (.*?) will be imported$`),
+		ImportedFrom:        regexp.MustCompile(`^ *# \(imported from (.*?)\)$`),
+		MovedFrom:           regexp.MustCompile(`^ *# \(moved from (.*?)\)$`),
 	}
 }
 
@@ -214,7 +217,8 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop,maintidx
 
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
 	hasNoChanges := p.HasNoChanges.MatchString(firstMatchLine)
-	HasAddOrUpdateOnly := !hasNoChanges && !hasDestroy && !hasPlanError
+	hasNoChangesInInfra := p.HasNoChangesInInfra.MatchString(firstMatchLine)
+	HasAddOrUpdateOnly := !hasNoChanges && !hasDestroy && !hasNoChangesInInfra && !hasPlanError
 
 	outsideTerraform := ""
 	if startOutsideTerraform != -1 {
@@ -240,21 +244,22 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop,maintidx
 	}
 
 	return ParseResult{
-		Result:             strings.TrimSpace(result),
-		ChangedResult:      changeResult,
-		OutsideTerraform:   outsideTerraform,
-		Warning:            strings.TrimSpace(warnings),
-		HasAddOrUpdateOnly: HasAddOrUpdateOnly,
-		HasDestroy:         hasDestroy,
-		HasNoChanges:       hasNoChanges,
-		HasError:           hasPlanError,
-		Error:              nil,
-		CreatedResources:   createdResources,
-		UpdatedResources:   updatedResources,
-		DeletedResources:   deletedResources,
-		ReplacedResources:  replacedResources,
-		MovedResources:     movedResources,
-		ImportedResources:  importedResources,
+		Result:              strings.TrimSpace(result),
+		ChangedResult:       changeResult,
+		OutsideTerraform:    outsideTerraform,
+		Warning:             strings.TrimSpace(warnings),
+		HasAddOrUpdateOnly:  HasAddOrUpdateOnly,
+		HasDestroy:          hasDestroy,
+		HasNoChanges:        hasNoChanges,
+		HasNoChangesInInfra: hasNoChangesInInfra,
+		HasError:            hasPlanError,
+		Error:               nil,
+		CreatedResources:    createdResources,
+		UpdatedResources:    updatedResources,
+		DeletedResources:    deletedResources,
+		ReplacedResources:   replacedResources,
+		MovedResources:      movedResources,
+		ImportedResources:   importedResources,
 	}
 }
 
