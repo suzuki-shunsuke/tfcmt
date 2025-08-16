@@ -542,9 +542,9 @@ Plan: 1 to add, 0 to change, 0 to destroy.`,
 			body: planOnlyOutputChangesSuccessResult0_12,
 			result: ParseResult{
 				Result:             "Plan: 0 to add, 0 to change, 0 to destroy.",
-				HasAddOrUpdateOnly: true,
+				HasAddOrUpdateOnly: false,
 				HasDestroy:         false,
-				HasNoChanges:       false,
+				HasNoChanges:       true,
 				HasError:           false,
 				Error:              nil,
 				ChangedResult: `
