@@ -26,9 +26,6 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.Parse
 	case result.HasNoChanges:
 		labelToAdd = cfg.ResultLabels.NoChangesLabel
 		labelColor = cfg.ResultLabels.NoChangesLabelColor
-	case result.HasNoChangesInInfra:
-		labelToAdd = cfg.ResultLabels.NoChangesInInfraLabel
-		labelColor = cfg.ResultLabels.NoChangesInInfraLabelColor
 	case result.HasError:
 		labelToAdd = cfg.ResultLabels.PlanErrorLabel
 		labelColor = cfg.ResultLabels.PlanErrorLabelColor
