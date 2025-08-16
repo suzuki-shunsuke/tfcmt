@@ -1,9 +1,8 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/aquaproj/aqua/v2.53.9/json-schema/aqua-yaml.json
 # aqua - Declarative CLI Version Manager
 # https://aquaproj.github.io/
 checksum:
-  # Enable Checksum Verification
-  # https://aquaproj.github.io/docs/tutorial-extras/checksum/
   enabled: true
   require_checksum: true
 registries:
