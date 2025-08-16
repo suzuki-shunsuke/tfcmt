@@ -64,7 +64,7 @@ func NewPlanParser() *PlanParser {
 		Warning:        regexp.MustCompile(`(?m)^([│|] )?(Warning: )`),
 		OutputsChanges: regexp.MustCompile(`(?m)^Changes to Outputs:`),
 		// "0 to destroy" should be treated as "no destroy"
-		HasDestroy:    regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
+		HasDestroy: regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		// "0 to add, 0 to change, 0 to destroy" should be treated as "no change" (issue#358)
 		HasNoChanges:  regexp.MustCompile(`(?m)^(No changes\.|Plan: 0 to add, 0 to change, 0 to destroy\.)`),
 		Create:        regexp.MustCompile(`^ *# (.*) will be created$`),
