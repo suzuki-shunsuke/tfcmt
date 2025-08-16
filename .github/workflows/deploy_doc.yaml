@@ -1,21 +1,16 @@
 ---
 name: Deploy GitHub Pages
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "*/30 * * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - site/**
+      - .github/workflows/deploy_doc.yaml
 permissions: {}
 jobs:
   deploy-doc:
-    timeout-minutes: 15
-    runs-on: ubuntu-24.04
+    uses: ./.github/workflows/workflow_call_deploy_doc.yaml
     permissions:
       contents: write
       issues: write
-    steps:
-      - uses: suzuki-shunsuke/release-doc-action@d0a80c8ada60c282df9664a7f6d2e016034ad353 # v0.0.5
-        with:
-          repository: suzuki-shunsuke/tfcmt-docs
-          issue_number: 1724
-          publish_dir: build
-          destination_dir: docs

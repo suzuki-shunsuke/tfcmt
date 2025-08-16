@@ -4,13 +4,11 @@ on: pull_request
 permissions: {}
 jobs:
   test:
-    uses: suzuki-shunsuke/go-test-full-workflow/.github/workflows/test.yaml@05399afd417ae28382877ebe5bf7c9288b023df7 # v3.2.1
-    with:
-      aqua_version: v2.53.6
-      golangci-lint-timeout: 120s
+    uses: ./.github/workflows/workflow_call_test.yaml
     permissions:
       pull-requests: write
-      contents: read
+      contents: write
+      issues: write
   status-check:
     runs-on: ubuntu-24.04
     if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
