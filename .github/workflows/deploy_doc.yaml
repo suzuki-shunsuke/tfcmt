@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - site/**
+      - website/**
       - .github/workflows/deploy_doc.yaml
 permissions: {}
 jobs:
