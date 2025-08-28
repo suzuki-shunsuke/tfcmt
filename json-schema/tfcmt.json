@@ -154,10 +154,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "disable_comment"
-      ]
+      "type": "object"
     },
     "WhenParseError": {
       "properties": {
