@@ -30,6 +30,7 @@ Fork of [mercari/tfnotify](https://github.com/mercari/tfnotify), enhancing tfnot
 - [LayerX Inc.](https://layerx.co.jp/) ([ref](https://tech.layerx.co.jp/entry/2025/03/24/113651))
 - [Section-9](https://sec9.co.jp/)
 - [H2O Retailing Corp.](https://www.h2o-retailing.co.jp/)
+- [ENECHANGE Ltd.](https://enechange.co.jp/) ([ref](https://tech.enechange.co.jp/entry/2025/08/27/100000))
 
 ## License
 
