@@ -19,19 +19,16 @@ const EnvBaseURL = "GITHUB_BASE_URL"
 // Client is a API client for GitHub
 type Client struct {
 	*github.Client
-	Debug bool
 
-	Config *Config
-
-	common service
-
+	Debug    bool
+	Config   *Config
+	common   service
 	Comment  *CommentService
 	Commits  *CommitsService
 	Notify   *NotifyService
 	User     *UserService
 	v4Client *githubv4.Client
-
-	API API
+	API      API
 }
 
 // Config is a configuration for GitHub client

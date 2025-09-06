@@ -23,6 +23,8 @@ linters:
     - varnamelen
     - wrapcheck
     - wsl
+    - wsl_v5
+    - noinlineerr
   exclusions:
     generated: lax
     presets:

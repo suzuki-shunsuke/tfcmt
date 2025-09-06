@@ -21,6 +21,7 @@ type API interface {
 // GitHub represents the attribute information necessary for requesting GitHub API
 type GitHub struct {
 	*github.Client
+
 	owner string
 	repo  string
 }

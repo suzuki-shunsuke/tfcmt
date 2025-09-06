@@ -10,6 +10,7 @@ import (
 
 type fakeAPI struct {
 	API
+
 	FakeIssuesCreateComment                    func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
 	FakeIssuesListLabels                       func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error)
 	FakeIssuesAddLabels                        func(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
