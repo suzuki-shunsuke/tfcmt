@@ -15,6 +15,9 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.Parse
 		labelToAdd string
 		labelColor string
 	)
+	if cfg.PR.Number == 0 {
+		return nil
+	}
 
 	switch {
 	case result.HasAddOrUpdateOnly:
