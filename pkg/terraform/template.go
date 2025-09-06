@@ -96,8 +96,9 @@ type CommonTemplate struct {
 
 // Template is a default template for terraform commands
 type Template struct {
-	Template string
 	CommonTemplate
+
+	Template string
 }
 
 // NewPlanTemplate is PlanTemplate initializer
