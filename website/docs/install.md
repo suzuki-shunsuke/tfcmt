@@ -19,7 +19,7 @@ brew install tfcmt
 Or
 
 ```sh
-brew install suzuki-shunsuke/tfcmt/tfcmt
+brew install --cask suzuki-shunsuke/tfcmt/tfcmt
 ```
 
 ## aqua
