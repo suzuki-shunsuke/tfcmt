@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/google/go-github/v74/github"
@@ -49,6 +50,10 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.Parse
 
 	if labelToAdd == "" {
 		return errMsgs
+	}
+
+	if len(labelToAdd) > 50 { //nolint:mnd
+		return append(errMsgs, fmt.Sprintf("failed to add a label %s: label name is too long (max: 50)", labelToAdd))
 	}
 
 	if currentLabelColor == "" {
