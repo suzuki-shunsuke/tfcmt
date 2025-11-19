@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/google/go-github/v76/github"
+	"github.com/google/go-github/v79/github"
 	"github.com/shurcooL/githubv4"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
