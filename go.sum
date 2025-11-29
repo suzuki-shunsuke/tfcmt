@@ -65,8 +65,6 @@ github.com/suzuki-shunsuke/gen-go-jsonschema v0.1.0 h1:g7askc+nskCkKRWTVOdsAT8nM
 github.com/suzuki-shunsuke/gen-go-jsonschema v0.1.0/go.mod h1:yFO7h5wwFejxi6jbtazqmk7b/JSBxHcit8DGwb1bhg0=
 github.com/suzuki-shunsuke/github-comment-metadata v0.1.0 h1:89uGvBINoWZ4p2dGj7S695bm/L1H175eMp/D47ltSPs=
 github.com/suzuki-shunsuke/github-comment-metadata v0.1.0/go.mod h1:GNDhEmWAJ6Bbk9rIds0mAMF4noyPV3EqwqLetnEoNLg=
-github.com/suzuki-shunsuke/go-ci-env/v3 v3.2.0 h1:pNoU+JrtCrOe+Aiy20Qq0Fmeq1y4DIN7fLUh/BU7R9w=
-github.com/suzuki-shunsuke/go-ci-env/v3 v3.2.0/go.mod h1:qnHYP5fJLLNKqOwxCfix7XVzQGfbF72vbGgLhl8X2vA=
 github.com/suzuki-shunsuke/go-ci-env/v3 v3.3.0 h1:1QLNzqHOx4ZYCMSRA5pTk8lH2Vh7K6NrNzdLitHTzuI=
 github.com/suzuki-shunsuke/go-ci-env/v3 v3.3.0/go.mod h1:bfoVZws4QhQEuqIhoQ7Gu8p3FUqbI08kWJC3Vv3akWI=
 github.com/suzuki-shunsuke/go-findconfig v1.2.0 h1:PWHIyKZEsVmZVh6+K+rHVw0/XjTFmQEYfa8ZIzIJd0c=
