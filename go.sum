@@ -66,8 +66,8 @@ github.com/suzuki-shunsuke/go-ci-env/v3 v3.3.0 h1:1QLNzqHOx4ZYCMSRA5pTk8lH2Vh7K6
 github.com/suzuki-shunsuke/go-ci-env/v3 v3.3.0/go.mod h1:bfoVZws4QhQEuqIhoQ7Gu8p3FUqbI08kWJC3Vv3akWI=
 github.com/suzuki-shunsuke/go-findconfig v1.2.0 h1:PWHIyKZEsVmZVh6+K+rHVw0/XjTFmQEYfa8ZIzIJd0c=
 github.com/suzuki-shunsuke/go-findconfig v1.2.0/go.mod h1:lXzJUZQXrgsMmpHxXMVrWUAQpE4EopgDEJbwslvKbzs=
-github.com/suzuki-shunsuke/slog-error v0.2.0 h1:XghEeRu6nchSxvzbqT5PpZgk5Dd6ZJSxx0VFSBMQysU=
-github.com/suzuki-shunsuke/slog-error v0.2.0/go.mod h1:w45QyO2G0uiEuo9hhrcLqqRl3hmYon9jGgq9CrCxxOY=
+github.com/suzuki-shunsuke/slog-error v0.2.1 h1:zcWOEo451RWmgusiONt/GueyvkTL7n4qA0ZJ3gTEjbA=
+github.com/suzuki-shunsuke/slog-error v0.2.1/go.mod h1:w45QyO2G0uiEuo9hhrcLqqRl3hmYon9jGgq9CrCxxOY=
 github.com/suzuki-shunsuke/slog-util v0.2.1 h1:nN0GWzRg5ZNNMd18berRqJZppPLtWvM3Bn0H/G4s7kg=
 github.com/suzuki-shunsuke/slog-util v0.2.1/go.mod h1:GBnGT/JhPyQ2lbwQM+M2MrsGuntdswcFi3vhk+z8Adw=
 github.com/suzuki-shunsuke/urfave-cli-v3-util v0.1.0 h1:wF2BTklnW4k5xC3LqGbOBdhJ331hRhpObzElteZl7NE=
