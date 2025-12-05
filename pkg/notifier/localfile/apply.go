@@ -3,15 +3,15 @@ package localfile
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
-	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(_ context.Context, param *notifier.ParamExec) error {
+func (g *NotifyService) Apply(_ context.Context, logger *slog.Logger, param *notifier.ParamExec) error {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -55,13 +55,9 @@ func (g *NotifyService) Apply(_ context.Context, param *notifier.ParamExec) erro
 		return err
 	}
 
-	logE := logrus.WithFields(logrus.Fields{
-		"program": "tfcmt",
-	})
-
 	body = mask.Mask(body, g.client.Config.Masks)
 
-	logE.Debug("writing the apply result to a file")
+	logger.Debug("writing the apply result to a file")
 	if err := g.client.Output.WriteToFile(body, cfg.OutputFile); err != nil {
 		return fmt.Errorf("write the apply result to a file: %w", err)
 	}

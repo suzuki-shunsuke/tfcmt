@@ -1,16 +1,16 @@
 package cli
 
-import "github.com/sirupsen/logrus"
+import (
+	"log/slog"
 
-func setLogLevel(logLevel string) {
+	"github.com/suzuki-shunsuke/slog-util/slogutil"
+)
+
+func setLogLevel(logLevelVar *slog.LevelVar, logLevel string) {
 	if logLevel == "" {
 		return
 	}
-	lvl, err := logrus.ParseLevel(logLevel)
-	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"log_level": logLevel,
-		}).WithError(err).Error("the log level is invalid")
+	if err := slogutil.SetLevel(logLevelVar, logLevel); err != nil {
+		slog.Error("the log level is invalid", "log_level", logLevel, "error", err)
 	}
-	logrus.SetLevel(lvl)
 }

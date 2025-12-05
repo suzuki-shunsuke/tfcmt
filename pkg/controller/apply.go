@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"io"
+	"log/slog"
 	"os"
 	"os/exec"
 
@@ -16,7 +17,7 @@ import (
 )
 
 // Apply sends the notification with notifier
-func (c *Controller) Apply(ctx context.Context, command Command) error {
+func (c *Controller) Apply(ctx context.Context, logger *slog.Logger, command Command) error {
 	if command.Cmd == "" {
 		return errors.New("no command specified")
 	}
@@ -50,7 +51,7 @@ func (c *Controller) Apply(ctx context.Context, command Command) error {
 	setCancel(cmd)
 	_ = cmd.Run()
 
-	return apperr.NewExitError(cmd.ProcessState.ExitCode(), ntf.Apply(ctx, &notifier.ParamExec{
+	return apperr.NewExitError(cmd.ProcessState.ExitCode(), ntf.Apply(ctx, logger, &notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),

@@ -3,15 +3,15 @@ package github
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
-	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) error {
+func (g *NotifyService) Apply(ctx context.Context, logger *slog.Logger, param *notifier.ParamExec) error {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -61,23 +61,17 @@ func (g *NotifyService) Apply(ctx context.Context, param *notifier.ParamExec) er
 		return err
 	}
 
-	logE := logrus.WithFields(logrus.Fields{
-		"program": "tfcmt",
-	})
-
 	embeddedComment, err := getEmbeddedComment(cfg, param.CIName, false)
 	if err != nil {
 		return err
 	}
-	logE.WithFields(logrus.Fields{
-		"comment": embeddedComment,
-	}).Debug("embedded HTML comment")
+	logger.Debug("embedded HTML comment", "comment", embeddedComment)
 	// embed HTML tag to hide old comments
 	body += embeddedComment
 
 	body = mask.Mask(body, g.client.Config.Masks)
 
-	logE.Debug("create a comment")
+	logger.Debug("create a comment")
 	if err := g.client.Comment.Post(ctx, body, &PostOptions{
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,

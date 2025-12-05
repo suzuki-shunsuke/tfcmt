@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/suzuki-shunsuke/urfave-cli-v3-util/helpall"
 	"github.com/suzuki-shunsuke/urfave-cli-v3-util/vcmd"
@@ -14,7 +15,7 @@ type LDFlags struct {
 	Date    string
 }
 
-func New(flags *LDFlags) *cli.Command {
+func New(flags *LDFlags, logger *slog.Logger, logLevelVar *slog.LevelVar) *cli.Command {
 	return helpall.With(vcmd.With(&cli.Command{
 		Name:           "tfcmt",
 		Usage:          "Notify the execution result of terraform command",
@@ -71,7 +72,7 @@ func New(flags *LDFlags) *cli.Command {
 				Description: `Run terraform plan and post a comment to GitHub commit, pull request, or issue.
 
 $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<terraform plan options>]`,
-				Action: cmdPlan,
+				Action: cmdPlanFunc(logger, logLevelVar),
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
 						Name:    "patch",
@@ -102,7 +103,7 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 				Description: `Run terraform apply and post a comment to GitHub commit, pull request, or issue.
 
 $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`,
-				Action: cmdApply,
+				Action: cmdApplyFunc(logger, logLevelVar),
 			},
 			vcmd.New(&vcmd.Command{
 				Name:    "tfcmt",

@@ -7,8 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/sirupsen/logrus"
-	"github.com/suzuki-shunsuke/logrus-error/logerr"
+	"github.com/suzuki-shunsuke/slog-error/slogerr"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 )
 
@@ -28,9 +27,7 @@ func ParseMasks(maskStr, maskSep string) ([]*config.Mask, error) {
 	for _, maskStr := range maskStrs {
 		mask, err := parseMask(maskStr)
 		if err != nil {
-			return nil, fmt.Errorf("parse a mask: %w", logerr.WithFields(err, logrus.Fields{
-				"mask": maskStr,
-			}))
+			return nil, fmt.Errorf("parse a mask: %w", slogerr.With(err, "mask", maskStr))
 		}
 		if mask == nil {
 			continue

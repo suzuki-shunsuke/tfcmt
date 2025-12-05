@@ -3,15 +3,15 @@ package localfile
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
-	"github.com/sirupsen/logrus"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // Plan posts comment optimized for notifications
-func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) error {
+func (g *NotifyService) Plan(ctx context.Context, logger *slog.Logger, param *notifier.ParamExec) error {
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -29,12 +29,9 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		}
 	}
 
-	logE := logrus.WithFields(logrus.Fields{
-		"program": "tfcmt",
-	})
 	if !cfg.DisableLabel {
-		logE.Debugf("updating labels")
-		errMsgs = append(errMsgs, g.client.labeler.UpdateLabels(ctx, result)...)
+		logger.Debug("updating labels")
+		errMsgs = append(errMsgs, g.client.labeler.UpdateLabels(ctx, logger, result)...)
 	}
 
 	template.SetValue(terraform.CommonTemplate{
@@ -67,7 +64,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 
 	body = mask.Mask(body, g.client.Config.Masks)
 
-	logE.Debug("write a plan output to a file")
+	logger.Debug("write a plan output to a file")
 	if err := g.client.Output.WriteToFile(body, cfg.OutputFile); err != nil {
 		return fmt.Errorf("write a plan output to a file: %w", err)
 	}

@@ -2,9 +2,6 @@ package apperr
 
 import (
 	"fmt"
-
-	"github.com/sirupsen/logrus"
-	"github.com/suzuki-shunsuke/logrus-error/logerr"
 )
 
 // Exit codes are int values for the exit code that shell interpreter can interpret
@@ -51,34 +48,7 @@ func (ee *ExitError) ExitCode() int {
 	return ee.exitCode
 }
 
-// HandleExit returns int value that shell interpreter can interpret as the exit code
-// If err has error message, it will be displayed to stderr
-// This function is heavily inspired by urfave/cli.HandleExitCoder
-func HandleExit(err error) int {
-	if err == nil {
-		return ExitCodeOK
-	}
-
-	logE := logrus.NewEntry(logrus.New())
-
-	if exitErr, ok := err.(ExitCoder); ok { //nolint:errorlint
-		errMsg := err.Error()
-		if errMsg != "" {
-			if _, ok := exitErr.(ErrorFormatter); ok {
-				logrus.Errorf("%+v", err)
-			} else {
-				logerr.WithError(logE, err).Error("tfcmt failed")
-			}
-		}
-		if code := exitErr.ExitCode(); code != 0 {
-			return code
-		}
-		if errMsg == "" {
-			return ExitCodeOK
-		}
-		return ExitCodeError
-	}
-
-	logerr.WithError(logE, err).Error("tfcmt failed")
-	return ExitCodeError
+// Unwrap returns the underlying error
+func (ee *ExitError) Unwrap() error {
+	return ee.err
 }

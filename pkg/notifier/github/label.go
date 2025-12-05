@@ -3,14 +3,15 @@ package github
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/google/go-github/v79/github"
-	"github.com/sirupsen/logrus"
+	"github.com/suzuki-shunsuke/slog-error/slogerr"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
-func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.ParseResult) []string { //nolint:cyclop
+func (g *NotifyService) UpdateLabels(ctx context.Context, logger *slog.Logger, result terraform.ParseResult) []string { //nolint:cyclop
 	cfg := g.client.Config
 	var (
 		labelToAdd string
@@ -37,14 +38,10 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.Parse
 
 	errMsgs := []string{}
 
-	logE := logrus.WithFields(logrus.Fields{
-		"program": "tfcmt",
-	})
-
 	currentLabelColor, err := g.removeResultLabels(ctx, labelToAdd)
 	if err != nil {
 		msg := "remove labels: " + err.Error()
-		logE.WithError(err).Error("remove labels")
+		slogerr.WithError(logger, err).Error("remove labels")
 		errMsgs = append(errMsgs, msg)
 	}
 
@@ -60,9 +57,7 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.Parse
 		labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
 		if err != nil {
 			msg := "add a label " + labelToAdd + ": " + err.Error()
-			logE.WithError(err).WithFields(logrus.Fields{
-				"label": labelToAdd,
-			}).Error("add a label")
+			slogerr.WithError(logger, err).Error("add a label", "label", labelToAdd)
 			errMsgs = append(errMsgs, msg)
 		}
 		if labelColor != "" {
@@ -72,10 +67,7 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.Parse
 					if label.GetColor() != labelColor {
 						if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
 							msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
-							logE.WithError(err).WithFields(logrus.Fields{
-								"label": labelToAdd,
-								"color": labelColor,
-							}).Error("update a label color")
+							slogerr.WithError(logger, err).Error("update a label color", "label", labelToAdd, "color", labelColor)
 							errMsgs = append(errMsgs, msg)
 						}
 					}
@@ -86,10 +78,7 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, result terraform.Parse
 		// set the color of label
 		if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
 			msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
-			logE.WithError(err).WithFields(logrus.Fields{
-				"label": labelToAdd,
-				"color": labelColor,
-			}).Error("update a label color")
+			slogerr.WithError(logger, err).Error("update a label color", "label", labelToAdd, "color", labelColor)
 			errMsgs = append(errMsgs, msg)
 		}
 	}

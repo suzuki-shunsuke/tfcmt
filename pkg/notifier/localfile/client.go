@@ -2,6 +2,7 @@ package localfile
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier/github"
@@ -54,7 +55,7 @@ type service struct {
 }
 
 type Labeler interface {
-	UpdateLabels(ctx context.Context, result terraform.ParseResult) []string
+	UpdateLabels(ctx context.Context, logger *slog.Logger, result terraform.ParseResult) []string
 }
 
 // NewClient returns Client initialized with Config
