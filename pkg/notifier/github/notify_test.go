@@ -1,6 +1,7 @@
 package github
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
@@ -9,6 +10,7 @@ import (
 
 func TestNotifyApply(t *testing.T) { //nolint:tparallel
 	t.Setenv("GITHUB_TOKEN", "xxx")
+	logger := slog.New(slog.DiscardHandler)
 	testCases := []struct {
 		name      string
 		config    Config
@@ -72,7 +74,7 @@ func TestNotifyApply(t *testing.T) { //nolint:tparallel
 			api := newFakeAPI()
 			client.API = &api
 			paramExec := testCase.paramExec
-			if err := client.Notify.Apply(t.Context(), &paramExec); (err == nil) != testCase.ok {
+			if err := client.Notify.Apply(t.Context(), logger, &paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
 		})
@@ -81,6 +83,7 @@ func TestNotifyApply(t *testing.T) { //nolint:tparallel
 
 func TestNotifyPlan(t *testing.T) { //nolint:tparallel
 	t.Setenv("GITHUB_TOKEN", "xxx")
+	logger := slog.New(slog.DiscardHandler)
 	testCases := []struct {
 		name      string
 		config    Config
@@ -271,7 +274,7 @@ func TestNotifyPlan(t *testing.T) { //nolint:tparallel
 			api := newFakeAPI()
 			client.API = &api
 			paramExec := testCase.paramExec
-			if err := client.Notify.Plan(t.Context(), &paramExec); (err == nil) != testCase.ok {
+			if err := client.Notify.Plan(t.Context(), logger, &paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
 			}
 		})

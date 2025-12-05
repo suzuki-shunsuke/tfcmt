@@ -3,15 +3,16 @@ package github
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
-	"github.com/sirupsen/logrus"
+	"github.com/suzuki-shunsuke/slog-error/slogerr"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // Plan posts comment optimized for notifications
-func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) error { //nolint:cyclop
+func (g *NotifyService) Plan(ctx context.Context, logger *slog.Logger, param *notifier.ParamExec) error { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -36,7 +37,7 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	}
 
 	if cfg.PR.IsNumber() && cfg.ResultLabels.HasAnyLabelDefined() {
-		errMsgs = append(errMsgs, g.UpdateLabels(ctx, result)...)
+		errMsgs = append(errMsgs, g.UpdateLabels(ctx, logger, result)...)
 	}
 
 	if cfg.IgnoreWarning {
@@ -71,27 +72,21 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 		return err
 	}
 
-	logE := logrus.WithFields(logrus.Fields{
-		"program": "tfcmt",
-	})
-
 	embeddedComment, err := getEmbeddedComment(cfg, param.CIName, true)
 	if err != nil {
 		return err
 	}
-	logE.WithFields(logrus.Fields{
-		"comment": embeddedComment,
-	}).Debug("embedded HTML comment")
+	logger.Debug("embedded HTML comment", "comment", embeddedComment)
 	// embed HTML tag to hide old comments
 	body += embeddedComment
 
 	body = mask.Mask(body, g.client.Config.Masks)
 
 	if cfg.Patch && cfg.PR.Number != 0 {
-		logE.Debug("try patching")
+		logger.Debug("try patching")
 		comments, err := g.client.Comment.List(ctx, cfg.Owner, cfg.Repo, cfg.PR.Number)
 		if err != nil {
-			logE.WithError(err).Debug("list comments")
+			slogerr.WithError(logger, err).Debug("list comments")
 			// Post a new comment instead of patching an existing comment
 			if err := g.client.Comment.Post(ctx, body, &PostOptions{
 				Number:   cfg.PR.Number,
@@ -101,14 +96,14 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 			}
 			return nil
 		}
-		logE.WithField("size", len(comments)).Debug("list comments")
-		comment := g.getPatchedComment(logE, comments, cfg.Vars["target"])
+		logger.Debug("list comments", "size", len(comments))
+		comment := g.getPatchedComment(logger, comments, cfg.Vars["target"])
 		if comment != nil {
 			if comment.Body == body {
-				logE.Debug("comment isn't changed")
+				logger.Debug("comment isn't changed")
 				return nil
 			}
-			logE.WithField("comment_id", comment.DatabaseID).Debug("patch a comment")
+			logger.Debug("patch a comment", "comment_id", comment.DatabaseID)
 			if err := g.client.Comment.Patch(ctx, body, int64(comment.DatabaseID)); err != nil {
 				return fmt.Errorf("patch a comment: %w", err)
 			}
@@ -117,11 +112,11 @@ func (g *NotifyService) Plan(ctx context.Context, param *notifier.ParamExec) err
 	}
 
 	if result.HasNoChanges && result.Warning == "" && len(errMsgs) == 0 && cfg.SkipNoChanges {
-		logE.Debug("skip posting a comment because there is no change")
+		logger.Debug("skip posting a comment because there is no change")
 		return nil
 	}
 
-	logE.Debug("create a comment")
+	logger.Debug("create a comment")
 	if err := g.client.Comment.Post(ctx, body, &PostOptions{
 		Number:   cfg.PR.Number,
 		Revision: cfg.PR.Revision,

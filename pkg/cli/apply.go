@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"log/slog"
 	"os"
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/controller"
@@ -9,35 +10,37 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func cmdApply(ctx context.Context, cmd *cli.Command) error {
-	logLevel := cmd.String("log-level")
-	setLogLevel(logLevel)
+func cmdApplyFunc(logger *slog.Logger, logLevelVar *slog.LevelVar) func(ctx context.Context, cmd *cli.Command) error {
+	return func(ctx context.Context, cmd *cli.Command) error {
+		logLevel := cmd.String("log-level")
+		setLogLevel(logLevelVar, logLevel)
 
-	cfg, err := newConfig(cmd)
-	if err != nil {
-		return err
+		cfg, err := newConfig(cmd)
+		if err != nil {
+			return err
+		}
+
+		if logLevel == "" {
+			logLevel = cfg.Log.Level
+			setLogLevel(logLevelVar, logLevel)
+		}
+
+		if err := parseOpts(cmd, &cfg, os.Environ()); err != nil {
+			return err
+		}
+
+		t := &controller.Controller{
+			Config:             cfg,
+			Parser:             terraform.NewApplyParser(),
+			Template:           terraform.NewApplyTemplate(cfg.Terraform.Apply.Template),
+			ParseErrorTemplate: terraform.NewApplyParseErrorTemplate(cfg.Terraform.Apply.WhenParseError.Template),
+		}
+
+		args := cmd.Args()
+
+		return t.Apply(ctx, logger, controller.Command{
+			Cmd:  args.First(),
+			Args: args.Tail(),
+		})
 	}
-
-	if logLevel == "" {
-		logLevel = cfg.Log.Level
-		setLogLevel(logLevel)
-	}
-
-	if err := parseOpts(cmd, &cfg, os.Environ()); err != nil {
-		return err
-	}
-
-	t := &controller.Controller{
-		Config:             cfg,
-		Parser:             terraform.NewApplyParser(),
-		Template:           terraform.NewApplyTemplate(cfg.Terraform.Apply.Template),
-		ParseErrorTemplate: terraform.NewApplyParseErrorTemplate(cfg.Terraform.Apply.WhenParseError.Template),
-	}
-
-	args := cmd.Args()
-
-	return t.Apply(ctx, controller.Command{
-		Cmd:  args.First(),
-		Args: args.Tail(),
-	})
 }

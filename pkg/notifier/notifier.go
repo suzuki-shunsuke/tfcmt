@@ -2,12 +2,13 @@ package notifier
 
 import (
 	"context"
+	"log/slog"
 )
 
 // Notifier is a notification interface
 type Notifier interface {
-	Apply(ctx context.Context, param *ParamExec) error
-	Plan(ctx context.Context, param *ParamExec) error
+	Apply(ctx context.Context, logger *slog.Logger, param *ParamExec) error
+	Plan(ctx context.Context, logger *slog.Logger, param *ParamExec) error
 }
 
 type ParamExec struct {
