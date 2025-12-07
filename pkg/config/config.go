@@ -13,11 +13,11 @@ import (
 // Config is for tfcmt config structure
 type Config struct {
 	CI                 CI                `json:"-" yaml:"-"`
-	Terraform          Terraform         `json:"terraform,omitempty,omitzero"`
+	Terraform          Terraform         `json:"terraform,omitempty"`
 	Vars               map[string]string `json:"-" yaml:"-"`
 	EmbeddedVarNames   []string          `json:"embedded_var_names,omitempty" yaml:"embedded_var_names"`
 	Templates          map[string]string `json:"templates,omitempty"`
-	Log                Log               `json:"log,omitempty,omitzero"`
+	Log                Log               `json:"log,omitempty"`
 	GHEBaseURL         string            `json:"ghe_base_url,omitempty" yaml:"ghe_base_url"`
 	GHEGraphQLEndpoint string            `json:"ghe_graphql_endpoint,omitempty" yaml:"ghe_graphql_endpoint"`
 	PlanPatch          bool              `json:"plan_patch,omitempty" yaml:"plan_patch"`
@@ -49,7 +49,7 @@ type Log struct {
 
 // Terraform represents terraform configurations
 type Terraform struct {
-	Plan         Plan  `json:"plan,omitempty,omitzero"`
+	Plan         Plan  `json:"plan,omitempty"`
 	Apply        Apply `json:"apply,omitempty"`
 	UseRawOutput bool  `json:"use_raw_output,omitempty" yaml:"use_raw_output"`
 }
