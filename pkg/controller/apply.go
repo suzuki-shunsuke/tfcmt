@@ -10,7 +10,7 @@ import (
 	"os/exec"
 
 	"github.com/mattn/go-colorable"
-	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/apperr"
+	"github.com/suzuki-shunsuke/go-error-with-exit-code/ecerror"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/platform"
@@ -51,11 +51,11 @@ func (c *Controller) Apply(ctx context.Context, logger *slog.Logger, command Com
 	setCancel(cmd)
 	_ = cmd.Run()
 
-	return apperr.NewExitError(cmd.ProcessState.ExitCode(), ntf.Apply(ctx, logger, &notifier.ParamExec{
+	return ecerror.Wrap(ntf.Apply(ctx, logger, &notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
 		CIName:         c.Config.CI.Name,
 		ExitCode:       cmd.ProcessState.ExitCode(),
-	}))
+	}), cmd.ProcessState.ExitCode())
 }
