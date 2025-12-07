@@ -2,24 +2,16 @@ package cli
 
 import (
 	"context"
-	"log/slog"
 
-	"github.com/suzuki-shunsuke/urfave-cli-v3-util/helpall"
-	"github.com/suzuki-shunsuke/urfave-cli-v3-util/vcmd"
+	"github.com/suzuki-shunsuke/slog-util/slogutil"
+	"github.com/suzuki-shunsuke/urfave-cli-v3-util/urfave"
 	"github.com/urfave/cli/v3"
 )
 
-type LDFlags struct {
-	Version string
-	Commit  string
-	Date    string
-}
-
-func New(flags *LDFlags, logger *slog.Logger, logLevelVar *slog.LevelVar) *cli.Command {
-	return helpall.With(vcmd.With(&cli.Command{
+func Run(ctx context.Context, logger *slogutil.Logger, env *urfave.Env) error {
+	return urfave.Command(env, &cli.Command{ //nolint:wrapcheck
 		Name:           "tfcmt",
 		Usage:          "Notify the execution result of terraform command",
-		Version:        flags.Version,
 		ExitErrHandler: func(context.Context, *cli.Command, error) {},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -72,7 +64,7 @@ func New(flags *LDFlags, logger *slog.Logger, logLevelVar *slog.LevelVar) *cli.C
 				Description: `Run terraform plan and post a comment to GitHub commit, pull request, or issue.
 
 $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<terraform plan options>]`,
-				Action: cmdPlanFunc(logger, logLevelVar),
+				Action: cmdPlanFunc(logger),
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
 						Name:    "patch",
@@ -103,13 +95,8 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 				Description: `Run terraform apply and post a comment to GitHub commit, pull request, or issue.
 
 $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`,
-				Action: cmdApplyFunc(logger, logLevelVar),
+				Action: cmdApplyFunc(logger),
 			},
-			vcmd.New(&vcmd.Command{
-				Name:    "tfcmt",
-				Version: flags.Version,
-				SHA:     flags.Commit,
-			}),
 		},
-	}, flags.Commit), nil)
+	}).Run(ctx, env.Args)
 }

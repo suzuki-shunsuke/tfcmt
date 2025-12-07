@@ -2,18 +2,21 @@ package cli
 
 import (
 	"context"
-	"log/slog"
+	"fmt"
 	"os"
 
+	"github.com/suzuki-shunsuke/slog-util/slogutil"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/controller"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 	"github.com/urfave/cli/v3"
 )
 
-func cmdApplyFunc(logger *slog.Logger, logLevelVar *slog.LevelVar) func(ctx context.Context, cmd *cli.Command) error {
+func cmdApplyFunc(logger *slogutil.Logger) func(ctx context.Context, cmd *cli.Command) error {
 	return func(ctx context.Context, cmd *cli.Command) error {
 		logLevel := cmd.String("log-level")
-		setLogLevel(logLevelVar, logLevel)
+		if err := logger.SetLevel(logLevel); err != nil {
+			return fmt.Errorf("set log level: %w", err)
+		}
 
 		cfg, err := newConfig(cmd)
 		if err != nil {
@@ -22,7 +25,9 @@ func cmdApplyFunc(logger *slog.Logger, logLevelVar *slog.LevelVar) func(ctx cont
 
 		if logLevel == "" {
 			logLevel = cfg.Log.Level
-			setLogLevel(logLevelVar, logLevel)
+			if err := logger.SetLevel(logLevel); err != nil {
+				return fmt.Errorf("set log level: %w", err)
+			}
 		}
 
 		if err := parseOpts(cmd, &cfg, os.Environ()); err != nil {
@@ -38,7 +43,7 @@ func cmdApplyFunc(logger *slog.Logger, logLevelVar *slog.LevelVar) func(ctx cont
 
 		args := cmd.Args()
 
-		return t.Apply(ctx, logger, controller.Command{
+		return t.Apply(ctx, logger.Logger, controller.Command{
 			Cmd:  args.First(),
 			Args: args.Tail(),
 		})

@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/mattn/go-colorable"
-	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/apperr"
+	"github.com/suzuki-shunsuke/go-error-with-exit-code/ecerror"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/platform"
@@ -52,13 +52,13 @@ func (c *Controller) Plan(ctx context.Context, logger *slog.Logger, command Comm
 	setCancel(cmd)
 	_ = cmd.Run()
 
-	return apperr.NewExitError(cmd.ProcessState.ExitCode(), ntf.Plan(ctx, logger, &notifier.ParamExec{
+	return ecerror.Wrap(ntf.Plan(ctx, logger, &notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
 		CIName:         c.Config.CI.Name,
 		ExitCode:       cmd.ProcessState.ExitCode(),
-	}))
+	}), cmd.ProcessState.ExitCode())
 }
 
 const waitDelay = 1000 * time.Hour
