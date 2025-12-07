@@ -3,6 +3,7 @@ package terraform
 import (
 	"bytes"
 	htmltemplate "html/template"
+	"maps"
 	"strings"
 	texttemplate "text/template"
 
@@ -277,9 +278,7 @@ _This feature was introduced from [Terraform v0.15.4](https://github.com/hashico
 		"guide_apply_parse_error": "",
 	}
 
-	for k, v := range t.Templates {
-		templates[k] = v
-	}
+	maps.Copy(templates, t.Templates)
 
 	resp, err := generateOutput("default", addTemplates(t.Template, templates), data, t.UseRawOutput)
 	if err != nil {
@@ -295,8 +294,14 @@ func (t *Template) SetValue(ct CommonTemplate) {
 }
 
 func addTemplates(tpl string, templates map[string]string) string {
+	var b strings.Builder
+	b.WriteString(tpl)
 	for k, v := range templates {
-		tpl += `{{define "` + k + `"}}` + v + "{{end}}"
+		b.WriteString(`{{define "`)
+		b.WriteString(k)
+		b.WriteString(`"}}`)
+		b.WriteString(v)
+		b.WriteString("{{end}}")
 	}
-	return tpl
+	return b.String()
 }

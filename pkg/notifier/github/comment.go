@@ -85,7 +85,7 @@ func (g *CommentService) listIssueComment(ctx context.Context, owner, repo strin
 	variables := map[string]any{
 		"repositoryOwner": githubv4.String(owner),
 		"repositoryName":  githubv4.String(repo),
-		"issueNumber":     githubv4.Int(number),    //nolint:gosec
+		"issueNumber":     githubv4.Int(number),
 		"commentsCursor":  (*githubv4.String)(nil), // Null after argument to get first page.
 	}
 
@@ -121,7 +121,7 @@ func (g *CommentService) listPRComment(ctx context.Context, owner, repo string, 
 	variables := map[string]any{
 		"repositoryOwner": githubv4.String(owner),
 		"repositoryName":  githubv4.String(repo),
-		"issueNumber":     githubv4.Int(number),    //nolint:gosec
+		"issueNumber":     githubv4.Int(number),
 		"commentsCursor":  (*githubv4.String)(nil), // Null after argument to get first page.
 	}
 

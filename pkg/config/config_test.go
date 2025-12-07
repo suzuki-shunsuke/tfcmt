@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -112,17 +113,12 @@ This plan contains **resource deletion**. Please check the plan result very care
 
 func createDummy(file string) {
 	validConfig := func(file string) bool {
-		for _, c := range []string{
+		return slices.Contains([]string{
 			"tfcmt.yaml",
 			"tfcmt.yml",
 			".tfcmt.yaml",
 			".tfcmt.yml",
-		} {
-			if file == c {
-				return true
-			}
-		}
-		return false
+		}, file)
 	}
 	if !validConfig(file) {
 		return

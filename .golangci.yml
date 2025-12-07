@@ -1,6 +1,12 @@
 version: "2"
 linters:
   default: all
+  settings:
+    modernize:
+      disable:
+        # invopop/jsonschema doesn't support omitzero yet.
+        # https://github.com/invopop/jsonschema/pull/161
+        - omitzero
   disable:
     - depguard
     - dupl

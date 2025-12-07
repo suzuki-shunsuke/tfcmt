@@ -17,11 +17,11 @@ func parseVars(vars []string, envs []string, varsM map[string]string) error {
 
 func parseVarOpts(vars []string, varsM map[string]string) error {
 	for _, v := range vars {
-		a := strings.Index(v, ":")
-		if a == -1 {
+		name, value, ok := strings.Cut(v, ":")
+		if !ok {
 			return errors.New("the value of var option is invalid. the format should be '<name>:<value>': " + v)
 		}
-		varsM[v[:a]] = v[a+1:]
+		varsM[name] = value
 	}
 	return nil
 }
@@ -29,7 +29,7 @@ func parseVarOpts(vars []string, varsM map[string]string) error {
 func parseVarEnvs(envs []string, m map[string]string) {
 	for _, kv := range envs {
 		k, v, _ := strings.Cut(kv, "=")
-		if a := strings.TrimPrefix(k, "TFCMT_VAR_"); k != a {
+		if a, ok := strings.CutPrefix(k, "TFCMT_VAR_"); ok {
 			m[a] = v
 		}
 	}
