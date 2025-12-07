@@ -4,18 +4,6 @@ on: pull_request
 permissions: {}
 jobs:
   autofix:
-    # This job is used for main branch's branch protection rule's status check.
-    # If all dependent jobs succeed or are skipped this job succeeds.
-    timeout-minutes: 10
-    runs-on: ubuntu-24.04
-    permissions: {}
-    if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
-    steps:
-      - run: exit 1
-    needs:
-      - fix
-
-  fix:
     runs-on: ubuntu-24.04
     permissions: {}
     timeout-minutes: 15
