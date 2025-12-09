@@ -15,14 +15,14 @@ USAGE:
    tfcmt [global options] [command [command options]]
 
 VERSION:
-   4.14.12
+   4.14.13
 
 COMMANDS:
-   plan     Run terraform plan and post a comment to GitHub commit, pull request, or issue
-   apply    Run terraform apply and post a comment to GitHub commit, pull request, or issue
-   version  Show version
-   version  Show version
-   help, h  Shows a list of commands or help for one command
+   plan        Run terraform plan and post a comment to GitHub commit, pull request, or issue
+   apply       Run terraform apply and post a comment to GitHub commit, pull request, or issue
+   version     Show version
+   help, h     Shows a list of commands or help for one command
+   completion  Output shell completion script for bash, zsh, fish, or Powershell
 
 GLOBAL OPTIONS:
    --owner string                 GitHub Repository owner name [$TFCMT_REPO_OWNER]
@@ -54,10 +54,10 @@ DESCRIPTION:
    $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<terraform plan options>]
 
 OPTIONS:
-   --patch            update an existing comment instead of creating a new comment. If there is no existing comment, a new comment is created. (default: false) [$TFCMT_PLAN_PATCH]
-   --skip-no-changes  If there is no change tfcmt updates a label but doesn't post a comment (default: false) [$TFCMT_SKIP_NO_CHANGES]
-   --ignore-warning   If skip-no-changes is enabled, comment is posted even if there is a warning. If skip-no-changes is disabled, warning is removed from the comment. (default: false) [$TFCMT_IGNORE_WARNING]
-   --disable-label    Disable to add or update a label (default: false) [$TFCMT_DISABLE_LABEL]
+   --patch            update an existing comment instead of creating a new comment. If there is no existing comment, a new comment is created. [$TFCMT_PLAN_PATCH]
+   --skip-no-changes  If there is no change tfcmt updates a label but doesn't post a comment [$TFCMT_SKIP_NO_CHANGES]
+   --ignore-warning   If skip-no-changes is enabled, comment is posted even if there is a warning. If skip-no-changes is disabled, warning is removed from the comment. [$TFCMT_IGNORE_WARNING]
+   --disable-label    Disable to add or update a label [$TFCMT_DISABLE_LABEL]
    --help, -h         show help
 ```
 
@@ -91,21 +91,37 @@ USAGE:
    tfcmt version
 
 OPTIONS:
-   --json, -j  Output version in JSON format (default: false)
+   --json, -j  Output version in JSON format
    --help, -h  show help
 ```
 
-## tfcmt version
+## tfcmt completion
 
 ```console
-$ tfcmt version --help
+$ tfcmt completion --help
 NAME:
-   tfcmt version - Show version
+   tfcmt completion - Output shell completion script for bash, zsh, fish, or Powershell
 
 USAGE:
-   tfcmt version
+   tfcmt completion
+
+DESCRIPTION:
+   Output shell completion script for bash, zsh, fish, or Powershell.
+   Source the output to enable completion.
+
+   # .bashrc
+   source <(tfcmt completion bash)
+
+   # .zshrc
+   source <(tfcmt completion zsh)
+
+   # fish
+   tfcmt completion fish > ~/.config/fish/completions/tfcmt.fish
+
+   # Powershell
+   Output the script to path/to/autocomplete/tfcmt.ps1 an run it.
+
 
 OPTIONS:
-   --json, -j  Output version in JSON format (default: false)
    --help, -h  show help
 ```
