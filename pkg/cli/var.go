@@ -7,7 +7,6 @@ import (
 
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
-	"github.com/urfave/cli/v3"
 )
 
 func parseVars(vars []string, envs []string, varsM map[string]string) error {
@@ -35,46 +34,45 @@ func parseVarEnvs(envs []string, m map[string]string) {
 	}
 }
 
-func parseOpts(cmd *cli.Command, cfg *config.Config, envs []string) error { //nolint:cyclop
-	if owner := cmd.String("owner"); owner != "" {
-		cfg.CI.Owner = owner
+func parseOptsPlan(args *PlanArgs, cfg *config.Config, envs []string) error { //nolint:cyclop
+	if args.Owner != "" {
+		cfg.CI.Owner = args.Owner
 	}
 
-	if repo := cmd.String("repo"); repo != "" {
-		cfg.CI.Repo = repo
+	if args.Repo != "" {
+		cfg.CI.Repo = args.Repo
 	}
 
-	if sha := cmd.String("sha"); sha != "" {
-		cfg.CI.SHA = sha
+	if args.SHA != "" {
+		cfg.CI.SHA = args.SHA
 	}
 
-	if pr := cmd.Int("pr"); pr != 0 {
-		cfg.CI.PRNumber = pr
+	if args.PR != 0 {
+		cfg.CI.PRNumber = args.PR
 	}
 
-	if cmd.IsSet("patch") {
-		cfg.PlanPatch = cmd.Bool("patch")
+	if args.PatchCount > 0 {
+		cfg.PlanPatch = args.Patch
 	}
 
-	if buildURL := cmd.String("build-url"); buildURL != "" {
-		cfg.CI.Link = buildURL
+	if args.BuildURL != "" {
+		cfg.CI.Link = args.BuildURL
 	}
 
-	if output := cmd.String("output"); output != "" {
-		cfg.Output = output
+	if args.Output != "" {
+		cfg.Output = args.Output
 	}
 
-	if cmd.IsSet("skip-no-changes") {
-		cfg.Terraform.Plan.WhenNoChanges.DisableComment = cmd.Bool("skip-no-changes")
+	if args.SkipNoChangesCount > 0 {
+		cfg.Terraform.Plan.WhenNoChanges.DisableComment = args.SkipNoChanges
 	}
 
-	if cmd.IsSet("ignore-warning") {
-		cfg.Terraform.Plan.IgnoreWarning = cmd.Bool("ignore-warning")
+	if args.IgnoreWarningCount > 0 {
+		cfg.Terraform.Plan.IgnoreWarning = args.IgnoreWarning
 	}
 
-	vars := cmd.StringSlice("var")
-	vm := make(map[string]string, len(vars))
-	if err := parseVars(vars, envs, vm); err != nil {
+	vm := make(map[string]string, len(args.Var))
+	if err := parseVars(args.Var, envs, vm); err != nil {
 		return err
 	}
 	cfg.Vars = vm
@@ -86,9 +84,57 @@ func parseOpts(cmd *cli.Command, cfg *config.Config, envs []string) error { //no
 	}
 	cfg.Masks = masks
 
-	if cmd.IsSet("disable-label") {
-		cfg.Terraform.Plan.DisableLabel = cmd.Bool("disable-label")
+	if args.DisableLabelCount > 0 {
+		cfg.Terraform.Plan.DisableLabel = args.DisableLabel
 	}
+
+	if cfg.GHEBaseURL == "" {
+		cfg.GHEBaseURL = os.Getenv("GITHUB_API_URL")
+	}
+	if cfg.GHEGraphQLEndpoint == "" {
+		cfg.GHEGraphQLEndpoint = os.Getenv("GITHUB_GRAPHQL_URL")
+	}
+
+	return nil
+}
+
+func parseOptsApply(args *ApplyArgs, cfg *config.Config, envs []string) error { //nolint:cyclop
+	if args.Owner != "" {
+		cfg.CI.Owner = args.Owner
+	}
+
+	if args.Repo != "" {
+		cfg.CI.Repo = args.Repo
+	}
+
+	if args.SHA != "" {
+		cfg.CI.SHA = args.SHA
+	}
+
+	if args.PR != 0 {
+		cfg.CI.PRNumber = args.PR
+	}
+
+	if args.BuildURL != "" {
+		cfg.CI.Link = args.BuildURL
+	}
+
+	if args.Output != "" {
+		cfg.Output = args.Output
+	}
+
+	vm := make(map[string]string, len(args.Var))
+	if err := parseVars(args.Var, envs, vm); err != nil {
+		return err
+	}
+	cfg.Vars = vm
+
+	// Mask https://github.com/suzuki-shunsuke/tfcmt/discussions/1083
+	masks, err := mask.ParseMasksFromEnv()
+	if err != nil {
+		return err
+	}
+	cfg.Masks = masks
 
 	if cfg.GHEBaseURL == "" {
 		cfg.GHEBaseURL = os.Getenv("GITHUB_API_URL")

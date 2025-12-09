@@ -2,12 +2,11 @@ package cli
 
 import (
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/config"
-	"github.com/urfave/cli/v3"
 )
 
-func newConfig(cmd *cli.Command) (config.Config, error) {
+func newConfig(configPath string) (config.Config, error) {
 	cfg := config.Config{}
-	confPath, err := cfg.Find(cmd.String("config"))
+	confPath, err := cfg.Find(configPath)
 	if err != nil {
 		return cfg, err
 	}
