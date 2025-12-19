@@ -258,6 +258,33 @@ func TestNotifyPlan(t *testing.T) { //nolint:tparallel
 			},
 			ok: true,
 		},
+		{
+			name: "case 8",
+			// valid with override label
+			config: Config{
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Revision: "",
+					Number:   1,
+				},
+				Parser:             terraform.NewPlanParser(),
+				Template:           terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
+				ResultLabels: ResultLabels{
+					AddOrUpdateLabel: "add-or-update",
+					DestroyLabel:     "destroy",
+					NoChangesLabel:   "no-changes",
+					PlanErrorLabel:   "error",
+					OverrideLabel:    "custom-infrastructure-label",
+				},
+			},
+			paramExec: notifier.ParamExec{
+				Stdout:   "Plan: 1 to add",
+				ExitCode: 2,
+			},
+			ok: true,
+		},
 	}
 
 	for i, testCase := range testCases {

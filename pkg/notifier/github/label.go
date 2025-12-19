@@ -21,6 +21,13 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, logger *slog.Logger, r
 		return nil
 	}
 
+	// If an override label is specified, use it instead of the calculated label
+	if cfg.ResultLabels.OverrideLabel != "" {
+		labelToAdd = cfg.ResultLabels.OverrideLabel
+		// Don't remove other labels when using override label
+		return g.addLabelOnly(ctx, logger, labelToAdd, labelColor)
+	}
+
 	switch {
 	case result.HasAddOrUpdateOnly:
 		labelToAdd = cfg.ResultLabels.AddOrUpdateLabel
@@ -112,4 +119,59 @@ func (g *NotifyService) removeResultLabels(ctx context.Context, label string) (s
 	}
 
 	return labelColor, nil
+}
+
+// addLabelOnly adds a label without removing other labels.
+// This is used when an override label is specified to allow multiple labels to accumulate.
+func (g *NotifyService) addLabelOnly(ctx context.Context, logger *slog.Logger, labelToAdd, labelColor string) []string {
+	cfg := g.client.Config
+	errMsgs := []string{}
+
+	if labelToAdd == "" {
+		return errMsgs
+	}
+
+	if len(labelToAdd) > 50 { //nolint:mnd
+		return append(errMsgs, fmt.Sprintf("failed to add a label %s: label name is too long (max: 50)", labelToAdd))
+	}
+
+	// Check if label already exists
+	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, &github.ListOptions{
+		PerPage: 100, //nolint:mnd
+	})
+	if err != nil {
+		msg := "list labels: " + err.Error()
+		slogerr.WithError(logger, err).Error("list labels")
+		return append(errMsgs, msg)
+	}
+
+	labelExists := false
+	currentLabelColor := ""
+	for _, label := range labels {
+		if label.GetName() == labelToAdd {
+			labelExists = true
+			currentLabelColor = label.GetColor()
+			break
+		}
+	}
+
+	if !labelExists {
+		_, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
+		if err != nil {
+			msg := "add a label " + labelToAdd + ": " + err.Error()
+			slogerr.WithError(logger, err).Error("add a label", "label", labelToAdd)
+			errMsgs = append(errMsgs, msg)
+			return errMsgs
+		}
+	}
+
+	if labelColor != "" && labelColor != currentLabelColor {
+		if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
+			msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+			slogerr.WithError(logger, err).Error("update a label color", "label", labelToAdd, "color", labelColor)
+			errMsgs = append(errMsgs, msg)
+		}
+	}
+
+	return errMsgs
 }

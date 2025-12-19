@@ -131,6 +131,10 @@ func (c *Controller) getPlanNotifier(ctx context.Context) (notifier.Notifier, er
 		}
 		labels = a
 	}
+	// Apply label override if specified
+	if c.Config.LabelOverride != "" {
+		labels.OverrideLabel = c.Config.LabelOverride
+	}
 	var gh *github.NotifyService
 	if !c.Config.Terraform.Plan.DisableLabel || c.Config.Output == "" {
 		client, err := github.NewClient(ctx, &github.Config{

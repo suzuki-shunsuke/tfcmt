@@ -31,6 +31,7 @@ type PlanArgs struct {
 	IgnoreWarningCount int
 	DisableLabel       bool
 	DisableLabelCount  int
+	Label              string
 	Command            string
 	CommandArgs        []string
 }
@@ -38,6 +39,7 @@ type PlanArgs struct {
 type ApplyArgs struct {
 	*GlobalArgs
 
+	Label       string
 	Command     string
 	CommandArgs []string
 }
@@ -151,6 +153,12 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 							Count: &planArgs.DisableLabelCount,
 						},
 					},
+					&cli.StringFlag{
+						Name:        "label",
+						Usage:       "Override the default calculated label with a custom label. This allows assigning multiple labels across runs.",
+						Sources:     cli.EnvVars("TFCMT_LABEL"),
+						Destination: &planArgs.Label,
+					},
 				},
 				Arguments: []cli.Argument{
 					&cli.StringArg{
@@ -173,6 +181,14 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 $ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`,
 				Action: func(ctx context.Context, _ *cli.Command) error {
 					return actionApply(ctx, logger, applyArgs)
+				},
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:        "label",
+						Usage:       "Override the default calculated label with a custom label. This allows assigning multiple labels across runs.",
+						Sources:     cli.EnvVars("TFCMT_LABEL"),
+						Destination: &applyArgs.Label,
+					},
 				},
 				Arguments: []cli.Argument{
 					&cli.StringArg{

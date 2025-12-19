@@ -25,6 +25,7 @@ type Config struct {
 	RepoName           string            `json:"repo_name,omitempty" yaml:"repo_name"`
 	Output             string            `json:"-" yaml:"-"`
 	Masks              []*Mask           `json:"-" yaml:"-"`
+	LabelOverride      string            `json:"-" yaml:"-"`
 }
 
 type Mask struct {

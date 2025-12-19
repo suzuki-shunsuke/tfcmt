@@ -267,6 +267,18 @@ func TestIsResultLabels(t *testing.T) {
 			label: "",
 			want:  false,
 		},
+		{
+			// Override label should not be considered a result label
+			rl: ResultLabels{
+				AddOrUpdateLabel: "add-or-update",
+				DestroyLabel:     "destroy",
+				NoChangesLabel:   "no-changes",
+				PlanErrorLabel:   "error",
+				OverrideLabel:    "custom-label",
+			},
+			label: "custom-label",
+			want:  false,
+		},
 	}
 	for _, testCase := range testCases {
 		if testCase.rl.IsResultLabel(testCase.label) != testCase.want {

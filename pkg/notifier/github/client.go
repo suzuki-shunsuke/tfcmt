@@ -140,6 +140,7 @@ type ResultLabels struct {
 	DestroyLabelColor     string
 	NoChangesLabelColor   string
 	PlanErrorLabelColor   string
+	OverrideLabel         string
 }
 
 // HasAnyLabelDefined returns true if any of the internal labels are set

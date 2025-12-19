@@ -88,6 +88,10 @@ func parseOptsPlan(args *PlanArgs, cfg *config.Config, envs []string) error { //
 		cfg.Terraform.Plan.DisableLabel = args.DisableLabel
 	}
 
+	if args.Label != "" {
+		cfg.LabelOverride = args.Label
+	}
+
 	if cfg.GHEBaseURL == "" {
 		cfg.GHEBaseURL = os.Getenv("GITHUB_API_URL")
 	}
@@ -135,6 +139,10 @@ func parseOptsApply(args *ApplyArgs, cfg *config.Config, envs []string) error { 
 		return err
 	}
 	cfg.Masks = masks
+
+	if args.Label != "" {
+		cfg.LabelOverride = args.Label
+	}
 
 	if cfg.GHEBaseURL == "" {
 		cfg.GHEBaseURL = os.Getenv("GITHUB_API_URL")

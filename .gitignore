@@ -26,3 +26,6 @@ dist
 .DS_Store
 
 third_party_licenses
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.cursor/rules/snyk_rules.mdc
