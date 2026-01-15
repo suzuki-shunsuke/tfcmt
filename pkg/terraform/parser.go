@@ -42,8 +42,9 @@ type PlanParser struct {
 	Create         *regexp.Regexp
 	Update         *regexp.Regexp
 	Delete         *regexp.Regexp
-	Replace        *regexp.Regexp
-	ReplaceOption  *regexp.Regexp
+	Replace            *regexp.Regexp
+	ReplaceOption      *regexp.Regexp
+	ReplaceTriggeredBy *regexp.Regexp
 	Move           *regexp.Regexp
 	Import         *regexp.Regexp
 	ImportedFrom   *regexp.Regexp
@@ -71,8 +72,9 @@ func NewPlanParser() *PlanParser {
 		Update:        regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
 		Delete:        regexp.MustCompile(`^ *# (.*) will be destroyed$`),
 		Replace:       regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
-		ReplaceOption: regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
-		Move:          regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
+		ReplaceOption:      regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
+		ReplaceTriggeredBy: regexp.MustCompile(`^ *# (.*?) will be replaced due to changes in replace_triggered_by$`),
+		Move:               regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
 		Import:        regexp.MustCompile(`^ *# (.*?) will be imported$`),
 		ImportedFrom:  regexp.MustCompile(`^ *# \(imported from (.*?)\)$`),
 		MovedFrom:     regexp.MustCompile(`^ *# \(moved from (.*?)\)$`),
@@ -178,6 +180,8 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop,maintidx
 			replacedResources = append(replacedResources, rsc)
 		} else if rsc := extractResource(p.ReplaceOption, line); rsc != "" {
 			replacedResources = append(replacedResources, rsc)
+		} else if rsc := extractResource(p.ReplaceTriggeredBy, line); rsc != "" {
+			replacedResources = append(replacedResources, rsc)
 		} else if rsc := extractResource(p.Import, line); rsc != "" {
 			importedResources = append(importedResources, rsc)
 		} else if rsc := extractResource(p.ImportedFrom, line); rsc != "" {
@@ -265,6 +269,8 @@ func (p *PlanParser) changedResources(line string) string {
 	} else if rsc := extractResource(p.Replace, line); rsc != "" {
 		return rsc
 	} else if rsc := extractResource(p.ReplaceOption, line); rsc != "" {
+		return rsc
+	} else if rsc := extractResource(p.ReplaceTriggeredBy, line); rsc != "" {
 		return rsc
 	}
 	return ""
