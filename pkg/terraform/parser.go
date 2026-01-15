@@ -33,21 +33,22 @@ type ParseResult struct {
 
 // PlanParser is a parser for terraform plan
 type PlanParser struct {
-	Pass           *regexp.Regexp
-	Fail           *regexp.Regexp
-	Warning        *regexp.Regexp
-	OutputsChanges *regexp.Regexp
-	HasDestroy     *regexp.Regexp
-	HasNoChanges   *regexp.Regexp
-	Create         *regexp.Regexp
-	Update         *regexp.Regexp
-	Delete         *regexp.Regexp
-	Replace        *regexp.Regexp
-	ReplaceOption  *regexp.Regexp
-	Move           *regexp.Regexp
-	Import         *regexp.Regexp
-	ImportedFrom   *regexp.Regexp
-	MovedFrom      *regexp.Regexp
+	Pass               *regexp.Regexp
+	Fail               *regexp.Regexp
+	Warning            *regexp.Regexp
+	OutputsChanges     *regexp.Regexp
+	HasDestroy         *regexp.Regexp
+	HasNoChanges       *regexp.Regexp
+	Create             *regexp.Regexp
+	Update             *regexp.Regexp
+	Delete             *regexp.Regexp
+	Replace            *regexp.Regexp
+	ReplaceOption      *regexp.Regexp
+	ReplaceTriggeredBy *regexp.Regexp
+	Move               *regexp.Regexp
+	Import             *regexp.Regexp
+	ImportedFrom       *regexp.Regexp
+	MovedFrom          *regexp.Regexp
 }
 
 // ApplyParser is a parser for terraform apply
@@ -66,16 +67,17 @@ func NewPlanParser() *PlanParser {
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy: regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
 		// "0 to add, 0 to change, 0 to destroy" should be treated as "no change" (issue#358)
-		HasNoChanges:  regexp.MustCompile(`(?m)^(No changes\.|Plan: 0 to add, 0 to change, 0 to destroy\.)`),
-		Create:        regexp.MustCompile(`^ *# (.*) will be created$`),
-		Update:        regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
-		Delete:        regexp.MustCompile(`^ *# (.*) will be destroyed$`),
-		Replace:       regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
-		ReplaceOption: regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
-		Move:          regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
-		Import:        regexp.MustCompile(`^ *# (.*?) will be imported$`),
-		ImportedFrom:  regexp.MustCompile(`^ *# \(imported from (.*?)\)$`),
-		MovedFrom:     regexp.MustCompile(`^ *# \(moved from (.*?)\)$`),
+		HasNoChanges:       regexp.MustCompile(`(?m)^(No changes\.|Plan: 0 to add, 0 to change, 0 to destroy\.)`),
+		Create:             regexp.MustCompile(`^ *# (.*) will be created$`),
+		Update:             regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
+		Delete:             regexp.MustCompile(`^ *# (.*) will be destroyed$`),
+		Replace:            regexp.MustCompile(`^ *# (.*?)(?: is tainted, so)? must be replaced$`),
+		ReplaceOption:      regexp.MustCompile(`^ *# (.*?) will be replaced, as requested$`),
+		ReplaceTriggeredBy: regexp.MustCompile(`^ *# (.*?) will be replaced due to changes in replace_triggered_by$`),
+		Move:               regexp.MustCompile(`^ *# (.*?) has moved to (.*?)$`),
+		Import:             regexp.MustCompile(`^ *# (.*?) will be imported$`),
+		ImportedFrom:       regexp.MustCompile(`^ *# \(imported from (.*?)\)$`),
+		MovedFrom:          regexp.MustCompile(`^ *# \(moved from (.*?)\)$`),
 	}
 }
 
@@ -178,6 +180,8 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop,maintidx
 			replacedResources = append(replacedResources, rsc)
 		} else if rsc := extractResource(p.ReplaceOption, line); rsc != "" {
 			replacedResources = append(replacedResources, rsc)
+		} else if rsc := extractResource(p.ReplaceTriggeredBy, line); rsc != "" {
+			replacedResources = append(replacedResources, rsc)
 		} else if rsc := extractResource(p.Import, line); rsc != "" {
 			importedResources = append(importedResources, rsc)
 		} else if rsc := extractResource(p.ImportedFrom, line); rsc != "" {
@@ -265,6 +269,8 @@ func (p *PlanParser) changedResources(line string) string {
 	} else if rsc := extractResource(p.Replace, line); rsc != "" {
 		return rsc
 	} else if rsc := extractResource(p.ReplaceOption, line); rsc != "" {
+		return rsc
+	} else if rsc := extractResource(p.ReplaceTriggeredBy, line); rsc != "" {
 		return rsc
 	}
 	return ""
