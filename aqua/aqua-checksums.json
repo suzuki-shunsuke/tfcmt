@@ -281,6 +281,36 @@
       "algorithm": "sha256"
     },
     {
+      "id": "http/golang.org/dl/go1.25.7.darwin-amd64.tar.gz",
+      "checksum": "BF5050A2152F4053837B886E8D9640C829DBACBC3370F913351EB0904CB706F5",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/golang.org/dl/go1.25.7.darwin-arm64.tar.gz",
+      "checksum": "FF18369FFAD05C57D5BED888B660B31385F3C913670A83EF557CDFD98EA9AE1B",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/golang.org/dl/go1.25.7.linux-amd64.tar.gz",
+      "checksum": "12E6D6A191091AE27DC31F6EFC630E3A3B8BA409BAF3573D955B196FDF086005",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/golang.org/dl/go1.25.7.linux-arm64.tar.gz",
+      "checksum": "BA611A53534135A81067240EFF9508CD7E256C560EDD5D8C2FEF54F083C07129",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/golang.org/dl/go1.25.7.windows-amd64.zip",
+      "checksum": "C75E5F4FF62D085CC0017BE3AD19D5536F46825FA05DB06EC468941F847E3228",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/golang.org/dl/go1.25.7.windows-arm64.zip",
+      "checksum": "807033F85931BC4A589CA8497535DCBEB1F30D506E47FA200F5F04C4A71C3D9F",
+      "algorithm": "sha256"
+    },
+    {
       "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.472.1/registry.yaml",
       "checksum": "BEBFA2ACAD7F00F7BC687E466DDBDA2FCA1EAC1F8931AB526FBDEB291CF7FB67FCCF8D30EB81DA74B1C8A49F93CDEC426A67D23B10A9A6285C8C8FDB330BBCE4",
       "algorithm": "sha512"
