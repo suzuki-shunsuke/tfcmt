@@ -450,6 +450,46 @@ Note: You didn't use the -out option to save this plan, so Terraform can't guara
 "terraform apply" now.
 `
 
+const planReplaceTriggeredBy = `
+terraform_data.replacement: Refreshing state... [id=e5dbd5ff-4b98-c184-4f54-de06fd1e5ecf]
+terraform_data.example1: Refreshing state... [id=43655691-08e4-9174-dc9d-91350450faf3]
+terraform_data.example2: Refreshing state... [id=926cb64d-df54-4c31-26b8-72fe9fe84264]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # terraform_data.example1 must be replaced
+-/+ resource "terraform_data" "example1" {
+      ~ id               = "43655691-08e4-9174-dc9d-91350450faf3" -> (known after apply)
+      ~ triggers_replace = [
+          ~ 1 -> 2,
+        ]
+    }
+
+  # terraform_data.example2 will be replaced due to changes in replace_triggered_by
+-/+ resource "terraform_data" "example2" {
+      ~ id = "926cb64d-df54-4c31-26b8-72fe9fe84264" -> (known after apply)
+    }
+
+  # terraform_data.replacement will be updated in-place
+  ~ resource "terraform_data" "replacement" {
+        id     = "e5dbd5ff-4b98-c184-4f54-de06fd1e5ecf"
+      ~ input  = 1 -> 2
+      ~ output = 1 -> (known after apply)
+    }
+
+Plan: 2 to add, 1 to change, 2 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+`
+
 const applySuccessResult = `
 data.terraform_remote_state.teams_platform_development: Refreshing state...
 google_project.my_service: Refreshing state...
@@ -854,6 +894,47 @@ Plan: 1 to add, 1 to change, 0 to destroy.`,
     }
 
 Plan: 1 to import, 2 to add, 2 to change, 1 to destroy.`,
+			},
+		},
+		{
+			name: "replace_triggered_by resources are parsed",
+			body: planReplaceTriggeredBy,
+			result: ParseResult{
+				Result:             "Plan: 2 to add, 1 to change, 2 to destroy.",
+				HasAddOrUpdateOnly: false,
+				HasDestroy:         true,
+				HasNoChanges:       false,
+				HasError:           false,
+				Error:              nil,
+				UpdatedResources: []string{
+					"terraform_data.replacement",
+				},
+				ReplacedResources: []string{
+					"terraform_data.example1",
+					"terraform_data.example2",
+				},
+				ChangedResult: `
+  # terraform_data.example1 must be replaced
+-/+ resource "terraform_data" "example1" {
+      ~ id               = "43655691-08e4-9174-dc9d-91350450faf3" -> (known after apply)
+      ~ triggers_replace = [
+          ~ 1 -> 2,
+        ]
+    }
+
+  # terraform_data.example2 will be replaced due to changes in replace_triggered_by
+-/+ resource "terraform_data" "example2" {
+      ~ id = "926cb64d-df54-4c31-26b8-72fe9fe84264" -> (known after apply)
+    }
+
+  # terraform_data.replacement will be updated in-place
+  ~ resource "terraform_data" "replacement" {
+        id     = "e5dbd5ff-4b98-c184-4f54-de06fd1e5ecf"
+      ~ input  = 1 -> 2
+      ~ output = 1 -> (known after apply)
+    }
+
+Plan: 2 to add, 1 to change, 2 to destroy.`,
 			},
 		},
 	}

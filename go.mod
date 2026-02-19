@@ -1,11 +1,11 @@
 module github.com/suzuki-shunsuke/tfcmt/v4
 
-go 1.25.5
+go 1.25.7
 
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/google/go-cmp v0.7.0
-	github.com/google/go-github/v80 v80.0.0
+	github.com/google/go-github/v83 v83.0.0
 	github.com/mattn/go-colorable v0.1.14
 	github.com/shurcooL/githubv4 v0.0.0-20240429030203-be2daab69064
 	github.com/suzuki-shunsuke/gen-go-jsonschema v0.1.0
@@ -13,11 +13,11 @@ require (
 	github.com/suzuki-shunsuke/go-ci-env/v3 v3.3.0
 	github.com/suzuki-shunsuke/go-error-with-exit-code v1.0.0
 	github.com/suzuki-shunsuke/go-findconfig v1.2.0
-	github.com/suzuki-shunsuke/slog-error v0.2.1
-	github.com/suzuki-shunsuke/slog-util v0.3.0
-	github.com/suzuki-shunsuke/urfave-cli-v3-util v0.1.2
-	github.com/urfave/cli/v3 v3.6.1
-	golang.org/x/oauth2 v0.34.0
+	github.com/suzuki-shunsuke/slog-error v0.2.2
+	github.com/suzuki-shunsuke/slog-util v0.3.1
+	github.com/suzuki-shunsuke/urfave-cli-v3-util v0.2.1
+	github.com/urfave/cli/v3 v3.6.2
+	golang.org/x/oauth2 v0.35.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -27,7 +27,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.0 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
 	github.com/invopop/jsonschema v0.12.0 // indirect

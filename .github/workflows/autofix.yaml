@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: suzuki-shunsuke/go-autofix-action@2a159c8f21af356c29ee26d76821b5c15956c1d6 # v0.1.11
         with:
-          aqua_version: v2.55.3
+          aqua_version: v2.56.6
 
       - name: get nested property
         id: package_json
@@ -18,7 +18,7 @@ jobs:
         with:
           path: website/package.json
           prop_path: volta.node
-      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: ${{steps.package_json.outputs.prop}}
           cache: npm
@@ -27,4 +27,4 @@ jobs:
         working-directory: website
       - run: bash scripts/generate-usage.sh
         working-directory: website
-      - uses: autofix-ci/action@635ffb0c9798bd160680f18fd73371e355b85f27 # v1.3.2
+      - uses: autofix-ci/action@7a166d7532b277f34e16238930461bf77f9d7ed8 # v1.3.3
