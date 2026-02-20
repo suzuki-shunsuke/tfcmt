@@ -98,7 +98,7 @@ func (g *CommentService) listIssueComment(ctx context.Context, owner, repo strin
 		if !q.Repository.Issue.Comments.PageInfo.HasNextPage {
 			break
 		}
-		variables["commentsCursor"] = githubv4.NewString(q.Repository.Issue.Comments.PageInfo.EndCursor)
+		variables["commentsCursor"] = new(q.Repository.Issue.Comments.PageInfo.EndCursor)
 	}
 	return allComments, nil
 }
@@ -134,7 +134,7 @@ func (g *CommentService) listPRComment(ctx context.Context, owner, repo string, 
 		if !q.Repository.PullRequest.Comments.PageInfo.HasNextPage {
 			break
 		}
-		variables["commentsCursor"] = githubv4.NewString(q.Repository.PullRequest.Comments.PageInfo.EndCursor)
+		variables["commentsCursor"] = new(q.Repository.PullRequest.Comments.PageInfo.EndCursor)
 	}
 	return allComments, nil
 }
