@@ -13,10 +13,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "when_parse_error"
-      ]
+      "type": "object"
     },
     "Config": {
       "properties": {
@@ -94,14 +91,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "when_add_or_update_only",
-        "when_destroy",
-        "when_no_changes",
-        "when_plan_error",
-        "when_parse_error"
-      ]
+      "type": "object"
     },
     "Terraform": {
       "properties": {
@@ -116,11 +106,7 @@
         }
       },
       "additionalProperties": false,
-      "type": "object",
-      "required": [
-        "plan",
-        "apply"
-      ]
+      "type": "object"
     },
     "WhenAddOrUpdateOnly": {
       "properties": {
