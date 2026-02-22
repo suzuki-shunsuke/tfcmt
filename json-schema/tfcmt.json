@@ -111,7 +111,7 @@
       "additionalProperties": false,
       "type": "object"
     },
-    "WhenApplyError": {
+    "WhenAddOrUpdateOnly": {
       "properties": {
         "label": {
           "type": "string"
@@ -126,7 +126,7 @@
       "additionalProperties": false,
       "type": "object"
     },
-    "WhenAddOrUpdateOnly": {
+    "WhenApplyError": {
       "properties": {
         "label": {
           "type": "string"
