@@ -49,19 +49,19 @@ type Log struct {
 
 // Terraform represents terraform configurations
 type Terraform struct {
-	Plan         Plan  `json:"plan,omitzero"`
-	Apply        Apply `json:"apply,omitzero"`
+	Plan         Plan  `json:"plan,omitempty"`
+	Apply        Apply `json:"apply,omitempty"`
 	UseRawOutput bool  `json:"use_raw_output,omitempty" yaml:"use_raw_output"`
 }
 
 // Plan is a terraform plan config
 type Plan struct {
 	Template            string              `json:"template,omitempty"`
-	WhenAddOrUpdateOnly WhenAddOrUpdateOnly `json:"when_add_or_update_only,omitzero" yaml:"when_add_or_update_only"`
-	WhenDestroy         WhenDestroy         `json:"when_destroy,omitzero" yaml:"when_destroy"`
-	WhenNoChanges       WhenNoChanges       `json:"when_no_changes,omitzero" yaml:"when_no_changes"`
-	WhenPlanError       WhenPlanError       `json:"when_plan_error,omitzero" yaml:"when_plan_error"`
-	WhenParseError      WhenParseError      `json:"when_parse_error,omitzero" yaml:"when_parse_error"`
+	WhenAddOrUpdateOnly WhenAddOrUpdateOnly `json:"when_add_or_update_only,omitempty" yaml:"when_add_or_update_only"`
+	WhenDestroy         WhenDestroy         `json:"when_destroy,omitempty" yaml:"when_destroy"`
+	WhenNoChanges       WhenNoChanges       `json:"when_no_changes,omitempty" yaml:"when_no_changes"`
+	WhenPlanError       WhenPlanError       `json:"when_plan_error,omitempty" yaml:"when_plan_error"`
+	WhenParseError      WhenParseError      `json:"when_parse_error,omitempty" yaml:"when_parse_error"`
 	DisableLabel        bool                `json:"disable_label,omitempty" yaml:"disable_label"`
 	IgnoreWarning       bool                `json:"ignore_warning,omitempty" yaml:"ignore_warning"`
 }
@@ -103,7 +103,7 @@ type WhenParseError struct {
 // Apply is a terraform apply config
 type Apply struct {
 	Template       string         `json:"template,omitempty"`
-	WhenParseError WhenParseError `json:"when_parse_error,omitzero" yaml:"when_parse_error"`
+	WhenParseError WhenParseError `json:"when_parse_error,omitempty" yaml:"when_parse_error"`
 }
 
 // LoadFile binds the config file to Config structure
