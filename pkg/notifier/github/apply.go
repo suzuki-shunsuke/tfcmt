@@ -11,7 +11,7 @@ import (
 )
 
 // Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(ctx context.Context, logger *slog.Logger, param *notifier.ParamExec) error {
+func (g *NotifyService) Apply(ctx context.Context, logger *slog.Logger, param *notifier.ParamExec) error { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
