@@ -35,6 +35,10 @@ func (g *NotifyService) Apply(ctx context.Context, logger *slog.Logger, param *n
 		}
 	}
 
+	if cfg.PR.IsNumber() && cfg.ResultLabels.HasApplyLabelDefined() {
+		errMsgs = append(errMsgs, g.UpdateApplyErrorLabel(ctx, logger, result.HasError)...)
+	}
+
 	template.SetValue(terraform.CommonTemplate{
 		Result:                 result.Result,
 		ChangedResult:          result.ChangedResult,

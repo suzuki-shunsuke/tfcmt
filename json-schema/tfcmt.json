@@ -10,6 +10,9 @@
         },
         "when_parse_error": {
           "$ref": "#/$defs/WhenParseError"
+        },
+        "when_apply_error": {
+          "$ref": "#/$defs/WhenApplyError"
         }
       },
       "additionalProperties": false,
@@ -102,6 +105,21 @@
           "$ref": "#/$defs/Apply"
         },
         "use_raw_output": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "WhenApplyError": {
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "label_color": {
+          "type": "string"
+        },
+        "disable_label": {
           "type": "boolean"
         }
       },
