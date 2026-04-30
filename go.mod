@@ -5,7 +5,7 @@ go 1.26.2
 require (
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/google/go-cmp v0.7.0
-	github.com/google/go-github/v83 v83.0.0
+	github.com/google/go-github/v85 v85.0.0
 	github.com/mattn/go-colorable v0.1.14
 	github.com/shurcooL/githubv4 v0.0.0-20240429030203-be2daab69064
 	github.com/suzuki-shunsuke/gen-go-jsonschema v0.1.0
