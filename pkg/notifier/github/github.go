@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 
-	"github.com/google/go-github/v83/github"
+	"github.com/google/go-github/v85/github"
 )
 
 // API is GitHub API interface
