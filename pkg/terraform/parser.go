@@ -57,6 +57,8 @@ type ApplyParser struct {
 	Fail *regexp.Regexp
 }
 
+const onlyOutputsChangedMsg = "Only Outputs will be changed."
+
 // NewPlanParser is PlanParser initialized with its Regexp
 func NewPlanParser() *PlanParser {
 	return &PlanParser{
@@ -214,7 +216,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop,maintidx
 	case p.Pass.MatchString(firstMatchLine):
 		result = lines[firstMatchLineIndex]
 	case p.OutputsChanges.MatchString(firstMatchLine):
-		result = "Only Outputs will be changed."
+		result = onlyOutputsChangedMsg
 	}
 
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
