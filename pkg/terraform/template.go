@@ -4,6 +4,7 @@ import (
 	"bytes"
 	htmltemplate "html/template"
 	"maps"
+	"regexp"
 	"strings"
 	texttemplate "text/template"
 
@@ -144,6 +145,27 @@ func avoidHTMLEscape(text string) htmltemplate.HTML {
 	return htmltemplate.HTML(text) //nolint:gosec
 }
 
+// stripLines removes lines from text whose content matches the given regular
+// expression. The pattern uses Go's regexp/syntax. A line is removed when the
+// pattern matches anywhere in the line, mirroring `grep -v`.
+//
+// Intended for use in templates to filter verbose noise from .CombinedOutput
+// (for example "Refreshing state..." lines) before passing it to wrapCode.
+func stripLines(pattern, text string) (string, error) {
+	re, err := regexp.Compile(pattern)
+	if err != nil {
+		return "", err
+	}
+	lines := strings.Split(text, "\n")
+	kept := make([]string, 0, len(lines))
+	for _, line := range lines {
+		if !re.MatchString(line) {
+			kept = append(kept, line)
+		}
+	}
+	return strings.Join(kept, "\n"), nil
+}
+
 func wrapCode(text string) any {
 	header := ""
 	if len(text) > 60000 { //nolint:mnd
@@ -172,6 +194,7 @@ func generateOutput(kind, template string, data map[string]any, useRawOutput boo
 	if useRawOutput {
 		tpl, err := texttemplate.New(kind).Funcs(texttemplate.FuncMap{
 			"avoidHTMLEscape": avoidHTMLEscape,
+			"stripLines":      stripLines,
 			"wrapCode":        wrapCode,
 		}).Funcs(tmpl.TxtFuncMap()).Parse(template)
 		if err != nil {
@@ -183,6 +206,7 @@ func generateOutput(kind, template string, data map[string]any, useRawOutput boo
 	} else {
 		tpl, err := htmltemplate.New(kind).Funcs(htmltemplate.FuncMap{
 			"avoidHTMLEscape": avoidHTMLEscape,
+			"stripLines":      stripLines,
 			"wrapCode":        wrapCode,
 		}).Funcs(tmpl.FuncMap()).Parse(template)
 		if err != nil {

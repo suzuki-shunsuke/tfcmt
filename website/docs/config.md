@@ -76,9 +76,26 @@ In the template, the [sprig template functions](http://masterminds.github.io/spr
 And the following functions can be used.
 
 * avoidHTMLEscape
+* stripLines
 * wrapCode
 
 `avoidHTMLEscape` prevents the text from being HTML escaped.
+
+`stripLines` removes lines that match a [Go regular expression](https://pkg.go.dev/regexp/syntax) from a string. A line is removed when the pattern matches anywhere in the line, mirroring `grep -v`. Use it to filter verbose noise from `.CombinedOutput` (for example, `Refreshing state...` lines from `terraform plan`) before passing to `wrapCode`:
+
+```yaml
+terraform:
+  plan:
+    template: |
+      {{template "plan_title" .}}
+      {{template "result" .}}
+
+      <details><summary>Details (Click me)</summary>
+      {{ stripLines "Refreshing state" .CombinedOutput | wrapCode }}
+      </details>
+```
+
+`stripLines` returns an error if the pattern is not a valid Go regular expression, which surfaces as a template execution error.
 
 `wrapCode` wraps a test with <code>\`\`\`</code> or `<pre><code>`.
 If the text includes <code>\`\`\`</code>, the text wraps with `<pre><code>`, otherwise the text wraps with <code>\`\`\`</code> and the text isn't HTML escaped.
