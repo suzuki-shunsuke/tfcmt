@@ -85,19 +85,19 @@ func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
 	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	))
-	client := github.NewClient(tc)
 
 	baseURL := cfg.BaseURL
 	baseURL = strings.TrimPrefix(baseURL, "$")
 	if baseURL == EnvBaseURL {
 		baseURL = os.Getenv(EnvBaseURL)
 	}
+	opts := []github.ClientOptionsFunc{github.WithHTTPClient(tc)}
 	if baseURL != "" {
-		var err error
-		client, err = github.NewClient(tc).WithEnterpriseURLs(baseURL, baseURL)
-		if err != nil {
-			return &Client{}, errors.New("failed to create a new github api client")
-		}
+		opts = append(opts, github.WithEnterpriseURLs(baseURL, baseURL))
+	}
+	client, err := github.NewClient(opts...)
+	if err != nil {
+		return &Client{}, errors.New("failed to create a new github api client")
 	}
 
 	c := &Client{
