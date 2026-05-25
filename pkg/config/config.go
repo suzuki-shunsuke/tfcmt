@@ -95,6 +95,13 @@ type WhenPlanError struct {
 	DisableLabel bool   `json:"disable_label,omitempty" yaml:"disable_label"`
 }
 
+// WhenApplyError is a configuration to notify the plan result returns an error
+type WhenApplyError struct {
+	Label        string `json:"label,omitempty"`
+	Color        string `json:"label_color,omitempty" yaml:"label_color"`
+	DisableLabel bool   `json:"disable_label,omitempty" yaml:"disable_label"`
+}
+
 // WhenParseError is a configuration to notify the plan result returns an error
 type WhenParseError struct {
 	Template string `json:"template,omitempty"`
@@ -104,6 +111,7 @@ type WhenParseError struct {
 type Apply struct {
 	Template       string         `json:"template,omitempty"`
 	WhenParseError WhenParseError `json:"when_parse_error,omitempty" yaml:"when_parse_error"`
+	WhenApplyError WhenApplyError `json:"when_apply_error,omitempty" yaml:"when_apply_error"`
 }
 
 // LoadFile binds the config file to Config structure
