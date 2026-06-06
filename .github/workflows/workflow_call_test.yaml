@@ -1,6 +1,10 @@
 ---
 name: test (workflow_call)
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      TAKUMI_GUARD_BOT_ID:
+        required: true
 permissions: {}
 env:
   AQUA_LOG_COLOR: always
@@ -16,6 +20,9 @@ jobs:
 
   test_deploy_doc:
     uses: ./.github/workflows/workflow_call_deploy_doc.yaml
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
     permissions:
       contents: write
       issues: write
+      id-token: write
