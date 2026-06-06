@@ -1,6 +1,10 @@
 ---
 name: Deploy GitHub Pages (workflow_call)
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      TAKUMI_GUARD_BOT_ID:
+        required: true
 permissions: {}
 jobs:
   deploy-doc:
@@ -9,7 +13,22 @@ jobs:
     permissions:
       contents: write
       issues: write
+      id-token: write # Required for OIDC
     steps:
+      - uses: flatt-security/setup-takumi-guard-npm@9a5d797c2085b6326d3a2985c08e3a114b9b88c1 # v1.1.1
+        with:
+          bot-id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+          set-registry: "false" # The registry is committed in website/.npmrc
+      - name: Move the registry auth token to the user npmrc
+        # release-doc-action runs its own actions/checkout (clean) and `npm ci`
+        # in website/, which would wipe a workspace .npmrc. Put the token in
+        # ~/.npmrc so it survives the checkout, while the registry comes from the
+        # committed website/.npmrc.
+        run: |
+          if [ -f .npmrc ]; then
+            cat .npmrc >> "$HOME/.npmrc"
+            rm .npmrc
+          fi
       - uses: suzuki-shunsuke/release-doc-action@a9e1ea0c4ca8c62906ca2a7fd3fa33325ee43ec9 # v0.1.0
         with:
           issue_number: 1724

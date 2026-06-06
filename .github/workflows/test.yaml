@@ -5,10 +5,13 @@ permissions: {}
 jobs:
   test:
     uses: ./.github/workflows/workflow_call_test.yaml
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
     permissions:
       pull-requests: write
       contents: write
       issues: write
+      id-token: write
   status-check:
     runs-on: ubuntu-24.04
     if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))

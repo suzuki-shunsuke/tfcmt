@@ -5,7 +5,9 @@ permissions: {}
 jobs:
   autofix:
     runs-on: ubuntu-24.04
-    permissions: {}
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
     timeout-minutes: 15
     steps:
       - uses: suzuki-shunsuke/go-autofix-action@ba716cebb7767055bdde0e62bb91d715bde39ab2 # v0.1.12
@@ -23,8 +25,22 @@ jobs:
           node-version: ${{steps.package_json.outputs.prop}}
           cache: npm
           cache-dependency-path: website/package-lock.json
+      - uses: flatt-security/setup-takumi-guard-npm@9a5d797c2085b6326d3a2985c08e3a114b9b88c1 # v1.1.1
+        with:
+          bot-id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+          set-registry: "false" # The registry is committed in website/.npmrc
+      - name: Add the registry auth token to website/.npmrc
+        # setup-takumi-guard-npm writes the token to ./.npmrc, but npm ci runs in
+        # website/ and npm does not read parent directories' .npmrc.
+        run: |
+          if [ -f .npmrc ]; then
+            cat .npmrc >> website/.npmrc
+            rm .npmrc
+          fi
       - run: npm ci
         working-directory: website
+      - name: Restore website/.npmrc to avoid committing the registry auth token
+        run: git checkout -- website/.npmrc
       - run: bash scripts/generate-usage.sh
         working-directory: website
       - uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
