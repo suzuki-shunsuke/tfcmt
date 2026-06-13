@@ -14,9 +14,12 @@ jobs:
     with:
       aqua_version: v2.60.0
       golangci-lint-timeout: 120s
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
     permissions:
       pull-requests: write
       contents: read
+      id-token: write
 
   test_deploy_doc:
     uses: ./.github/workflows/workflow_call_deploy_doc.yaml
