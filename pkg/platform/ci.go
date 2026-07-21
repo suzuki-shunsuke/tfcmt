@@ -49,10 +49,11 @@ func getLink(ciname string) string {
 		return os.Getenv("CODEBUILD_BUILD_URL")
 	case "github-actions":
 		return fmt.Sprintf(
-			"%s/%s/actions/runs/%s",
+			"%s/%s/actions/runs/%s/attempts/%s",
 			os.Getenv("GITHUB_SERVER_URL"),
 			os.Getenv("GITHUB_REPOSITORY"),
 			os.Getenv("GITHUB_RUN_ID"),
+			os.Getenv("GITHUB_RUN_ATTEMPT"),
 		)
 	case "google-cloud-build":
 		region := os.Getenv("_REGION")
