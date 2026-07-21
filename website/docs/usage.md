@@ -15,7 +15,7 @@ USAGE:
    tfcmt [global options] [command [command options]]
 
 VERSION:
-   4.14.15
+   4.14.17
 
 COMMANDS:
    plan        Run terraform plan and post a comment to GitHub commit, pull request, or issue
@@ -46,7 +46,7 @@ NAME:
    tfcmt plan - Run terraform plan and post a comment to GitHub commit, pull request, or issue
 
 USAGE:
-   tfcmt plan  <command> <args>...
+   tfcmt plan [options]  <command> <args>...
 
 DESCRIPTION:
    Run terraform plan and post a comment to GitHub commit, pull request, or issue.
@@ -59,6 +59,17 @@ OPTIONS:
    --ignore-warning   If skip-no-changes is enabled, comment is posted even if there is a warning. If skip-no-changes is disabled, warning is removed from the comment. [$TFCMT_IGNORE_WARNING]
    --disable-label    Disable to add or update a label [$TFCMT_DISABLE_LABEL]
    --help, -h         show help
+
+GLOBAL OPTIONS:
+   --owner string                 GitHub Repository owner name [$TFCMT_REPO_OWNER]
+   --repo string                  GitHub Repository name [$TFCMT_REPO_NAME]
+   --sha string                   commit SHA (revision) [$TFCMT_SHA]
+   --build-url string             build url
+   --log-level string             log level
+   --pr int                       pull request number (default: 0) [$TFCMT_PR_NUMBER]
+   --config string                config path [$TFCMT_CONFIG]
+   --var string [ --var string ]  template variables. The format of value is '<name>:<value>'. You can refer to the variable in the comment and label template using {{.Vars.<variable name>}}.
+   --output string                specify file to output result instead of posting a comment
 ```
 
 ## tfcmt apply
@@ -69,7 +80,7 @@ NAME:
    tfcmt apply - Run terraform apply and post a comment to GitHub commit, pull request, or issue
 
 USAGE:
-   tfcmt apply  <command> <args>...
+   tfcmt apply [options]  <command> <args>...
 
 DESCRIPTION:
    Run terraform apply and post a comment to GitHub commit, pull request, or issue.
@@ -78,6 +89,17 @@ DESCRIPTION:
 
 OPTIONS:
    --help, -h  show help
+
+GLOBAL OPTIONS:
+   --owner string                 GitHub Repository owner name [$TFCMT_REPO_OWNER]
+   --repo string                  GitHub Repository name [$TFCMT_REPO_NAME]
+   --sha string                   commit SHA (revision) [$TFCMT_SHA]
+   --build-url string             build url
+   --log-level string             log level
+   --pr int                       pull request number (default: 0) [$TFCMT_PR_NUMBER]
+   --config string                config path [$TFCMT_CONFIG]
+   --var string [ --var string ]  template variables. The format of value is '<name>:<value>'. You can refer to the variable in the comment and label template using {{.Vars.<variable name>}}.
+   --output string                specify file to output result instead of posting a comment
 ```
 
 ## tfcmt version
@@ -88,11 +110,22 @@ NAME:
    tfcmt version - Show version
 
 USAGE:
-   tfcmt version
+   tfcmt version [options]
 
 OPTIONS:
    --json, -j  Output version in JSON format
    --help, -h  show help
+
+GLOBAL OPTIONS:
+   --owner string                 GitHub Repository owner name [$TFCMT_REPO_OWNER]
+   --repo string                  GitHub Repository name [$TFCMT_REPO_NAME]
+   --sha string                   commit SHA (revision) [$TFCMT_SHA]
+   --build-url string             build url
+   --log-level string             log level
+   --pr int                       pull request number (default: 0) [$TFCMT_PR_NUMBER]
+   --config string                config path [$TFCMT_CONFIG]
+   --var string [ --var string ]  template variables. The format of value is '<name>:<value>'. You can refer to the variable in the comment and label template using {{.Vars.<variable name>}}.
+   --output string                specify file to output result instead of posting a comment
 ```
 
 ## tfcmt completion
@@ -103,7 +136,7 @@ NAME:
    tfcmt completion - Output shell completion script for bash, zsh, fish, or Powershell
 
 USAGE:
-   tfcmt completion
+   tfcmt completion [command [command options]]
 
 DESCRIPTION:
    Output shell completion script for bash, zsh, fish, or Powershell.
@@ -121,6 +154,68 @@ DESCRIPTION:
    # Powershell
    Output the script to path/to/autocomplete/tfcmt.ps1 an run it.
 
+
+COMMANDS:
+   bash  Output bash completion script
+   zsh   Output zsh completion script
+   fish  Output fish completion script
+   pwsh  Output pwsh completion script
+
+OPTIONS:
+   --help, -h  show help
+```
+
+### completion bash
+
+```console
+$ completion bash --help
+NAME:
+   tfcmt completion bash - Output bash completion script
+
+USAGE:
+   tfcmt completion bash [options]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+### completion zsh
+
+```console
+$ completion zsh --help
+NAME:
+   tfcmt completion zsh - Output zsh completion script
+
+USAGE:
+   tfcmt completion zsh [options]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+### completion fish
+
+```console
+$ completion fish --help
+NAME:
+   tfcmt completion fish - Output fish completion script
+
+USAGE:
+   tfcmt completion fish [options]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+### completion pwsh
+
+```console
+$ completion pwsh --help
+NAME:
+   tfcmt completion pwsh - Output pwsh completion script
+
+USAGE:
+   tfcmt completion pwsh [options]
 
 OPTIONS:
    --help, -h  show help
