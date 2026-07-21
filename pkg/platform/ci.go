@@ -48,13 +48,19 @@ func getLink(ciname string) string {
 	case "codebuild":
 		return os.Getenv("CODEBUILD_BUILD_URL")
 	case "github-actions":
-		return fmt.Sprintf(
-			"%s/%s/actions/runs/%s/attempts/%s",
+		link := fmt.Sprintf(
+			"%s/%s/actions/runs/%s",
 			os.Getenv("GITHUB_SERVER_URL"),
 			os.Getenv("GITHUB_REPOSITORY"),
 			os.Getenv("GITHUB_RUN_ID"),
-			os.Getenv("GITHUB_RUN_ATTEMPT"),
 		)
+		// GITHUB_RUN_ATTEMPT isn't always available.
+		// e.g. GitHub Enterprise Server < 3.3, GitHub Actions compatible runners.
+		// The URL would be broken if the attempt were empty.
+		if attempt := os.Getenv("GITHUB_RUN_ATTEMPT"); attempt != "" {
+			link += "/attempts/" + attempt
+		}
+		return link
 	case "google-cloud-build":
 		region := os.Getenv("_REGION")
 		if region == "" {
