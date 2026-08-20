@@ -15,7 +15,7 @@ USAGE:
    tfcmt [global options] [command [command options]]
 
 VERSION:
-   4.14.17
+   4.14.18
 
 COMMANDS:
    plan        Run terraform plan and post a comment to GitHub commit, pull request, or issue
@@ -152,7 +152,7 @@ DESCRIPTION:
    tfcmt completion fish > ~/.config/fish/completions/tfcmt.fish
 
    # Powershell
-   Output the script to path/to/autocomplete/tfcmt.ps1 an run it.
+   Output the script to path/to/autocomplete/tfcmt.ps1 and run it.
 
 
 COMMANDS:
