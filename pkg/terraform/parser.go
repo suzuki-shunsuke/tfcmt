@@ -68,8 +68,10 @@ func NewPlanParser() *PlanParser {
 		OutputsChanges: regexp.MustCompile(`(?m)^Changes to Outputs:`),
 		// "0 to destroy" should be treated as "no destroy"
 		HasDestroy: regexp.MustCompile(`(?m)([1-9][0-9]* to destroy.)`),
-		// "0 to add, 0 to change, 0 to destroy" should be treated as "no change" (issue#358)
-		HasNoChanges:       regexp.MustCompile(`(?m)^(No changes\.|Plan: 0 to add, 0 to change, 0 to destroy\.)`),
+		// "0 to add, 0 to change, 0 to destroy" should be treated as "no change" (issue#358).
+		// Terraform prefixes the summary with "N to import" only when the plan imports resources,
+		// and an import changes only the state, so it should be treated as "no change" too.
+		HasNoChanges:       regexp.MustCompile(`(?m)^(No changes\.|Plan: (\d+ to import, )?0 to add, 0 to change, 0 to destroy\.)`),
 		Create:             regexp.MustCompile(`^ *# (.*) will be created$`),
 		Update:             regexp.MustCompile(`^ *# (.*) will be updated in-place$`),
 		Delete:             regexp.MustCompile(`^ *# (.*) will be destroyed$`),

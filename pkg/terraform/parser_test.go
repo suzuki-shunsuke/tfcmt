@@ -490,6 +490,60 @@ Note: You didn't use the -out option to save this plan, so Terraform can't
 guarantee to take exactly these actions if you run "terraform apply" now.
 `
 
+const planImportOnly = `
+github_repository.tfcmt: Preparing import... [id=tfcmt]
+github_repository.tfcmt: Refreshing state... [id=tfcmt]
+
+Terraform will perform the following actions:
+
+  # github_repository.tfcmt will be imported
+    resource "github_repository" "tfcmt" {
+        id   = "tfcmt"
+        name = "tfcmt"
+    }
+
+Plan: 1 to import, 0 to add, 0 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+`
+
+const planImportedAndMovedOnly = `
+null_resource.bar: Refreshing state... [id=7822522400686116714]
+github_repository.tfaction: Preparing import... [id=tfaction]
+github_repository.tfaction: Refreshing state... [id=tfaction]
+github_repository.tfcmt: Preparing import... [id=tfcmt]
+github_repository.tfcmt: Refreshing state... [id=tfcmt]
+
+Terraform will perform the following actions:
+
+  # github_repository.tfaction will be imported
+    resource "github_repository" "tfaction" {
+        id   = "tfaction"
+        name = "tfaction"
+    }
+
+  # github_repository.tfcmt will be imported
+    resource "github_repository" "tfcmt" {
+        id   = "tfcmt"
+        name = "tfcmt"
+    }
+
+  # null_resource.foo has moved to null_resource.bar
+    resource "null_resource" "bar" {
+        id = "7822522400686116714"
+    }
+
+Plan: 2 to import, 0 to add, 0 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+`
+
 const applySuccessResult = `
 data.terraform_remote_state.teams_platform_development: Refreshing state...
 google_project.my_service: Refreshing state...
@@ -935,6 +989,70 @@ Plan: 1 to import, 2 to add, 2 to change, 1 to destroy.`,
     }
 
 Plan: 2 to add, 1 to change, 2 to destroy.`,
+			},
+		},
+		{
+			name: "plan imports resources only",
+			body: planImportOnly,
+			result: ParseResult{
+				Result:             "Plan: 1 to import, 0 to add, 0 to change, 0 to destroy.",
+				HasAddOrUpdateOnly: false,
+				HasDestroy:         false,
+				HasNoChanges:       true,
+				HasError:           false,
+				Error:              nil,
+				ImportedResources: []string{
+					"github_repository.tfcmt",
+				},
+				ChangedResult: `
+  # github_repository.tfcmt will be imported
+    resource "github_repository" "tfcmt" {
+        id   = "tfcmt"
+        name = "tfcmt"
+    }
+
+Plan: 1 to import, 0 to add, 0 to change, 0 to destroy.`,
+			},
+		},
+		{
+			name: "plan imports and moves resources only",
+			body: planImportedAndMovedOnly,
+			result: ParseResult{
+				Result:             "Plan: 2 to import, 0 to add, 0 to change, 0 to destroy.",
+				HasAddOrUpdateOnly: false,
+				HasDestroy:         false,
+				HasNoChanges:       true,
+				HasError:           false,
+				Error:              nil,
+				ImportedResources: []string{
+					"github_repository.tfaction",
+					"github_repository.tfcmt",
+				},
+				MovedResources: []*MovedResource{
+					{
+						Before: "null_resource.foo",
+						After:  "null_resource.bar",
+					},
+				},
+				ChangedResult: `
+  # github_repository.tfaction will be imported
+    resource "github_repository" "tfaction" {
+        id   = "tfaction"
+        name = "tfaction"
+    }
+
+  # github_repository.tfcmt will be imported
+    resource "github_repository" "tfcmt" {
+        id   = "tfcmt"
+        name = "tfcmt"
+    }
+
+  # null_resource.foo has moved to null_resource.bar
+    resource "null_resource" "bar" {
+        id = "7822522400686116714"
+    }
+
+Plan: 2 to import, 0 to add, 0 to change, 0 to destroy.`,
 			},
 		},
 	}
