@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 
-	"github.com/google/go-github/v89/github"
+	"github.com/google/go-github/v90/github"
 )
 
 // API is GitHub API interface
@@ -50,9 +50,9 @@ func (g *GitHub) IssuesRemoveLabel(ctx context.Context, number int, label string
 	return g.Issues.RemoveLabelForIssue(ctx, g.owner, g.repo, number, label)
 }
 
-// IssuesUpdateLabel is a wrapper of https://pkg.go.dev/github.com/google/go-github/github#IssuesService.EditLabel
+// IssuesUpdateLabel is a wrapper of https://pkg.go.dev/github.com/google/go-github/github#IssuesService.UpdateLabel
 func (g *GitHub) IssuesUpdateLabel(ctx context.Context, label, color string) (*github.Label, *github.Response, error) {
-	return g.Issues.EditLabel(ctx, g.owner, g.repo, label, &github.Label{
+	return g.Issues.UpdateLabel(ctx, g.owner, g.repo, label, github.UpdateIssueLabelRequest{
 		Color: &color,
 	})
 }

@@ -4,7 +4,7 @@ package github
 import (
 	"context"
 
-	"github.com/google/go-github/v89/github"
+	"github.com/google/go-github/v90/github"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
@@ -64,12 +64,12 @@ func newFakeAPI() fakeAPI {
 		FakeIssuesListLabels: func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error) {
 			labels := []*github.Label{
 				{
-					ID:   new(int64(371748792)),
-					Name: new("label 1"),
+					ID:   371748792,
+					Name: "label 1",
 				},
 				{
-					ID:   new(int64(371765743)),
-					Name: new("label 2"),
+					ID:   371765743,
+					Name: "label 2",
 				},
 			}
 			return labels, nil, nil
