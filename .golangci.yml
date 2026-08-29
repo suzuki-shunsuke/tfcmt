@@ -13,6 +13,7 @@ linters:
     - dupword
     - err113
     - exhaustruct
+    - exhaustruct_v5
     - funlen
     - gocognit
     - gocyclo
