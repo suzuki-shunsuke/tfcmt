@@ -11,7 +11,7 @@ import (
 type fakeAPI struct {
 	API
 
-	FakeIssuesCreateComment                    func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
+	FakeIssuesCreateComment                    func(ctx context.Context, number int, comment github.IssueCommentRequest) (*github.IssueComment, *github.Response, error)
 	FakeIssuesListLabels                       func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error)
 	FakeIssuesAddLabels                        func(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
 	FakeIssuesRemoveLabel                      func(ctx context.Context, number int, label string) (*github.Response, error)
@@ -21,7 +21,7 @@ type fakeAPI struct {
 	FakePullRequestsListPullRequestsWithCommit func(ctx context.Context, sha string, opt *github.ListOptions) ([]*github.PullRequest, *github.Response, error)
 }
 
-func (g *fakeAPI) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
+func (g *fakeAPI) IssuesCreateComment(ctx context.Context, number int, comment github.IssueCommentRequest) (*github.IssueComment, *github.Response, error) {
 	return g.FakeIssuesCreateComment(ctx, number, comment)
 }
 
@@ -55,7 +55,7 @@ func (g *fakeAPI) PullRequestsListPullRequestsWithCommit(ctx context.Context, sh
 
 func newFakeAPI() fakeAPI {
 	return fakeAPI{
-		FakeIssuesCreateComment: func(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
+		FakeIssuesCreateComment: func(ctx context.Context, number int, comment github.IssueCommentRequest) (*github.IssueComment, *github.Response, error) {
 			return &github.IssueComment{
 				ID:   new(int64(371748792)),
 				Body: new("comment 1"),

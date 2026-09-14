@@ -25,7 +25,7 @@ func (g *CommentService) Post(ctx context.Context, body string, opt *PostOptions
 		_, _, err := g.client.API.IssuesCreateComment(
 			ctx,
 			opt.Number,
-			&github.IssueComment{Body: &body},
+			github.IssueCommentRequest{Body: body},
 		)
 		return err
 	}
@@ -41,10 +41,10 @@ func (g *CommentService) Post(ctx context.Context, body string, opt *PostOptions
 }
 
 func (g *CommentService) Patch(ctx context.Context, body string, commentID int64) error {
-	_, _, err := g.client.API.IssuesEditComment(
+	_, _, err := g.client.API.IssuesUpdateComment(
 		ctx,
 		commentID,
-		&github.IssueComment{Body: &body},
+		github.IssueCommentRequest{Body: body},
 	)
 	return err
 }
