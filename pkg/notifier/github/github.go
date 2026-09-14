@@ -8,8 +8,8 @@ import (
 
 // API is GitHub API interface
 type API interface {
-	IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
-	IssuesEditComment(ctx context.Context, commentID int64, comment *github.IssueComment) (*github.IssueComment, *github.Response, error)
+	IssuesCreateComment(ctx context.Context, number int, comment github.IssueCommentRequest) (*github.IssueComment, *github.Response, error)
+	IssuesUpdateComment(ctx context.Context, commentID int64, comment github.IssueCommentRequest) (*github.IssueComment, *github.Response, error)
 	IssuesListLabels(ctx context.Context, number int, opt *github.ListOptions) ([]*github.Label, *github.Response, error)
 	IssuesAddLabels(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
 	IssuesRemoveLabel(ctx context.Context, number int, label string) (*github.Response, error)
@@ -27,12 +27,13 @@ type GitHub struct {
 }
 
 // IssuesCreateComment is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.CreateComment
-func (g *GitHub) IssuesCreateComment(ctx context.Context, number int, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
+func (g *GitHub) IssuesCreateComment(ctx context.Context, number int, comment github.IssueCommentRequest) (*github.IssueComment, *github.Response, error) {
 	return g.Issues.CreateComment(ctx, g.owner, g.repo, number, comment)
 }
 
-func (g *GitHub) IssuesEditComment(ctx context.Context, commentID int64, comment *github.IssueComment) (*github.IssueComment, *github.Response, error) {
-	return g.Issues.EditComment(ctx, g.owner, g.repo, commentID, comment)
+// IssuesUpdateComment is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.UpdateComment
+func (g *GitHub) IssuesUpdateComment(ctx context.Context, commentID int64, comment github.IssueCommentRequest) (*github.IssueComment, *github.Response, error) {
+	return g.Issues.UpdateComment(ctx, g.owner, g.repo, commentID, comment)
 }
 
 // IssuesAddLabels is a wrapper of https://godoc.org/github.com/google/go-github/github#IssuesService.AddLabelsToIssue
