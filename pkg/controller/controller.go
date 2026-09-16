@@ -46,6 +46,7 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 		DestroyLabelColor:     c.Config.Terraform.Plan.WhenDestroy.Color,
 		NoChangesLabelColor:   c.Config.Terraform.Plan.WhenNoChanges.Color,
 		PlanErrorLabelColor:   c.Config.Terraform.Plan.WhenPlanError.Color,
+		ApplyErrorLabelColor:  c.Config.Terraform.Apply.WhenApplyError.Color,
 	}
 
 	target, ok := c.Config.Vars["target"]
@@ -61,6 +62,9 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 	}
 	if labels.NoChangesLabelColor == "" {
 		labels.NoChangesLabelColor = "0e8a16" // green
+	}
+	if labels.ApplyErrorLabelColor == "" {
+		labels.ApplyErrorLabelColor = "d93f0b" // red
 	}
 
 	if !c.Config.Terraform.Plan.WhenAddOrUpdateOnly.DisableLabel {
@@ -117,6 +121,22 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 			return labels, err
 		}
 		labels.PlanErrorLabel = planErrorLabel
+	}
+
+	if !c.Config.Terraform.Apply.WhenApplyError.DisableLabel {
+		if c.Config.Terraform.Apply.WhenApplyError.Label == "" {
+			if target == "" {
+				labels.ApplyErrorLabel = "apply-fail"
+			} else {
+				labels.ApplyErrorLabel = target + "/apply-fail"
+			}
+		} else {
+			label, err := c.renderTemplate(c.Config.Terraform.Apply.WhenApplyError.Label)
+			if err != nil {
+				return labels, err
+			}
+			labels.ApplyErrorLabel = label
+		}
 	}
 
 	return labels, nil
@@ -185,6 +205,11 @@ func (c *Controller) getPlanNotifier(ctx context.Context) (notifier.Notifier, er
 }
 
 func (c *Controller) getApplyNotifier(ctx context.Context) (notifier.Notifier, error) {
+	labels, err := c.renderGitHubLabels()
+	if err != nil {
+		return nil, err
+	}
+
 	if c.Config.Output != "" {
 		// Write output to file instead of github comment
 		client, err := localfile.NewClient(&localfile.Config{
@@ -219,6 +244,7 @@ func (c *Controller) getApplyNotifier(ctx context.Context) (notifier.Notifier, e
 		UseRawOutput:       c.Config.Terraform.UseRawOutput,
 		Template:           c.Template,
 		ParseErrorTemplate: c.ParseErrorTemplate,
+		ResultLabels:       labels,
 		Vars:               c.Config.Vars,
 		EmbeddedVarNames:   c.Config.EmbeddedVarNames,
 		Templates:          c.Config.Templates,
