@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 
-	"github.com/google/go-github/v91/github"
+	"github.com/google/go-github/v92/github"
 )
 
 // API is GitHub API interface
@@ -14,7 +14,7 @@ type API interface {
 	IssuesAddLabels(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
 	IssuesRemoveLabel(ctx context.Context, number int, label string) (*github.Response, error)
 	IssuesUpdateLabel(ctx context.Context, label, color string) (*github.Label, *github.Response, error)
-	RepositoriesCreateComment(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error)
+	RepositoriesCreateComment(ctx context.Context, sha string, comment github.CreateCommitCommentRequest) (*github.RepositoryComment, *github.Response, error)
 	PullRequestsListPullRequestsWithCommit(ctx context.Context, sha string, opt *github.ListOptions) ([]*github.PullRequest, *github.Response, error)
 }
 
@@ -59,7 +59,7 @@ func (g *GitHub) IssuesUpdateLabel(ctx context.Context, label, color string) (*g
 }
 
 // RepositoriesCreateComment is a wrapper of https://godoc.org/github.com/google/go-github/github#RepositoriesService.CreateComment
-func (g *GitHub) RepositoriesCreateComment(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error) {
+func (g *GitHub) RepositoriesCreateComment(ctx context.Context, sha string, comment github.CreateCommitCommentRequest) (*github.RepositoryComment, *github.Response, error) {
 	return g.Repositories.CreateComment(ctx, g.owner, g.repo, sha, comment)
 }
 
