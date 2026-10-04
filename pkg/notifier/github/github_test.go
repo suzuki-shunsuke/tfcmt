@@ -15,7 +15,7 @@ type fakeAPI struct {
 	FakeIssuesListLabels                       func(ctx context.Context, number int, opts *github.ListOptions) ([]*github.Label, *github.Response, error)
 	FakeIssuesAddLabels                        func(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error)
 	FakeIssuesRemoveLabel                      func(ctx context.Context, number int, label string) (*github.Response, error)
-	FakeRepositoriesCreateComment              func(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error)
+	FakeRepositoriesCreateComment              func(ctx context.Context, sha string, comment github.CreateCommitCommentRequest) (*github.RepositoryComment, *github.Response, error)
 	FakeRepositoriesListCommits                func(ctx context.Context, opt *github.CommitsListOptions) ([]*github.RepositoryCommit, *github.Response, error)
 	FakeRepositoriesGetCommit                  func(ctx context.Context, sha string) (*github.RepositoryCommit, *github.Response, error)
 	FakePullRequestsListPullRequestsWithCommit func(ctx context.Context, sha string, opt *github.ListOptions) ([]*github.PullRequest, *github.Response, error)
@@ -37,7 +37,7 @@ func (g *fakeAPI) IssuesRemoveLabel(ctx context.Context, number int, label strin
 	return g.FakeIssuesRemoveLabel(ctx, number, label)
 }
 
-func (g *fakeAPI) RepositoriesCreateComment(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error) {
+func (g *fakeAPI) RepositoriesCreateComment(ctx context.Context, sha string, comment github.CreateCommitCommentRequest) (*github.RepositoryComment, *github.Response, error) {
 	return g.FakeRepositoriesCreateComment(ctx, sha, comment)
 }
 
@@ -80,7 +80,7 @@ func newFakeAPI() fakeAPI {
 		FakeIssuesRemoveLabel: func(ctx context.Context, number int, label string) (*github.Response, error) {
 			return nil, nil
 		},
-		FakeRepositoriesCreateComment: func(ctx context.Context, sha string, comment *github.RepositoryComment) (*github.RepositoryComment, *github.Response, error) {
+		FakeRepositoriesCreateComment: func(ctx context.Context, sha string, comment github.CreateCommitCommentRequest) (*github.RepositoryComment, *github.Response, error) {
 			return &github.RepositoryComment{
 				ID:       new(int64(28427394)),
 				CommitID: new("04e0917e448b662c2b16330fad50e97af16ff27a"),

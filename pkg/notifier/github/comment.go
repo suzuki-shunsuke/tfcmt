@@ -33,7 +33,7 @@ func (g *CommentService) Post(ctx context.Context, body string, opt *PostOptions
 		_, _, err := g.client.API.RepositoriesCreateComment(
 			ctx,
 			opt.Revision,
-			&github.RepositoryComment{Body: &body},
+			github.CreateCommitCommentRequest{Body: body},
 		)
 		return err
 	}
