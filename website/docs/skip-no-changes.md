@@ -27,3 +27,22 @@ If the option is set, `tfcmt plan` adds or updates a pull request label but does
 
 Even if there are no comment, the pull request label lets you know the result.
 This feature is useful when you want to keep pull request comments clean.
+
+`tfcmt apply` accepts the same flag and a separate yaml key. Apply has no result label, so the option only omits the comment. A zero-resource apply is the summary line `Apply complete! Resources: 0 added, 0 changed, 0 destroyed.`
+
+e.g.
+
+```sh
+tfcmt apply -skip-no-changes -- terraform apply
+```
+
+tfcmt.yaml
+
+```yaml
+terraform:
+  apply:
+    when_no_changes:
+      disable_comment: true
+```
+
+`terraform.plan.when_no_changes.disable_comment` does not skip apply comments.

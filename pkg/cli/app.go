@@ -38,8 +38,10 @@ type PlanArgs struct {
 type ApplyArgs struct {
 	*GlobalArgs
 
-	Command     string
-	CommandArgs []string
+	SkipNoChanges      bool
+	SkipNoChangesCount int
+	Command            string
+	CommandArgs        []string
 }
 
 func Run(ctx context.Context, logger *slogutil.Logger, env *urfave.Env) error {
@@ -170,9 +172,20 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 				Usage:     "Run terraform apply and post a comment to GitHub commit, pull request, or issue",
 				Description: `Run terraform apply and post a comment to GitHub commit, pull request, or issue.
 
-$ tfcmt [<global options>] apply -- terraform apply [<terraform apply options>]`,
+$ tfcmt [<global options>] apply [-skip-no-changes] -- terraform apply [<terraform apply options>]`,
 				Action: func(ctx context.Context, _ *cli.Command) error {
 					return actionApply(ctx, logger, applyArgs)
+				},
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:        "skip-no-changes",
+						Usage:       "If there is no change tfcmt doesn't post a comment",
+						Sources:     cli.EnvVars("TFCMT_SKIP_NO_CHANGES"),
+						Destination: &applyArgs.SkipNoChanges,
+						Config: cli.BoolConfig{
+							Count: &applyArgs.SkipNoChangesCount,
+						},
+					},
 				},
 				Arguments: []cli.Argument{
 					&cli.StringArg{
