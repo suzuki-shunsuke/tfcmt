@@ -223,7 +223,7 @@ func (c *Controller) getApplyNotifier(ctx context.Context) (notifier.Notifier, e
 		EmbeddedVarNames:   c.Config.EmbeddedVarNames,
 		Templates:          c.Config.Templates,
 		Patch:              c.Config.PlanPatch,
-		SkipNoChanges:      c.Config.Terraform.Plan.WhenNoChanges.DisableComment,
+		SkipNoChanges:      c.Config.Terraform.Apply.WhenNoChanges.DisableComment,
 		IgnoreWarning:      c.Config.Terraform.Plan.IgnoreWarning,
 		Masks:              c.Config.Masks,
 	})

@@ -11,7 +11,7 @@ import (
 )
 
 // Apply posts comment optimized for notifications
-func (g *NotifyService) Apply(ctx context.Context, logger *slog.Logger, param *notifier.ParamExec) error {
+func (g *NotifyService) Apply(ctx context.Context, logger *slog.Logger, param *notifier.ParamExec) error { //nolint:cyclop
 	cfg := g.client.Config
 	parser := g.client.Config.Parser
 	template := g.client.Config.Template
@@ -70,6 +70,11 @@ func (g *NotifyService) Apply(ctx context.Context, logger *slog.Logger, param *n
 	body += embeddedComment
 
 	body = mask.Mask(body, g.client.Config.Masks)
+
+	if cfg.SkipNoChanges && result.HasNoChanges && !result.HasError && !result.HasParseError {
+		logger.Debug("skip posting a comment because there is no change")
+		return nil
+	}
 
 	logger.Debug("create a comment")
 	if err := g.client.Comment.Post(ctx, body, &PostOptions{
