@@ -31,6 +31,9 @@ type PlanArgs struct {
 	IgnoreWarningCount int
 	DisableLabel       bool
 	DisableLabelCount  int
+	ResultFile         string
+	GitHubOutput       bool
+	GitHubOutputCount  int
 	Command            string
 	CommandArgs        []string
 }
@@ -149,6 +152,21 @@ $ tfcmt [<global options>] plan [-patch] [-skip-no-changes] -- terraform plan [<
 						Destination: &planArgs.DisableLabel,
 						Config: cli.BoolConfig{
 							Count: &planArgs.DisableLabelCount,
+						},
+					},
+					&cli.StringFlag{
+						Name:        "result-file",
+						Usage:       "specify file to output parsed plan result as JSON",
+						Sources:     cli.EnvVars("TFCMT_RESULT_FILE"),
+						Destination: &planArgs.ResultFile,
+					},
+					&cli.BoolFlag{
+						Name:        "github-output",
+						Usage:       "set parsed plan result to GitHub Actions step outputs ($GITHUB_OUTPUT)",
+						Sources:     cli.EnvVars("TFCMT_GITHUB_OUTPUT"),
+						Destination: &planArgs.GitHubOutput,
+						Config: cli.BoolConfig{
+							Count: &planArgs.GitHubOutputCount,
 						},
 					},
 				},
