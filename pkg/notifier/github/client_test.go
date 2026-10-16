@@ -215,6 +215,77 @@ func TestHasAnyLabelDefined(t *testing.T) {
 	}
 }
 
+func TestHasApplyLabelDefined(t *testing.T) {
+	t.Parallel()
+	testCases := []struct {
+		rl   ResultLabels
+		want bool
+	}{
+		{
+			rl: ResultLabels{
+				ApplyErrorLabel: "apply-fail",
+			},
+			want: true,
+		},
+		{
+			rl: ResultLabels{
+				ApplyErrorLabel: "",
+			},
+			want: false,
+		},
+		{
+			rl:   ResultLabels{},
+			want: false,
+		},
+	}
+	for _, testCase := range testCases {
+		if testCase.rl.HasApplyLabelDefined() != testCase.want {
+			t.Errorf("got %v but want %v", testCase.rl.HasApplyLabelDefined(), testCase.want)
+		}
+	}
+}
+
+func TestIsApplyResultLabel(t *testing.T) {
+	t.Parallel()
+	testCases := []struct {
+		rl    ResultLabels
+		label string
+		want  bool
+	}{
+		{
+			rl: ResultLabels{
+				ApplyErrorLabel: "apply-fail",
+			},
+			label: "apply-fail",
+			want:  true,
+		},
+		{
+			rl: ResultLabels{
+				ApplyErrorLabel: "apply-fail",
+			},
+			label: "other-label",
+			want:  false,
+		},
+		{
+			rl: ResultLabels{
+				ApplyErrorLabel: "apply-fail",
+			},
+			label: "",
+			want:  false,
+		},
+		{
+			rl:    ResultLabels{},
+			label: "",
+			want:  false,
+		},
+	}
+	for _, testCase := range testCases {
+		if testCase.rl.IsApplyResultLabel(testCase.label) != testCase.want {
+			t.Errorf("got %v but want %v", testCase.rl.IsApplyResultLabel(testCase.label), testCase.want)
+		}
+	}
+}
+
 func TestIsResultLabels(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {

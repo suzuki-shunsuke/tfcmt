@@ -85,6 +85,99 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, logger *slog.Logger, r
 	return errMsgs
 }
 
+func (g *NotifyService) UpdateApplyErrorLabel(ctx context.Context, logger *slog.Logger, hasError bool) []string { //nolint:cyclop
+	cfg := g.client.Config
+	if cfg.PR.Number == 0 {
+		return nil
+	}
+
+	var (
+		labelToAdd string
+		labelColor string
+	)
+	if hasError {
+		labelToAdd = cfg.ResultLabels.ApplyErrorLabel
+		labelColor = cfg.ResultLabels.ApplyErrorLabelColor
+	}
+
+	errMsgs := []string{}
+
+	currentLabelColor, err := g.removeApplyResultLabels(ctx, labelToAdd)
+	if err != nil {
+		msg := "remove labels: " + err.Error()
+		slogerr.WithError(logger, err).Error("remove labels")
+		errMsgs = append(errMsgs, msg)
+	}
+
+	if labelToAdd == "" {
+		return errMsgs
+	}
+
+	if len(labelToAdd) > 50 { //nolint:mnd
+		return append(errMsgs, fmt.Sprintf("failed to add a label %s: label name is too long (max: 50)", labelToAdd))
+	}
+
+	if currentLabelColor == "" {
+		labels, _, err := g.client.API.IssuesAddLabels(ctx, cfg.PR.Number, []string{labelToAdd})
+		if err != nil {
+			msg := "add a label " + labelToAdd + ": " + err.Error()
+			slogerr.WithError(logger, err).Error("add a label", "label", labelToAdd)
+			errMsgs = append(errMsgs, msg)
+		}
+		if labelColor != "" {
+			// set the color of label
+			for _, label := range labels {
+				if labelToAdd == label.GetName() {
+					if label.GetColor() != labelColor {
+						if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
+							msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+							slogerr.WithError(logger, err).Error("update a label color", "label", labelToAdd, "color", labelColor)
+							errMsgs = append(errMsgs, msg)
+						}
+					}
+				}
+			}
+		}
+	} else if labelColor != "" && labelColor != currentLabelColor {
+		// set the color of label
+		if _, _, err := g.client.API.IssuesUpdateLabel(ctx, labelToAdd, labelColor); err != nil {
+			msg := "update a label color (name: " + labelToAdd + ", color: " + labelColor + "): " + err.Error()
+			slogerr.WithError(logger, err).Error("update a label color", "label", labelToAdd, "color", labelColor)
+			errMsgs = append(errMsgs, msg)
+		}
+	}
+	return errMsgs
+}
+
+func (g *NotifyService) removeApplyResultLabels(ctx context.Context, label string) (string, error) {
+	cfg := g.client.Config
+	// A Pull Request can have 100 labels the maximum
+	labels, _, err := g.client.API.IssuesListLabels(ctx, cfg.PR.Number, &github.ListOptions{
+		PerPage: 100, //nolint:mnd
+	})
+	if err != nil {
+		return "", err
+	}
+
+	labelColor := ""
+	for _, l := range labels {
+		labelText := l.GetName()
+		if labelText == label {
+			labelColor = l.GetColor()
+			continue
+		}
+		if cfg.ResultLabels.IsApplyResultLabel(labelText) {
+			resp, err := g.client.API.IssuesRemoveLabel(ctx, cfg.PR.Number, labelText)
+			// Ignore 404 errors, which are from the PR not having the label
+			if err != nil && resp.StatusCode != http.StatusNotFound {
+				return labelColor, err
+			}
+		}
+	}
+
+	return labelColor, nil
+}
+
 func (g *NotifyService) removeResultLabels(ctx context.Context, label string) (string, error) {
 	cfg := g.client.Config
 	// A Pull Request can have 100 labels the maximum

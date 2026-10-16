@@ -136,10 +136,12 @@ type ResultLabels struct {
 	DestroyLabel          string
 	NoChangesLabel        string
 	PlanErrorLabel        string
+	ApplyErrorLabel       string
 	AddOrUpdateLabelColor string
 	DestroyLabelColor     string
 	NoChangesLabelColor   string
 	PlanErrorLabelColor   string
+	ApplyErrorLabelColor  string
 }
 
 // HasAnyLabelDefined returns true if any of the internal labels are set
@@ -157,4 +159,17 @@ func (r *ResultLabels) IsResultLabel(label string) bool {
 	default:
 		return false
 	}
+}
+
+// HasApplyLabelDefined returns true if the apply error label is set
+func (r *ResultLabels) HasApplyLabelDefined() bool {
+	return r.ApplyErrorLabel != ""
+}
+
+// IsApplyResultLabel returns true if a label matches the apply error label
+func (r *ResultLabels) IsApplyResultLabel(label string) bool {
+	if label == "" {
+		return false
+	}
+	return label == r.ApplyErrorLabel
 }

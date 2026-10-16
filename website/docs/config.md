@@ -224,6 +224,10 @@ terraform:
         <details><summary>Details (Click me)</summary>
         {{wrapCode .CombinedOutput}}
         </details>
+    when_apply_error:
+      label: "{{if .Vars.target}}{{.Vars.target}}/{{end}}apply-fail"
+      label_color: d93f0b # red
+      # disable_label: false
 ```
 
 If you don't want to update labels, please set `terraform.plan.disable_label: true`.
