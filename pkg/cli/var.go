@@ -123,6 +123,10 @@ func parseOptsApply(args *ApplyArgs, cfg *config.Config, envs []string) error { 
 		cfg.Output = args.Output
 	}
 
+	if args.SkipNoChangesCount > 0 {
+		cfg.Terraform.Apply.WhenNoChanges.DisableComment = args.SkipNoChanges
+	}
+
 	vm := make(map[string]string, len(args.Var))
 	if err := parseVars(args.Var, envs, vm); err != nil {
 		return err

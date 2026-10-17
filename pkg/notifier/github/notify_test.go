@@ -1,21 +1,43 @@
 package github
 
 import (
+	"context"
 	"log/slog"
 	"testing"
 
+	"github.com/google/go-github/v92/github"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
+
+// commentCounter counts comment posts without changing the fake responses.
+type commentCounter struct {
+	fakeAPI
+
+	issues int
+	repos  int
+}
+
+func (g *commentCounter) IssuesCreateComment(ctx context.Context, number int, comment github.IssueCommentRequest) (*github.IssueComment, *github.Response, error) {
+	g.issues++
+	return g.fakeAPI.IssuesCreateComment(ctx, number, comment)
+}
+
+func (g *commentCounter) RepositoriesCreateComment(ctx context.Context, sha string, comment github.CreateCommitCommentRequest) (*github.RepositoryComment, *github.Response, error) {
+	g.repos++
+	return g.fakeAPI.RepositoriesCreateComment(ctx, sha, comment)
+}
 
 func TestNotifyApply(t *testing.T) { //nolint:tparallel
 	t.Setenv("GITHUB_TOKEN", "xxx")
 	logger := slog.New(slog.DiscardHandler)
 	testCases := []struct {
-		name      string
-		config    Config
-		ok        bool
-		paramExec notifier.ParamExec
+		name          string
+		config        Config
+		ok            bool
+		comments      int
+		checkComments bool
+		paramExec     notifier.ParamExec
 	}{
 		{
 			name: "case 8",
@@ -58,6 +80,115 @@ func TestNotifyApply(t *testing.T) { //nolint:tparallel
 			},
 			ok: true,
 		},
+		{
+			name: "skip comment when no resources change",
+			config: Config{
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Revision: "revision",
+					Number:   1,
+				},
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
+				SkipNoChanges:      true,
+			},
+			paramExec: notifier.ParamExec{
+				CombinedOutput: "Apply complete! Resources: 0 added, 0 changed, 0 destroyed.\n",
+				ExitCode:       0,
+			},
+			ok:            true,
+			checkComments: true,
+			comments:      0,
+		},
+		{
+			name: "post comment when resources change and skip is enabled",
+			config: Config{
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Revision: "revision",
+					Number:   1,
+				},
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
+				SkipNoChanges:      true,
+			},
+			paramExec: notifier.ParamExec{
+				CombinedOutput: "Apply complete! Resources: 1 added, 0 changed, 0 destroyed.\n",
+				ExitCode:       0,
+			},
+			ok:            true,
+			checkComments: true,
+			comments:      1,
+		},
+		{
+			name: "post comment when skip is disabled and no resources change",
+			config: Config{
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Revision: "revision",
+					Number:   1,
+				},
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
+			},
+			paramExec: notifier.ParamExec{
+				CombinedOutput: "Apply complete! Resources: 0 added, 0 changed, 0 destroyed.\n",
+				ExitCode:       0,
+			},
+			ok:            true,
+			checkComments: true,
+			comments:      1,
+		},
+		{
+			name: "post comment when apply fails and skip is enabled",
+			config: Config{
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Revision: "revision",
+					Number:   1,
+				},
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
+				SkipNoChanges:      true,
+			},
+			paramExec: notifier.ParamExec{
+				CombinedOutput: "Error: failed to send enable services request\n",
+				ExitCode:       1,
+			},
+			ok:            true,
+			checkComments: true,
+			comments:      1,
+		},
+		{
+			name: "post comment when apply output cannot be parsed and skip is enabled",
+			config: Config{
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Revision: "revision",
+					Number:   1,
+				},
+				Parser:             terraform.NewApplyParser(),
+				Template:           terraform.NewApplyTemplate(terraform.DefaultApplyTemplate),
+				ParseErrorTemplate: terraform.NewPlanParseErrorTemplate(terraform.DefaultPlanTemplate),
+				SkipNoChanges:      true,
+			},
+			paramExec: notifier.ParamExec{
+				CombinedOutput: "not terraform output\n",
+				ExitCode:       1,
+			},
+			ok:            true,
+			checkComments: true,
+			comments:      1,
+		},
 	}
 
 	for i, testCase := range testCases {
@@ -71,11 +202,14 @@ func TestNotifyApply(t *testing.T) { //nolint:tparallel
 			if err != nil {
 				t.Fatal(err)
 			}
-			api := newFakeAPI()
-			client.API = &api
+			api := &commentCounter{fakeAPI: newFakeAPI()}
+			client.API = api
 			paramExec := testCase.paramExec
 			if err := client.Notify.Apply(t.Context(), logger, &paramExec); (err == nil) != testCase.ok {
 				t.Errorf("got error %v", err)
+			}
+			if testCase.checkComments && api.issues+api.repos != testCase.comments {
+				t.Errorf("IssuesCreateComment=%d RepositoriesCreateComment=%d, want %d comments", api.issues, api.repos, testCase.comments)
 			}
 		})
 	}

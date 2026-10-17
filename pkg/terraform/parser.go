@@ -53,8 +53,9 @@ type PlanParser struct {
 
 // ApplyParser is a parser for terraform apply
 type ApplyParser struct {
-	Pass *regexp.Regexp
-	Fail *regexp.Regexp
+	Pass         *regexp.Regexp
+	Fail         *regexp.Regexp
+	HasNoChanges *regexp.Regexp
 }
 
 const onlyOutputsChangedMsg = "Only Outputs will be changed."
@@ -90,6 +91,8 @@ func NewApplyParser() *ApplyParser {
 	return &ApplyParser{
 		Pass: regexp.MustCompile(`(?m)^(Apply complete!)`),
 		Fail: regexp.MustCompile(`(?m)^(Error: )`),
+		// Anchor the summary so a later ", N imported" suffix is not zero resources.
+		HasNoChanges: regexp.MustCompile(`(?m)^Apply complete! Resources: 0 added, 0 changed, 0 destroyed\.$`),
 	}
 }
 
@@ -307,17 +310,20 @@ func (p *ApplyParser) Parse(body string) ParseResult {
 			break
 		}
 	}
+	var hasNoChanges bool
 	switch {
 	case p.Fail.MatchString(line):
 		// Fail should be checked before Pass
 		result = strings.Join(trimBars(trimLastNewline(lines[i:])), "\n")
 	case p.Pass.MatchString(line):
 		result = lines[i]
+		hasNoChanges = p.HasNoChanges.MatchString(line)
 	}
 	return ParseResult{
-		Result:   strings.TrimSpace(result),
-		HasError: hasError,
-		Error:    nil,
+		Result:       strings.TrimSpace(result),
+		HasError:     hasError,
+		HasNoChanges: hasNoChanges,
+		Error:        nil,
 	}
 }
 

@@ -8,8 +8,20 @@
         "template": {
           "type": "string"
         },
+        "when_no_changes": {
+          "$ref": "#/$defs/ApplyWhenNoChanges"
+        },
         "when_parse_error": {
           "$ref": "#/$defs/WhenParseError"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "ApplyWhenNoChanges": {
+      "properties": {
+        "disable_comment": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false,
