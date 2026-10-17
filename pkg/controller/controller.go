@@ -42,10 +42,14 @@ func (c *Controller) renderTemplate(tpl string) (string, error) {
 
 func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolint:cyclop
 	labels := github.ResultLabels{
-		AddOrUpdateLabelColor: c.Config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
-		DestroyLabelColor:     c.Config.Terraform.Plan.WhenDestroy.Color,
-		NoChangesLabelColor:   c.Config.Terraform.Plan.WhenNoChanges.Color,
-		PlanErrorLabelColor:   c.Config.Terraform.Plan.WhenPlanError.Color,
+		AddOrUpdateLabelColor:        c.Config.Terraform.Plan.WhenAddOrUpdateOnly.Color,
+		DestroyLabelColor:            c.Config.Terraform.Plan.WhenDestroy.Color,
+		NoChangesLabelColor:          c.Config.Terraform.Plan.WhenNoChanges.Color,
+		MovedLabelColor:              c.Config.Terraform.Plan.WhenMoved.Color,
+		NoChangesInInfraLabelColor:   c.Config.Terraform.Plan.WhenNoChangesInInfra.Color,
+		PlanErrorLabelColor:          c.Config.Terraform.Plan.WhenPlanError.Color,
+		DisableMovedLabel:            c.Config.Terraform.Plan.WhenMoved.DisableLabel,
+		DisableNoChangesInInfraLabel: c.Config.Terraform.Plan.WhenNoChangesInInfra.DisableLabel,
 	}
 
 	target, ok := c.Config.Vars["target"]
@@ -61,6 +65,12 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 	}
 	if labels.NoChangesLabelColor == "" {
 		labels.NoChangesLabelColor = "0e8a16" // green
+	}
+	if labels.MovedLabelColor == "" {
+		labels.MovedLabelColor = "5319e7"
+	}
+	if labels.NoChangesInInfraLabelColor == "" {
+		labels.NoChangesInInfraLabelColor = "5319e7"
 	}
 
 	if !c.Config.Terraform.Plan.WhenAddOrUpdateOnly.DisableLabel {
@@ -108,6 +118,38 @@ func (c *Controller) renderGitHubLabels() (github.ResultLabels, error) { //nolin
 				return labels, err
 			}
 			labels.NoChangesLabel = nochangesLabel
+		}
+	}
+
+	if !c.Config.Terraform.Plan.WhenMoved.DisableLabel {
+		if c.Config.Terraform.Plan.WhenMoved.Label != "" {
+			movedLabel, err := c.renderTemplate(c.Config.Terraform.Plan.WhenMoved.Label)
+			if err != nil {
+				return labels, err
+			}
+			labels.MovedLabel = movedLabel
+		} else if c.Config.Terraform.Plan.WhenMoved.Color != "" {
+			if target == "" {
+				labels.MovedLabel = "moves"
+			} else {
+				labels.MovedLabel = target + "/moves"
+			}
+		}
+	}
+
+	if !c.Config.Terraform.Plan.WhenNoChangesInInfra.DisableLabel {
+		if c.Config.Terraform.Plan.WhenNoChangesInInfra.Label != "" {
+			noChangesInInfraLabel, err := c.renderTemplate(c.Config.Terraform.Plan.WhenNoChangesInInfra.Label)
+			if err != nil {
+				return labels, err
+			}
+			labels.NoChangesInInfraLabel = noChangesInInfraLabel
+		} else if c.Config.Terraform.Plan.WhenNoChangesInInfra.Color != "" {
+			if target == "" {
+				labels.NoChangesInInfraLabel = "no-changes-in-infra"
+			} else {
+				labels.NoChangesInInfraLabel = target + "/no-changes-in-infra"
+			}
 		}
 	}
 
