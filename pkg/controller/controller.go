@@ -175,6 +175,7 @@ func (c *Controller) getPlanNotifier(ctx context.Context) (notifier.Notifier, er
 		Vars:               c.Config.Vars,
 		EmbeddedVarNames:   c.Config.EmbeddedVarNames,
 		Templates:          c.Config.Templates,
+		IgnoreWarning:      c.Config.Terraform.Plan.IgnoreWarning,
 		Masks:              c.Config.Masks,
 		DisableLabel:       c.Config.Terraform.Plan.DisableLabel,
 	}, gh)
