@@ -34,6 +34,7 @@ type Config struct {
 	Templates          map[string]string
 	CI                 string
 	UseRawOutput       bool
+	IgnoreWarning      bool
 	Masks              []*config.Mask
 
 	// For labeling
