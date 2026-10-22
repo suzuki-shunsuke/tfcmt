@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: suzuki-shunsuke/go-autofix-action@9a8682f2dc2a935fe2a2ac96deb03de2dfcb872e # v0.1.13
         with:
-          aqua_version: v2.64.0
+          aqua_version: v2.65.2
           takumi_guard_bot_id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
