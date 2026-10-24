@@ -94,7 +94,7 @@ func (g *CommentService) listIssueComment(ctx context.Context, owner, repo strin
 		if err := g.client.v4Client.Query(ctx, &q, variables); err != nil {
 			return nil, fmt.Errorf("list issue comments by GitHub API: %w", err)
 		}
-		allComments = append(allComments, q.Repository.Issue.Comments.Nodes...)
+		allComments = appendComments(allComments, q.Repository.Issue.Comments.Nodes)
 		if !q.Repository.Issue.Comments.PageInfo.HasNextPage {
 			break
 		}
@@ -130,11 +130,22 @@ func (g *CommentService) listPRComment(ctx context.Context, owner, repo string, 
 		if err := g.client.v4Client.Query(ctx, &q, variables); err != nil {
 			return nil, fmt.Errorf("list issue comments by GitHub API: %w", err)
 		}
-		allComments = append(allComments, q.Repository.PullRequest.Comments.Nodes...)
+		allComments = appendComments(allComments, q.Repository.PullRequest.Comments.Nodes)
 		if !q.Repository.PullRequest.Comments.PageInfo.HasNextPage {
 			break
 		}
 		variables["commentsCursor"] = new(q.Repository.PullRequest.Comments.PageInfo.EndCursor)
 	}
 	return allComments, nil
+}
+
+// appendComments appends nodes to comments, skipping null nodes.
+// Elements of nodes in GitHub GraphQL API connections are nullable, and GitHub can return null for comments it can't resolve.
+func appendComments(comments, nodes []*IssueComment) []*IssueComment {
+	for _, node := range nodes {
+		if node != nil {
+			comments = append(comments, node)
+		}
+	}
+	return comments
 }

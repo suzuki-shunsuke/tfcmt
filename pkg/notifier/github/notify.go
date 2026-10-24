@@ -15,6 +15,9 @@ type NotifyService service
 func (g *NotifyService) getPatchedComment(logger *slog.Logger, comments []*IssueComment, target string) *IssueComment {
 	var cmt *IssueComment
 	for i, comment := range comments {
+		if comment == nil {
+			continue
+		}
 		logger := logger.With(
 			"comment_database_id", comment.DatabaseID,
 			"comment_index", i,
