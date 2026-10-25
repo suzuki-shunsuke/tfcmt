@@ -1,0 +1,33 @@
+---
+name: autofix.ci (workflow_call)
+on:
+  workflow_call:
+    secrets:
+      TAKUMI_GUARD_BOT_ID:
+        required: false
+permissions: {}
+jobs:
+  go:
+    uses: suzuki-shunsuke/go-autofix-action/.github/workflows/autofix-ci.yaml@ad61a60b1ab7061f3adca50247830727f0aa4df2 # v0.2.2
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      aqua_version: v2.65.2
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+
+  fix:
+    runs-on: ubuntu-26.04
+    permissions: {}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: aquaproj/aqua-installer@611554c6f0137ba41c8dd15aca8bee82504ea461 # v4.1.1
+        with:
+          aqua_version: v2.65.2
+      - run: bash scripts/generate-usage.sh
+        working-directory: website
+      - uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
