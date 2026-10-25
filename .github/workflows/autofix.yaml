@@ -10,7 +10,7 @@ jobs:
       contents: read
     timeout-minutes: 15
     steps:
-      - uses: suzuki-shunsuke/go-autofix-action@9a8682f2dc2a935fe2a2ac96deb03de2dfcb872e # v0.1.13
+      - uses: suzuki-shunsuke/go-autofix-action@ad61a60b1ab7061f3adca50247830727f0aa4df2 # v0.2.2
         with:
           aqua_version: v2.65.2
           takumi_guard_bot_id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
