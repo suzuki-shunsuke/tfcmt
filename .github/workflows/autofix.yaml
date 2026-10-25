@@ -3,61 +3,21 @@ name: autofix.ci
 on: pull_request
 permissions: {}
 jobs:
+  # Don't add jobs to this file. Please add jobs to wc_autofix.yaml.
+  fix:
+    uses: ./.github/workflows/wc_autofix.yaml
+    permissions:
+      contents: read
+      id-token: write
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
   autofix:
     runs-on: ubuntu-26.04
     if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
     timeout-minutes: 10
     permissions: {}
     needs:
-      - go
       - fix
     steps:
       - run: exit 1
-
-  go:
-    uses: suzuki-shunsuke/go-autofix-action/.github/workflows/autofix-ci.yaml@ad61a60b1ab7061f3adca50247830727f0aa4df2 # v0.2.2
-    permissions:
-      contents: read
-      id-token: write
-    with:
-      aqua_version: v2.65.2
-    secrets:
-      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
-
-  fix:
-    runs-on: ubuntu-26.04
-    permissions:
-      id-token: write # Required for OIDC of setup-takumi-guard-npm
-      contents: read
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: aquaproj/aqua-installer@611554c6f0137ba41c8dd15aca8bee82504ea461 # v4.1.1
-        with:
-          aqua_version: v2.65.2
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: website/.node-version
-          cache: npm
-          cache-dependency-path: website/package-lock.json
-      - uses: flatt-security/setup-takumi-guard-npm@14f07d0cbc739b42a1b7c70a04c2b84cd1318ddd # v1.4.0
-        with:
-          bot-id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
-          set-registry: "false" # The registry is committed in website/.npmrc
-      - name: Add the registry auth token to website/.npmrc
-        # setup-takumi-guard-npm writes the token to ./.npmrc, but npm ci runs in
-        # website/ and npm does not read parent directories' .npmrc.
-        run: |
-          if [ -f .npmrc ]; then
-            cat .npmrc >> website/.npmrc
-            rm .npmrc
-          fi
-      - run: npm ci
-        working-directory: website
-      - name: Restore website/.npmrc to avoid committing the registry auth token
-        run: git checkout -- website/.npmrc
-      - run: bash scripts/generate-usage.sh
-        working-directory: website
-      - uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
+  # Don't add jobs to this file. Please add jobs to wc_autofix.yaml.
