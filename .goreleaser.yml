@@ -4,10 +4,6 @@ project_name: tfcmt
 env:
   - GO111MODULE=on
 
-before:
-  hooks:
-    - go mod tidy
-
 builds:
   - main: ./cmd/tfcmt
     binary: tfcmt
