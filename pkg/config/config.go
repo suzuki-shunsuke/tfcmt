@@ -100,10 +100,16 @@ type WhenParseError struct {
 	Template string `json:"template,omitempty"`
 }
 
+// ApplyWhenNoChanges is a configuration to skip the apply comment when no resources change
+type ApplyWhenNoChanges struct {
+	DisableComment bool `json:"disable_comment,omitempty" yaml:"disable_comment"`
+}
+
 // Apply is a terraform apply config
 type Apply struct {
-	Template       string         `json:"template,omitempty"`
-	WhenParseError WhenParseError `json:"when_parse_error,omitempty" yaml:"when_parse_error"`
+	Template       string             `json:"template,omitempty"`
+	WhenNoChanges  ApplyWhenNoChanges `json:"when_no_changes,omitempty" yaml:"when_no_changes"`
+	WhenParseError WhenParseError     `json:"when_parse_error,omitempty" yaml:"when_parse_error"`
 }
 
 // LoadFile binds the config file to Config structure
