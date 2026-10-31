@@ -1,3 +1,5 @@
+# This workflow is managed by gh actions-lock.
+
 ---
 name: Deploy GitHub Pages (workflow_call)
 on:
@@ -15,7 +17,7 @@ jobs:
       issues: write
       id-token: write # Required for OIDC
     steps:
-      - uses: flatt-security/setup-takumi-guard-npm@14f07d0cbc739b42a1b7c70a04c2b84cd1318ddd # v1.4.0
+      - uses: flatt-security/setup-takumi-guard-npm@v1.4.0
         with:
           bot-id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
           set-registry: "false" # The registry is committed in website/.npmrc
@@ -29,7 +31,7 @@ jobs:
             cat .npmrc >> "$HOME/.npmrc"
             rm .npmrc
           fi
-      - uses: suzuki-shunsuke/release-doc-action@a9e1ea0c4ca8c62906ca2a7fd3fa33325ee43ec9 # v0.1.0
+      - uses: suzuki-shunsuke/release-doc-action@v0.1.0
         with:
           issue_number: 1724
           source_dir: website

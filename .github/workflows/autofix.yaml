@@ -1,3 +1,5 @@
+# This workflow is managed by gh actions-lock.
+
 ---
 name: autofix.ci
 on: pull_request
