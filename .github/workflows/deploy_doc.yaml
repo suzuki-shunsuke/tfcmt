@@ -12,7 +12,9 @@ on:
 permissions: {}
 jobs:
   deploy-doc:
-    uses: ./.github/workflows/workflow_call_deploy_doc.yaml
+    uses: suzuki-shunsuke/release-doc-action/.github/workflows/release.yaml@1cb15eb99aa8f0ae05ae28174430e49579e878fa # v0.2.0
+    with:
+      issue_number: "1724"
     secrets:
       TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
     permissions:

@@ -11,8 +11,7 @@ jobs:
       TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
     permissions:
       pull-requests: write
-      contents: write
-      issues: write
+      contents: read
       id-token: write
   status-check:
     runs-on: ubuntu-26.04
