@@ -31,7 +31,7 @@ jobs:
             cat .npmrc >> "$HOME/.npmrc"
             rm .npmrc
           fi
-      - uses: suzuki-shunsuke/release-doc-action@v0.1.0
+      - uses: suzuki-shunsuke/release-doc-action@v0.2.0
         with:
           issue_number: 1724
           source_dir: website
