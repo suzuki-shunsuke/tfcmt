@@ -15,7 +15,7 @@ jobs:
       contents: read
       id-token: write
     with:
-      aqua_version: v2.66.0
+      aqua_version: v2.66.1
     secrets:
       TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
 
@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
       - uses: aquaproj/aqua-installer@v4.1.1
         with:
-          aqua_version: v2.66.0
+          aqua_version: v2.66.1
       - run: bash scripts/generate-usage.sh
         working-directory: website
       - uses: autofix-ci/action@v1.3.4
