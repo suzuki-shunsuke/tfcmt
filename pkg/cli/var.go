@@ -88,6 +88,14 @@ func parseOptsPlan(args *PlanArgs, cfg *config.Config, envs []string) error { //
 		cfg.Terraform.Plan.DisableLabel = args.DisableLabel
 	}
 
+	if args.ResultFile != "" {
+		cfg.Terraform.Plan.ResultFile = args.ResultFile
+	}
+
+	if args.GitHubOutputCount > 0 || args.GitHubOutput {
+		cfg.Terraform.Plan.GitHubOutput = args.GitHubOutput
+	}
+
 	if cfg.GHEBaseURL == "" {
 		cfg.GHEBaseURL = os.Getenv("GITHUB_API_URL")
 	}
