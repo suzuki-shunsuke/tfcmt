@@ -1080,6 +1080,7 @@ func TestApplyParserParse(t *testing.T) {
 			result: ParseResult{
 				Result:        "",
 				HasParseError: true,
+				HasNoChanges:  false,
 				Error:         errors.New("cannot parse apply result"),
 			},
 		},
@@ -1087,8 +1088,18 @@ func TestApplyParserParse(t *testing.T) {
 			name: "apply ok pattern",
 			body: applySuccessResult,
 			result: ParseResult{
-				Result: "Apply complete! Resources: 0 added, 0 changed, 0 destroyed.",
-				Error:  nil,
+				Result:       "Apply complete! Resources: 0 added, 0 changed, 0 destroyed.",
+				HasNoChanges: true,
+				Error:        nil,
+			},
+		},
+		{
+			name: "apply ok with resource changes",
+			body: "Apply complete! Resources: 1 added, 0 changed, 0 destroyed.\n",
+			result: ParseResult{
+				Result:       "Apply complete! Resources: 1 added, 0 changed, 0 destroyed.",
+				HasNoChanges: false,
+				Error:        nil,
 			},
 		},
 		{
@@ -1099,8 +1110,9 @@ func TestApplyParserParse(t *testing.T) {
 
   on .terraform/modules/tfcmt-jp-tfcmt-prod/google_project_service.tf line 6, in resource "google_project_service" "gcp_api_service":
    6: resource "google_project_service" "gcp_api_service" {`,
-				Error:    nil,
-				HasError: true,
+				Error:        nil,
+				HasError:     true,
+				HasNoChanges: false,
 			},
 		},
 	}
