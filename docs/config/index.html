@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.10.2">
 <title data-rh="true">Configuration | tfcmt</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://suzuki-shunsuke.github.io/tfcmt/config"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Configuration | tfcmt"><meta data-rh="true" name="description" content="tfcmt provides the good default configuration and the configuration file is optional,"><meta data-rh="true" property="og:description" content="tfcmt provides the good default configuration and the configuration file is optional,"><link data-rh="true" rel="icon" href="/tfcmt/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://suzuki-shunsuke.github.io/tfcmt/config"><link data-rh="true" rel="alternate" href="https://suzuki-shunsuke.github.io/tfcmt/config" hreflang="en"><link data-rh="true" rel="alternate" href="https://suzuki-shunsuke.github.io/tfcmt/config" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://EVJI539OA7-dsn.algolia.net" crossorigin="anonymous"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Configuration","item":"https://suzuki-shunsuke.github.io/tfcmt/config"}]}</script><link rel="search" type="application/opensearchdescription+xml" title="tfcmt" href="/tfcmt/opensearch.xml"><link rel="stylesheet" href="/tfcmt/assets/css/styles.37dabcab.css">
-<script src="/tfcmt/assets/js/runtime~main.8dc18ccd.js" defer="defer"></script>
+<script src="/tfcmt/assets/js/runtime~main.7f4fba8d.js" defer="defer"></script>
 <script src="/tfcmt/assets/js/main.f37fc1e2.js" defer="defer"></script>
 </head>
 <body>
@@ -35,87 +35,6 @@ Configuration file is optional. If <code>--config</code> option isn&#x27;t used 
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="template-engine">Template Engine<a href="#template-engine" class="hash-link" aria-label="Direct link to Template Engine" title="Direct link to Template Engine" translate="no">​</a></h2>
 <p>The template is rendered with Go&#x27;s <a href="https://golang.org/pkg/html/template/" target="_blank" rel="noopener noreferrer" class="">template</a>.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="template-variables">Template variables<a href="#template-variables" class="hash-link" aria-label="Direct link to Template variables" title="Direct link to Template variables" translate="no">​</a></h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <table><thead><tr><th>Placeholder</th><th>Usage</th></tr></thead><tbody><tr><td><code>{{ .Result }}</code></td><td>Matched result by parsing like <code>Plan: 1 to add</code> or <code>No changes</code></td></tr><tr><td><code>{{ .ChangedResult }}</code></td><td></td></tr><tr><td><code>{{ .ChangeOutsideTerraform }}</code></td><td></td></tr><tr><td><code>{{ .Warning }}</code></td><td></td></tr><tr><td><code>{{ .Link }}</code></td><td>The link of the build page on CI</td></tr><tr><td><code>{{ .Vars }}</code></td><td>The variables which are passed by <code>-var</code> option</td></tr><tr><td><code>{{ .Stdout }}</code></td><td>The standard output of terraform command</td></tr><tr><td><code>{{ .Stderr }}</code></td><td>The standard error output of terraform command</td></tr><tr><td><code>{{ .CombinedOutput }}</code></td><td>The output of terraform command</td></tr><tr><td><code>{{ .ExitCode }}</code></td><td>The exit code of terraform command</td></tr><tr><td><code>{{ .HasDestroy }}</code></td><td>Whether there are destroyed resources</td></tr><tr><td><code>{{ .ErrorMessages }}</code></td><td>a list of error messages which occur in tfcmt</td></tr><tr><td><code>{{ .CreatedResources }}</code></td><td>a list of created resource paths. This variable can be used at only plan</td></tr><tr><td><code>{{ .UpdatedResources }}</code></td><td>a list of updated resource paths. This variable can be used at only plan</td></tr><tr><td><code>{{ .DeletedResources }}</code></td><td>a list of deleted resource paths. This variable can be used at only plan</td></tr><tr><td><code>{{ .ReplacedResources }}</code></td><td>a list of deleted resource paths. This variable can be used at only plan</td></tr><tr><td><code>{{ .MovedResources }}</code></td><td>a list of moved resource paths. This variable can be used at only plan</td></tr><tr><td><code>{{ .ImportedResources }}</code></td><td>a list of imported resources (<code>{&quot;Before&quot;: &quot;resource path&quot;, &quot;After&quot;: &quot;resource path&quot;}</code>). This variable can be used at only plan</td></tr></tbody></table>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="template-functions">Template Functions<a href="#template-functions" class="hash-link" aria-label="Direct link to Template Functions" title="Direct link to Template Functions" translate="no">​</a></h2>
 <p>In the template, the <a href="http://masterminds.github.io/sprig/" target="_blank" rel="noopener noreferrer" class="">sprig template functions</a> can be used.
