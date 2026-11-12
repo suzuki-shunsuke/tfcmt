@@ -281,8 +281,8 @@ func (p *PlanParser) changedResources(line string) string {
 }
 
 type MovedResource struct {
-	Before string
-	After  string
+	Before string `json:"before"`
+	After  string `json:"after"`
 }
 
 // Parse returns ParseResult related with terraform apply
