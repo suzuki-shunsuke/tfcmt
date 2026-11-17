@@ -15,7 +15,7 @@ USAGE:
    tfcmt [global options] [command [command options]]
 
 VERSION:
-   4.14.20
+   4.14.21
 
 COMMANDS:
    plan        Run terraform plan and post a comment to GitHub commit, pull request, or issue
