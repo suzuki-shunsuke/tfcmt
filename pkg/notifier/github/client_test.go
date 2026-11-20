@@ -1,7 +1,13 @@
 package github
 
 import (
+	"context"
+	"log/slog"
+	"slices"
 	"testing"
+
+	"github.com/google/go-github/v92/github"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 func TestNewClient(t *testing.T) {
@@ -196,6 +202,18 @@ func TestHasAnyLabelDefined(t *testing.T) {
 		},
 		{
 			rl: ResultLabels{
+				MovedLabel: "moves",
+			},
+			want: true,
+		},
+		{
+			rl: ResultLabels{
+				NoChangesInInfraLabel: "no-changes-in-infra",
+			},
+			want: true,
+		},
+		{
+			rl: ResultLabels{
 				AddOrUpdateLabel: "",
 				DestroyLabel:     "",
 				NoChangesLabel:   "",
@@ -231,6 +249,27 @@ func TestIsResultLabels(t *testing.T) {
 			},
 			label: "add-or-update",
 			want:  true,
+		},
+		{
+			rl: ResultLabels{
+				MovedLabel: "moves",
+			},
+			label: "moves",
+			want:  true,
+		},
+		{
+			rl: ResultLabels{
+				NoChangesInInfraLabel: "no-changes-in-infra",
+			},
+			label: "no-changes-in-infra",
+			want:  true,
+		},
+		{
+			rl: ResultLabels{
+				MovedLabel: "moves",
+			},
+			label: "no-changes",
+			want:  false,
 		},
 		{
 			rl: ResultLabels{
@@ -274,3 +313,111 @@ func TestIsResultLabels(t *testing.T) {
 		}
 	}
 }
+
+func TestUpdateLabels(t *testing.T) { //nolint:tparallel
+	t.Setenv("GITHUB_TOKEN", "xxx")
+	logger := slog.New(slog.DiscardHandler)
+
+	movedOnlyResult := terraform.ParseResult{
+		HasNoChanges:        true,
+		HasMovedOnly:        true,
+		HasNoChangesInInfra: true,
+		MovedResources: []*terraform.MovedResource{
+			{
+				Before: "null_resource.foo",
+				After:  "null_resource.bar",
+			},
+		},
+	}
+
+	noChangesResult := terraform.ParseResult{
+		HasNoChanges: true,
+	}
+
+	testCases := []struct {
+		name         string
+		resultLabels ResultLabels
+		parseResult  terraform.ParseResult
+		wantAdded    []string
+	}{
+		{
+			name: "move-only plan uses MovedLabel when configured",
+			resultLabels: ResultLabels{
+				NoChangesLabel: "no-changes",
+				MovedLabel:     "moves",
+			},
+			parseResult: movedOnlyResult,
+			wantAdded:   []string{"moves"},
+		},
+		{
+			name: "move-only plan uses NoChangesInInfraLabel when configured",
+			resultLabels: ResultLabels{
+				NoChangesLabel:        "no-changes",
+				NoChangesInInfraLabel: "no-changes-in-infra",
+			},
+			parseResult: movedOnlyResult,
+			wantAdded:   []string{"no-changes-in-infra"},
+		},
+		{
+			name: "move-only plan falls back to NoChangesLabel when move label unconfigured",
+			resultLabels: ResultLabels{
+				NoChangesLabel: "no-changes",
+			},
+			parseResult: movedOnlyResult,
+			wantAdded:   []string{"no-changes"},
+		},
+		{
+			name: "move-only plan skips label when DisableMovedLabel is true",
+			resultLabels: ResultLabels{
+				NoChangesLabel:    "no-changes",
+				DisableMovedLabel: true,
+			},
+			parseResult: movedOnlyResult,
+			wantAdded:   nil,
+		},
+		{
+			name: "standard no-changes plan uses NoChangesLabel even when MovedLabel is configured",
+			resultLabels: ResultLabels{
+				NoChangesLabel: "no-changes",
+				MovedLabel:     "moves",
+			},
+			parseResult: noChangesResult,
+			wantAdded:   []string{"no-changes"},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			cfg := Config{
+				Owner: "owner",
+				Repo:  "repo",
+				PR: PullRequest{
+					Number: 1,
+				},
+				Parser:       terraform.NewPlanParser(),
+				Template:     terraform.NewPlanTemplate(terraform.DefaultPlanTemplate),
+				ResultLabels: tc.resultLabels,
+			}
+			client, err := NewClient(t.Context(), &cfg)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var added []string
+			api := newFakeAPI()
+			api.FakeIssuesAddLabels = func(ctx context.Context, number int, labels []string) ([]*github.Label, *github.Response, error) {
+				added = append(added, labels...)
+				return nil, nil, nil
+			}
+			client.API = &api
+			errMsgs := client.Notify.UpdateLabels(t.Context(), logger, tc.parseResult)
+			if len(errMsgs) > 0 {
+				t.Fatalf("unexpected error messages: %v", errMsgs)
+			}
+			if !slices.Equal(added, tc.wantAdded) {
+				t.Errorf("got added labels %v, want %v", added, tc.wantAdded)
+			}
+		})
+	}
+}
+

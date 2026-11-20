@@ -544,6 +544,24 @@ Note: You didn't use the -out option to save this plan, so Terraform can't
 guarantee to take exactly these actions if you run "terraform apply" now.
 `
 
+const planMovedOnly = `
+null_resource.foo: Refreshing state... [id=1968536679283731966]
+
+Terraform will perform the following actions:
+
+  # null_resource.foo has moved to null_resource.bar
+    resource "null_resource" "bar" {
+        id = "1968536679283731966"
+    }
+
+Plan: 0 to add, 0 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+`
+
 const applySuccessResult = `
 data.terraform_remote_state.teams_platform_development: Refreshing state...
 google_project.my_service: Refreshing state...
@@ -1018,12 +1036,14 @@ Plan: 1 to import, 0 to add, 0 to change, 0 to destroy.`,
 			name: "plan imports and moves resources only",
 			body: planImportedAndMovedOnly,
 			result: ParseResult{
-				Result:             "Plan: 2 to import, 0 to add, 0 to change, 0 to destroy.",
-				HasAddOrUpdateOnly: false,
-				HasDestroy:         false,
-				HasNoChanges:       true,
-				HasError:           false,
-				Error:              nil,
+				Result:              "Plan: 2 to import, 0 to add, 0 to change, 0 to destroy.",
+				HasAddOrUpdateOnly:  false,
+				HasDestroy:          false,
+				HasNoChanges:        true,
+				HasMovedOnly:        true,
+				HasNoChangesInInfra: true,
+				HasError:            false,
+				Error:               nil,
 				ImportedResources: []string{
 					"github_repository.tfaction",
 					"github_repository.tfcmt",
@@ -1053,6 +1073,33 @@ Plan: 1 to import, 0 to add, 0 to change, 0 to destroy.`,
     }
 
 Plan: 2 to import, 0 to add, 0 to change, 0 to destroy.`,
+			},
+		},
+		{
+			name: "plan moved only",
+			body: planMovedOnly,
+			result: ParseResult{
+				Result:              "Plan: 0 to add, 0 to change, 0 to destroy.",
+				HasAddOrUpdateOnly:  false,
+				HasDestroy:          false,
+				HasNoChanges:        true,
+				HasMovedOnly:        true,
+				HasNoChangesInInfra: true,
+				HasError:            false,
+				Error:               nil,
+				MovedResources: []*MovedResource{
+					{
+						Before: "null_resource.foo",
+						After:  "null_resource.bar",
+					},
+				},
+				ChangedResult: `
+  # null_resource.foo has moved to null_resource.bar
+    resource "null_resource" "bar" {
+        id = "1968536679283731966"
+    }
+
+Plan: 0 to add, 0 to change, 0 to destroy.`,
 			},
 		},
 	}

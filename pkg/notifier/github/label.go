@@ -28,6 +28,16 @@ func (g *NotifyService) UpdateLabels(ctx context.Context, logger *slog.Logger, r
 	case result.HasDestroy:
 		labelToAdd = cfg.ResultLabels.DestroyLabel
 		labelColor = cfg.ResultLabels.DestroyLabelColor
+	case (result.HasMovedOnly || (result.HasNoChanges && len(result.MovedResources) > 0)) && cfg.ResultLabels.DisableMovedLabel:
+		labelToAdd = ""
+	case (result.HasMovedOnly || (result.HasNoChanges && len(result.MovedResources) > 0)) && cfg.ResultLabels.MovedLabel != "":
+		labelToAdd = cfg.ResultLabels.MovedLabel
+		labelColor = cfg.ResultLabels.MovedLabelColor
+	case (result.HasMovedOnly || (result.HasNoChanges && len(result.MovedResources) > 0)) && cfg.ResultLabels.DisableNoChangesInInfraLabel:
+		labelToAdd = ""
+	case (result.HasMovedOnly || (result.HasNoChanges && len(result.MovedResources) > 0)) && cfg.ResultLabels.NoChangesInInfraLabel != "":
+		labelToAdd = cfg.ResultLabels.NoChangesInInfraLabel
+		labelColor = cfg.ResultLabels.NoChangesInInfraLabelColor
 	case result.HasNoChanges:
 		labelToAdd = cfg.ResultLabels.NoChangesLabel
 		labelColor = cfg.ResultLabels.NoChangesLabelColor
