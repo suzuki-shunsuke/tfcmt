@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
@@ -15,6 +16,7 @@ import (
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/mask"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/notifier"
 	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/platform"
+	"github.com/suzuki-shunsuke/tfcmt/v4/pkg/terraform"
 )
 
 // Plan sends the notification with notifier
@@ -52,13 +54,55 @@ func (c *Controller) Plan(ctx context.Context, logger *slog.Logger, command Comm
 	setCancel(cmd)
 	_ = cmd.Run()
 
+	exitCode := 0
+	if cmd.ProcessState != nil {
+		exitCode = cmd.ProcessState.ExitCode()
+	}
+
+	if err := c.ExportPlanResult(combinedOutput.String(), exitCode); err != nil {
+		return ecerror.Wrap(err, exitCode)
+	}
+
 	return ecerror.Wrap(ntf.Plan(ctx, logger, &notifier.ParamExec{
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
 		CIName:         c.Config.CI.Name,
-		ExitCode:       cmd.ProcessState.ExitCode(),
-	}), cmd.ProcessState.ExitCode())
+		ExitCode:       exitCode,
+	}), exitCode)
+}
+
+// ExportPlanResult writes machine-readable plan result to file and/or GITHUB_OUTPUT.
+func (c *Controller) ExportPlanResult(combinedOutput string, exitCode int) error {
+	if c.Config.Terraform.Plan.ResultFile == "" && !c.Config.Terraform.Plan.GitHubOutput {
+		return nil
+	}
+
+	parser := c.Parser
+	if parser == nil {
+		parser = terraform.NewPlanParser()
+	}
+
+	result := parser.Parse(combinedOutput)
+	planResult := terraform.NewPlanResult(exitCode, result, c.Config.Vars)
+
+	if c.Config.Terraform.Plan.ResultFile != "" {
+		if err := terraform.WriteResultFile(c.Config.Terraform.Plan.ResultFile, planResult); err != nil {
+			return fmt.Errorf("write plan result file: %w", err)
+		}
+	}
+
+	if c.Config.Terraform.Plan.GitHubOutput {
+		outputFile := os.Getenv("GITHUB_OUTPUT")
+		if outputFile == "" {
+			return errors.New("GITHUB_OUTPUT environment variable is not set")
+		}
+		if err := terraform.ExportGitHubOutput(outputFile, planResult); err != nil {
+			return fmt.Errorf("export plan result to GITHUB_OUTPUT: %w", err)
+		}
+	}
+
+	return nil
 }
 
 const waitDelay = 1000 * time.Hour

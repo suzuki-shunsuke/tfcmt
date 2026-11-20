@@ -88,6 +88,12 @@
         },
         "ignore_warning": {
           "type": "boolean"
+        },
+        "result_file": {
+          "type": "string"
+        },
+        "github_output": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false,
