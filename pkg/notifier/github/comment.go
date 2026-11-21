@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/google/go-github/v93/github"
 	"github.com/shurcooL/githubv4"
@@ -27,6 +28,18 @@ func (g *CommentService) Post(ctx context.Context, body string, opt *PostOptions
 			opt.Number,
 			github.IssueCommentRequest{Body: body},
 		)
+		if err != nil && isBodyTooLongError(err) {
+			fallback := g.buildBodyTooLongFallbackComment(body, opt)
+			_, _, err2 := g.client.API.IssuesCreateComment(
+				ctx,
+				opt.Number,
+				github.IssueCommentRequest{Body: fallback},
+			)
+			if err2 != nil {
+				return errors.Join(err, fmt.Errorf("post a fallback comment: %w", err2))
+			}
+			return nil
+		}
 		return err
 	}
 	if opt.Revision != "" {
@@ -35,9 +48,90 @@ func (g *CommentService) Post(ctx context.Context, body string, opt *PostOptions
 			opt.Revision,
 			github.CreateCommitCommentRequest{Body: body},
 		)
+		if err != nil && isBodyTooLongError(err) {
+			fallback := g.buildBodyTooLongFallbackComment(body, opt)
+			_, _, err2 := g.client.API.RepositoriesCreateComment(
+				ctx,
+				opt.Revision,
+				github.CreateCommitCommentRequest{Body: fallback},
+			)
+			if err2 != nil {
+				return errors.Join(err, fmt.Errorf("post a fallback comment: %w", err2))
+			}
+			return nil
+		}
 		return err
 	}
 	return errors.New("github.comment.post: Number or Revision is required")
+}
+
+const bodyTooLongMessage = "Body is too long (maximum is 65536 characters)"
+
+// isBodyTooLongError returns true if the error is a GitHub API 422 error
+// caused by the comment body exceeding the maximum length.
+// https://github.com/suzuki-shunsuke/tfcmt/issues/1847
+func isBodyTooLongError(err error) bool {
+	if err == nil {
+		return false
+	}
+	var ghErr *github.ErrorResponse
+	if errors.As(err, &ghErr) {
+		for _, e := range ghErr.Errors {
+			if strings.Contains(e.Message, bodyTooLongMessage) {
+				return true
+			}
+		}
+		// Some responses only carry the message at the top level.
+		if strings.Contains(ghErr.Message, bodyTooLongMessage) {
+			return true
+		}
+	}
+	return strings.Contains(err.Error(), bodyTooLongMessage)
+}
+
+// buildBodyTooLongFallbackComment builds a short fallback comment posted when
+// the original comment body is too long for GitHub.
+// The fallback keeps the plan/apply result summary visible and links to the
+// CI log so the omitted detail can still be reached.
+func (g *CommentService) buildBodyTooLongFallbackComment(body string, opt *PostOptions) string {
+	cfg := g.client.Config
+	var link string
+	if cfg != nil && cfg.CI != "" {
+		link = cfg.CI
+	}
+	var sb strings.Builder
+	if link != "" {
+		sb.WriteString("[CI link](")
+		sb.WriteString(link)
+		sb.WriteString(")\n\n")
+	}
+	sb.WriteString("> [!WARNING]\n")
+	sb.WriteString("> tfcmt couldn't post a comment because the comment body is too long.\n")
+	if link != "" {
+		sb.WriteString("> So tfcmt posts this comment instead. [Please check the log](")
+		sb.WriteString(link)
+		sb.WriteString(").\n")
+	} else {
+		sb.WriteString("> So tfcmt posts this comment instead. Please check the log.\n")
+	}
+	sb.WriteString("\n")
+	sb.WriteString(extractResultSummary(body))
+	return sb.String()
+}
+
+// extractResultSummary tries to pull the `Plan: N to add, ...` /
+// `Apply complete!` line out of a rendered comment body so the fallback still
+// shows the result summary. Returns an empty string when nothing is found.
+func extractResultSummary(body string) string {
+	for _, line := range strings.Split(body, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "Plan: ") ||
+			strings.HasPrefix(trimmed, "Apply complete!") ||
+			strings.HasPrefix(trimmed, "No changes.") {
+			return "<pre><code>" + trimmed + "</code></pre>\n"
+		}
+	}
+	return ""
 }
 
 func (g *CommentService) Patch(ctx context.Context, body string, commentID int64) error {
