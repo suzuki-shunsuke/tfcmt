@@ -280,3 +280,22 @@ func TestNotifyPlan(t *testing.T) { //nolint:tparallel
 		})
 	}
 }
+
+func TestNotifyService_getPatchedComment(t *testing.T) {
+	t.Parallel()
+	logger := slog.New(slog.DiscardHandler)
+	body := "foo\n" + `<!-- github-comment: {"Program":"tfcmt","Command":"plan","Target":"dev"} -->`
+	comments := []*IssueComment{
+		nil,
+		{DatabaseID: 1, Body: body},
+		nil,
+	}
+	var g *NotifyService
+	cmt := g.getPatchedComment(logger, comments, "dev")
+	if cmt == nil {
+		t.Fatal("comment should be found")
+	}
+	if cmt.DatabaseID != 1 {
+		t.Fatalf("wanted 1, got %d", cmt.DatabaseID)
+	}
+}
