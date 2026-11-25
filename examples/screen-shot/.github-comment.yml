@@ -1,0 +1,5 @@
+---
+# https://github.com/suzuki-shunsuke/github-comment
+hide:
+  default: |
+    Comment.HasMeta && Comment.Meta.SHA1 != Commit.SHA1 && ! (Comment.Meta.Program == "tfcmt" && Comment.Meta.Command == "apply")
