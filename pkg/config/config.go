@@ -64,6 +64,8 @@ type Plan struct {
 	WhenParseError      WhenParseError      `json:"when_parse_error,omitempty" yaml:"when_parse_error"`
 	DisableLabel        bool                `json:"disable_label,omitempty" yaml:"disable_label"`
 	IgnoreWarning       bool                `json:"ignore_warning,omitempty" yaml:"ignore_warning"`
+	ResultFile          string              `json:"result_file,omitempty" yaml:"result_file"`
+	GitHubOutput        bool                `json:"github_output,omitempty" yaml:"github_output"`
 }
 
 // WhenAddOrUpdateOnly is a configuration to notify the plan result contains new or updated in place resources
