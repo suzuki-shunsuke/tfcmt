@@ -224,6 +224,8 @@ terraform:
         <details><summary>Details (Click me)</summary>
         {{wrapCode .CombinedOutput}}
         </details>
+    # when_no_changes:
+    #   disable_comment: false
 ```
 
 If you don't want to update labels, please set `terraform.plan.disable_label: true`.
