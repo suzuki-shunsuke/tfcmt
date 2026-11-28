@@ -19,8 +19,10 @@ type ParseResult struct {
 	Warning            string
 	HasAddOrUpdateOnly bool
 	HasDestroy         bool
-	HasNoChanges       bool
-	HasError           bool
+	HasNoChanges        bool
+	HasMovedOnly        bool
+	HasNoChangesInInfra bool
+	HasError            bool
 	HasParseError      bool
 	Error              error
 	CreatedResources   []string
@@ -224,6 +226,7 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop,maintidx
 	hasDestroy := p.HasDestroy.MatchString(firstMatchLine)
 	hasNoChanges := p.HasNoChanges.MatchString(firstMatchLine)
 	HasAddOrUpdateOnly := !hasNoChanges && !hasDestroy && !hasPlanError
+	hasMovedOnly := hasNoChanges && len(movedResources) > 0
 
 	outsideTerraform := ""
 	if startOutsideTerraform != -1 {
@@ -249,14 +252,16 @@ func (p *PlanParser) Parse(body string) ParseResult { //nolint:cyclop,maintidx
 	}
 
 	return ParseResult{
-		Result:             strings.TrimSpace(result),
-		ChangedResult:      changeResult,
-		OutsideTerraform:   outsideTerraform,
-		Warning:            strings.TrimSpace(warnings),
-		HasAddOrUpdateOnly: HasAddOrUpdateOnly,
-		HasDestroy:         hasDestroy,
-		HasNoChanges:       hasNoChanges,
-		HasError:           hasPlanError,
+		Result:              strings.TrimSpace(result),
+		ChangedResult:       changeResult,
+		OutsideTerraform:    outsideTerraform,
+		Warning:             strings.TrimSpace(warnings),
+		HasAddOrUpdateOnly:  HasAddOrUpdateOnly,
+		HasDestroy:          hasDestroy,
+		HasNoChanges:        hasNoChanges,
+		HasMovedOnly:        hasMovedOnly,
+		HasNoChangesInInfra: hasMovedOnly,
+		HasError:            hasPlanError,
 		Error:              nil,
 		CreatedResources:   createdResources,
 		UpdatedResources:   updatedResources,
